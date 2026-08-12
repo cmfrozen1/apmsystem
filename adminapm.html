@@ -253,15 +253,16 @@
     /* Loading overlay */
     .loading-overlay {
       display: none;
-      position: absolute;
+      position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
       background: rgba(255, 255, 255, 0.75);
       backdrop-filter: blur(3px);
-      border-radius: 20px;
       z-index: 1000;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
+      gap: 1.1rem;
     }
     .spinner {
       width: 44px; height: 44px;
@@ -269,6 +270,11 @@
       border-top: 4px solid #059669;
       border-radius: 50%;
       animation: spin 0.9s linear infinite;
+    }
+    .loading-text {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #047857;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -297,6 +303,7 @@
   <div class="container" id="mainContainer">
     <div class="loading-overlay" id="loadingOverlay">
       <div class="spinner"></div>
+      <p class="loading-text">กำลังบันทึก..</p>
     </div>
 
     <div class="tabs">
@@ -390,6 +397,7 @@
     const showLoading = (show) => {
       const el = document.getElementById('loadingOverlay');
       el.style.display = show ? 'flex' : 'none';
+      document.body.style.overflow = show ? 'hidden' : '';
     };
     const showError = (msg) => Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: msg, confirmButtonColor: '#059669' });
     const showSuccess = (msg) => Swal.fire({ icon: 'success', title: 'สำเร็จ', text: msg, timer: 1500, showConfirmButton: false, confirmButtonColor: '#059669' });
