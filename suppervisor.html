@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>รายงานการกำกับดูแล (Supervisor)</title>
   <meta name="description" content="แบบฟอร์มรายงานการกำกับดูแล ชุปเปอร์ไวเซอร์">
-  <link rel="icon" type="image/png" sizes="96x96" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="icon" type="image/png" sizes="96x96"
+    href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
   <!-- Preconnect to speed up CDN connections -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
@@ -20,7 +22,12 @@
   <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       font-family: 'Prompt', sans-serif;
       background: linear-gradient(155deg, #f0fdf4 0%, #ecfdf5 45%, #d1fae5 100%);
@@ -42,11 +49,13 @@
       top: 0;
       z-index: 500;
     }
+
     .avatar {
-      width: 48px; height: 48px;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
       background: #d1fae5;
-      border: 2px solid rgba(255,255,255,0.85);
+      border: 2px solid rgba(255, 255, 255, 0.85);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -56,15 +65,38 @@
       overflow: hidden;
       flex-shrink: 0;
     }
-    .avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .avatar.no-photo img { display: none; }
-    .app-header .titles { flex: 1; min-width: 0; }
-    .app-header .titles h1 { font-size: 1.05rem; font-weight: 700; line-height: 1.35; }
-    .app-header .titles p { font-size: 0.78rem; color: #d1fae5; }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar.no-photo img {
+      display: none;
+    }
+
+    .app-header .titles {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .app-header .titles h1 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .app-header .titles p {
+      font-size: 0.78rem;
+      color: #d1fae5;
+    }
+
     .leaf-badge {
-      width: 40px; height: 40px;
+      width: 40px;
+      height: 40px;
       border-radius: 12px;
-      background: rgba(255,255,255,0.16);
+      background: rgba(255, 255, 255, 0.16);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -93,8 +125,10 @@
       padding: 3rem 1.2rem;
       min-height: 420px;
     }
+
     .gps-icon-wrap {
-      width: 96px; height: 96px;
+      width: 96px;
+      height: 96px;
       border-radius: 50%;
       background: linear-gradient(135deg, #d1fae5, #a7f3d0);
       display: flex;
@@ -104,26 +138,63 @@
       box-shadow: 0 12px 30px rgba(5, 150, 105, 0.25);
       animation: gpsPulse 2.2s ease-in-out infinite;
     }
-    .gps-icon-wrap i { font-size: 2.6rem; color: #047857; }
-    @keyframes gpsPulse {
-      0%, 100% { transform: scale(1); box-shadow: 0 12px 30px rgba(5, 150, 105, 0.25); }
-      50% { transform: scale(1.06); box-shadow: 0 14px 38px rgba(5, 150, 105, 0.4); }
+
+    .gps-icon-wrap i {
+      font-size: 2.6rem;
+      color: #047857;
     }
+
+    @keyframes gpsPulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        box-shadow: 0 12px 30px rgba(5, 150, 105, 0.25);
+      }
+
+      50% {
+        transform: scale(1.06);
+        box-shadow: 0 14px 38px rgba(5, 150, 105, 0.4);
+      }
+    }
+
     .gps-icon-wrap.error {
       background: linear-gradient(135deg, #fee2e2, #fecaca);
       animation: none;
     }
-    .gps-icon-wrap.error i { color: #dc2626; }
-    .gps-checking h3 { font-size: 1.3rem; font-weight: 700; color: #064e3b; margin-bottom: 0.6rem; }
-    .gps-checking p { color: #6b7280; font-size: 0.9rem; margin-bottom: 1.8rem; }
+
+    .gps-icon-wrap.error i {
+      color: #dc2626;
+    }
+
+    .gps-checking h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #064e3b;
+      margin-bottom: 0.6rem;
+    }
+
+    .gps-checking p {
+      color: #6b7280;
+      font-size: 0.9rem;
+      margin-bottom: 1.8rem;
+    }
+
     .spinner {
-      width: 42px; height: 42px;
+      width: 42px;
+      height: 42px;
       border: 4px solid #d1fae5;
       border-top: 4px solid #059669;
       border-radius: 50%;
       animation: spin 0.9s linear infinite;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
     .retry-btn {
       padding: 0.8rem 2rem;
       border: none;
@@ -140,8 +211,14 @@
       gap: 0.5rem;
       transition: all 0.25s ease;
     }
-    .retry-btn:hover { transform: translateY(-2px); }
-    .hidden { display: none !important; }
+
+    .retry-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .hidden {
+      display: none !important;
+    }
 
     .section-head {
       display: flex;
@@ -154,9 +231,14 @@
       padding-bottom: 0.5rem;
       border-bottom: 2px solid #f0fdf4;
     }
-    .section-head:first-of-type { margin-top: 0; }
+
+    .section-head:first-of-type {
+      margin-top: 0;
+    }
+
     .section-head .icon {
-      width: 30px; height: 30px;
+      width: 30px;
+      height: 30px;
       border-radius: 9px;
       background: #d1fae5;
       color: #047857;
@@ -166,7 +248,10 @@
       font-size: 0.85rem;
     }
 
-    .field { margin-bottom: 0.9rem; }
+    .field {
+      margin-bottom: 0.9rem;
+    }
+
     .field label {
       display: block;
       font-size: 0.82rem;
@@ -174,8 +259,15 @@
       color: #4b5563;
       margin-bottom: 0.35rem;
     }
-    .field label .req { color: #dc2626; }
-    input[type="text"], input[type="date"], input[type="file"], textarea {
+
+    .field label .req {
+      color: #dc2626;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="file"],
+    textarea {
       width: 100%;
       padding: 0.72rem 0.9rem;
       border: 1.5px solid #d1d5db;
@@ -187,13 +279,26 @@
       transition: border-color 0.25s ease, box-shadow 0.25s ease;
       color: #1f2937;
     }
-    input:focus, textarea:focus {
+
+    input:focus,
+    textarea:focus {
       border-color: #10b981;
       box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
     }
-    input[readonly] { background: #f8fafc; color: #6b7280; }
-    textarea { min-height: 96px; resize: vertical; }
-    input[type="file"] { padding: 0.5rem 0.9rem; }
+
+    input[readonly] {
+      background: #f8fafc;
+      color: #6b7280;
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    input[type="file"] {
+      padding: 0.5rem 0.9rem;
+    }
 
     .file-box {
       border: 2px dashed #a7f3d0;
@@ -206,10 +311,22 @@
       cursor: pointer;
       transition: all 0.25s ease;
     }
-    .file-box:hover { border-color: #059669; background: #ecfdf5; }
-    .file-box i { font-size: 1.4rem; display: block; margin-bottom: 0.3rem; }
 
-    .image-preview { margin-top: 0.8rem; }
+    .file-box:hover {
+      border-color: #059669;
+      background: #ecfdf5;
+    }
+
+    .file-box i {
+      font-size: 1.4rem;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .image-preview {
+      margin-top: 0.8rem;
+    }
+
     .image-preview img {
       width: 100%;
       max-height: 260px;
@@ -218,7 +335,12 @@
       border: 2px solid #d1fae5;
       box-shadow: 0 8px 20px rgba(2, 44, 34, 0.12);
     }
-    .map-container iframe { border-radius: 14px; border: 2px solid #d1fae5; }
+
+    .map-container iframe {
+      border-radius: 14px;
+      border: 2px solid #d1fae5;
+    }
+
     .coords-note {
       display: flex;
       align-items: center;
@@ -231,7 +353,10 @@
       margin-top: 0.5rem;
       word-break: break-all;
     }
-    .coords-note i { flex-shrink: 0; }
+
+    .coords-note i {
+      flex-shrink: 0;
+    }
 
     .submit-btn {
       width: 100%;
@@ -252,11 +377,22 @@
       gap: 0.55rem;
       transition: all 0.25s ease;
     }
-    .submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(5, 150, 105, 0.45); }
-    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .submit-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 32px rgba(5, 150, 105, 0.45);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
 
     /* Tom Select green styling */
-    .ts-wrapper { width: 100% !important; }
+    .ts-wrapper {
+      width: 100% !important;
+    }
+
     .ts-control {
       border: 1.5px solid #d1d5db !important;
       border-radius: 12px !important;
@@ -268,25 +404,37 @@
       font-family: 'Prompt', sans-serif !important;
       cursor: pointer;
     }
+
     .ts-wrapper.focus .ts-control {
       border-color: #10b981 !important;
       box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18) !important;
     }
+
     .ts-dropdown {
       border-radius: 12px !important;
       border: 1.5px solid #d1d5db !important;
       font-family: 'Prompt', sans-serif !important;
       font-size: 0.9rem !important;
     }
-    .ts-dropdown .option { font-family: 'Prompt', sans-serif !important; padding: 0.5rem 1rem; }
-    .ts-dropdown .option.active { background-color: #059669 !important; color: #fff !important; }
+
+    .ts-dropdown .option {
+      font-family: 'Prompt', sans-serif !important;
+      padding: 0.5rem 1rem;
+    }
+
+    .ts-dropdown .option.active {
+      background-color: #059669 !important;
+      color: #fff !important;
+    }
 
     /* Loading overlay */
     .loading-overlay {
       display: none;
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       background: rgba(255, 255, 255, 0.82);
       backdrop-filter: blur(4px);
       border-radius: 22px;
@@ -294,8 +442,10 @@
       align-items: center;
       justify-content: center;
     }
+
     .loader {
-      width: 50px; height: 50px;
+      width: 50px;
+      height: 50px;
       border: 5px solid #d1fae5;
       border-top: 5px solid #059669;
       border-radius: 50%;
@@ -310,17 +460,25 @@
     }
 
     @media (max-width: 480px) {
-      .card { margin: 0.9rem 0.8rem 0; padding: 1.3rem 1.1rem 1.5rem; }
-      .app-header { padding: 1rem 0.9rem; }
+      .card {
+        margin: 0.9rem 0.8rem 0;
+        padding: 1.3rem 1.1rem 1.5rem;
+      }
+
+      .app-header {
+        padding: 1rem 0.9rem;
+      }
     }
   </style>
 </head>
+
 <body>
   <!-- Header -->
   <header class="app-header">
-    <div class="avatar" id="avatarBox"><img id="profileImage" src="" alt="Profile"><i class="fas fa-user-shield"></i></div>
+    <div class="avatar" id="avatarBox"><img id="profileImage" src="" alt="Profile"><i class="fas fa-user-shield"></i>
+    </div>
     <div class="titles">
-      <h1>รายงานการกำกับดูแล</h1>
+      <h1>ชุปเปอร์ไวเซอร์</h1>
       <p id="displayName">กำลังโหลด...</p>
     </div>
     <div class="leaf-badge"><i class="fas fa-leaf"></i></div>
@@ -337,7 +495,8 @@
       <h3 id="gpsTitle">กำลังตรวจสอบ GPS</h3>
       <p id="gpsDesc">กรุณารอสักครู่ขณะที่เราตรวจสอบตำแหน่งของคุณ...</p>
       <div class="spinner" id="gpsSpinner"></div>
-      <button class="retry-btn hidden" id="gpsRetry" onclick="startGpsCheck()"><i class="fas fa-sync-alt"></i> ลองอีกครั้ง</button>
+      <button class="retry-btn hidden" id="gpsRetry" onclick="startGpsCheck()"><i class="fas fa-sync-alt"></i>
+        ลองอีกครั้ง</button>
     </div>
 
     <!-- Main Form (Hidden until GPS ready) -->
@@ -389,7 +548,8 @@
       </div>
       <div class="field">
         <div class="map-container" id="mapContainer"></div>
-        <div class="coords-note hidden" id="coordsNote"><i class="fas fa-crosshairs"></i><span id="coordsText"></span></div>
+        <div class="coords-note hidden" id="coordsNote"><i class="fas fa-crosshairs"></i><span id="coordsText"></span>
+        </div>
       </div>
 
       <div class="section-head">
@@ -405,7 +565,8 @@
       </div>
 
       <button type="submit" id="sub" class="submit-btn"><i class="fas fa-paper-plane"></i> บันทึกการกำกับดูแล</button>
-      <p class="footnote"><i class="fas fa-leaf"></i> ระบบส่งเสริมการเกษตร • บริษัทเชียงใหม่โฟรเซ่นฟูดส์ จำกัด (มหาชน)</p>
+      <p class="footnote"><i class="fas fa-leaf"></i> ระบบส่งเสริมการเกษตร • บริษัทเชียงใหม่โฟรเซ่นฟูดส์ จำกัด (มหาชน)
+      </p>
     </form>
   </div>
 
@@ -669,7 +830,7 @@
 
     // ---------- โหลด Select (แคช + ดึงข้อมูล) ----------
     const SUPERVISOR_API_URL = 'https://script.google.com/macros/s/AKfycbyE8tvOVYAAR6WOiCVDEb2Fp1Yq3ebTAri9ZQYonpduMjQCFzod8xi0glBVXc6A6_qOeA/exec';
-    const CACHE_TTL = 60 * 60 * 1000; // 1 ชั่วโมง
+    const CACHE_TTL = 12 * 60 * 60 * 1000; // 12 ชั่วโมง (ข้อมูล Select เปลี่ยนบ่อยน้อย)
 
     function getCache(key) {
       try {
@@ -683,6 +844,36 @@
 
     function setCache(key, data) {
       try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data: data })); } catch (e) { /* localStorage ไม่พร้อมใช้งาน */ }
+    }
+
+    // แปลงข้อผิดพลาดให้ผู้ใช้เข้าใจว่าต้องแก้อะไร
+    function describeApiError(error) {
+      if (!error) return 'เกิดข้อผิดพลาดในการเชื่อมต่อ';
+      if (error.name === 'AbortError') return 'API ตอบช้าเกินไป (หมดเวลา 60 วินาที) — ลองเปิดหน้าใหม่อีกครั้ง';
+      if (error.message === 'Failed to fetch') return 'เชื่อมต่อกับ API ไม่ได้ (CORS/เครือข่าย) — ตรวจว่าเปิดหน้านี้จากลิงก์ LINE อย่างเป็นทางการ';
+      if (/Unexpected token|did not match the expected pattern/.test(error.message)) return 'API ตอบกลับเป็นหน้า HTML (ต้องล็อกอิน Google หรือยังไม่เปิดสาธารณะ) — ไปที่ Google Apps Script > Deploy > Manage deployments แล้วตั้งค่า Who has access เป็น Anyone';
+      return error.message || 'เกิดข้อผิดพลาดในการเชื่อมต่อ';
+    }
+
+    // อ่าน response โดยตรวจเนื้อหาจริง (GAS มักคืน JSON พร้อม header text/html)
+    function parseResponseBody(response) {
+      return response.text().then(text => {
+        const trimmed = text.trim();
+        if (!trimmed) throw new Error('API ตอบกลับว่างเปล่า');
+        // ถ้าเป็น HTML (หน้า login/error ของ Google) → แจ้งเตือนชัดเจน
+        if (trimmed.charAt(0) === '<') {
+          const e = new Error('API ตอบกลับเป็นหน้า HTML (ต้องล็อกอิน Google หรือยังไม่เปิดสาธารณะ) — ไปที่ Google Apps Script > Deploy > Manage deployments แล้วตั้งค่า Who has access เป็น Anyone');
+          e.apiError = true;
+          throw e;
+        }
+        try {
+          return JSON.parse(trimmed);
+        } catch (e) {
+          const err = new Error('API ตอบกลับไม่ใช่ JSON ที่ถูกต้อง: ' + trimmed.slice(0, 80));
+          err.apiError = true;
+          throw err;
+        }
+      });
     }
 
     // เติมตัวเลือกใน Select และสร้าง/อัปเดต Tom Select (กัน option ซ้ำ)
@@ -714,11 +905,39 @@
       const cached = getCache(cacheKey);
       if (cached && cached.length) fillSelect(selectId, cached, placeholder, onCreated);
 
-      // ถ้า GAS ตอบช้า/ค้าง (cold start) ให้ timeout 30 วินาที
+      // ถ้า GAS ตอบช้า/ค้าง (cold start) ให้ timeout 60 วินาที
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 30000);
+      const timer = setTimeout(() => controller.abort(), 60000);
+
+      // ถ้าเกิน 8 วิ ยังไม่ตอบ → แจ้งว่ากำลังโหลด (กันผู้ใช้คิดว่าค้าง) — เฉพาะครั้งแรกที่ยังไม่มีแคช
+      const slowTimer = setTimeout(() => {
+        if (!cached || !cached.length) {
+          Swal.fire({
+            icon: 'info',
+            title: 'กำลังโหลดข้อมูล...',
+            text: 'API กำลังตอบช้า (Google Apps Script cold start) — กรุณารอสักครู่ ถ้ายังไม่โหลดให้กดลองใหม่',
+            timer: 6000,
+            showConfirmButton: false,
+            confirmButtonColor: '#059669'
+          });
+        }
+      }, 8000);
+
       return fetch(url, { signal: controller.signal })
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            // GAS คืน HTTP error (403 = ไม่เปิดสาธารณะ, 404 = URL ผิด/ถูกลบ)
+            const statusText = response.status === 403
+              ? 'API ยังไม่เปิดใช้งานสาธารณะ (HTTP 403) — ไปที่ Google Apps Script > Deploy > Manage deployments แล้วตั้งค่า Who has access เป็น Anyone'
+              : response.status === 404
+                ? 'ไม่พบ API (HTTP 404) — ตรวจสอบ URL ของ Google Apps Script หรือ Deployment ถูกลบไปแล้ว'
+                : 'API ตอบกลับ HTTP ' + response.status;
+            const e = new Error(statusText);
+            e.apiError = true;
+            throw e;
+          }
+          return parseResponseBody(response);
+        })
         .then(data => {
           if (data.error) {
             // มีข้อมูลแคชแสดงอยู่แล้ว → ไม่ต้องเด้ง error ซ้ำ
@@ -737,9 +956,20 @@
             console.warn('อัปเดต ' + errorLabel + ' ไม่สำเร็จ ใช้ข้อมูลเก่า:', error);
             return;
           }
-          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message, confirmButtonColor: '#059669' });
+          const msg = error.apiError ? error.message : 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + describeApiError(error);
+          Swal.fire({
+            icon: 'error',
+            title: 'ข้อผิดพลาด',
+            text: msg,
+            confirmButtonColor: '#059669',
+            showCancelButton: true,
+            confirmButtonText: 'ลองใหม่',
+            cancelButtonText: 'ปิด'
+          }).then(result => {
+            if (result.isConfirmed) loadSelect(action, selectId, cacheKey, placeholder, errorLabel, onCreated);
+          });
         })
-        .finally(() => clearTimeout(timer));
+        .finally(() => { clearTimeout(timer); clearTimeout(slowTimer); });
     }
 
     // โหลด Select ทั้ง 2 ช่องแบบขนาน (ไม่ต้องรอ LIFF/GPS)
@@ -759,8 +989,21 @@
     }
 
     function fetchAutoData(district) {
-      fetch(SUPERVISOR_API_URL + '?action=getAutoData&district=' + encodeURIComponent(district))
-        .then(response => response.json())
+      // ถ้า GAS ตอบช้า/ค้าง ให้ timeout 30 วินาที
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 30000);
+      fetch(SUPERVISOR_API_URL + '?action=getAutoData&district=' + encodeURIComponent(district), { signal: controller.signal })
+        .then(response => {
+          if (!response.ok) {
+            const statusText = response.status === 403
+              ? 'API ยังไม่เปิดใช้งานสาธารณะ (HTTP 403) — ไปที่ Google Apps Script > Deploy > Manage deployments แล้วตั้งค่า Who has access เป็น Anyone'
+              : response.status === 404
+                ? 'ไม่พบ API (HTTP 404) — ตรวจสอบ URL ของ Google Apps Script หรือ Deployment ถูกลบไปแล้ว'
+                : 'API ตอบกลับ HTTP ' + response.status;
+            throw new Error(statusText);
+          }
+          return parseResponseBody(response);
+        })
         .then(data => {
           if (data.error) {
             Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลดข้อมูลได้: ' + data.error, confirmButtonColor: '#059669' });
@@ -770,8 +1013,9 @@
           document.getElementById('subDistrict').value = data.subDistrict || '';
         })
         .catch(error => {
-          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message, confirmButtonColor: '#059669' });
-        });
+          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + describeApiError(error), confirmButtonColor: '#059669' });
+        })
+        .finally(() => clearTimeout(timer));
     }
 
     window.onload = function () {
@@ -784,4 +1028,5 @@
     };
   </script>
 </body>
+
 </html>

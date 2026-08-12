@@ -831,7 +831,7 @@
 
     // ---------- โหลด Select (แคช + ดึงข้อมูล) ----------
     const SCRIPT_BASE_URL = 'https://script.google.com/macros/s/AKfycbzniYO49YaS_3gv-V1WoLakPP14j6D9HScO6XCMDMzl3LdkADSI_RN1gVpaygghwdLD/exec';
-    const CACHE_TTL = 60 * 60 * 1000; // 1 ชั่วโมง
+    const CACHE_TTL = 12 * 60 * 60 * 1000; // 12 ชั่วโมง (ข้อมูล Select เปลี่ยนบ่อยน้อย)
 
     function getCache(key) {
       try {
@@ -845,6 +845,36 @@
 
     function setCache(key, data) {
       try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data: data })); } catch (e) { /* localStorage ไม่พร้อมใช้งาน */ }
+    }
+
+    // แปลงข้อผิดพลาดให้ผู้ใช้เข้าใจว่าต้องแก้อะไร
+    function describeApiError(error) {
+      if (!error) return 'เกิดข้อผิดพลาดในการเชื่อมต่อ';
+      if (error.name === 'AbortError') return 'API ตอบช้าเกินไป (หมดเวลา 60 วินาที) — ลองเปิดหน้าใหม่อีกครั้ง';
+      if (error.message === 'Failed to fetch') return 'เชื่อมต่อกับ API ไม่ได้ (CORS/เครือข่าย) — ตรวจว่าเปิดหน้านี้จากลิงก์ LINE อย่างเป็นทางการ';
+      if (/Unexpected token|did not match the expected pattern/.test(error.message)) return 'API ตอบกลับเป็นหน้า HTML (ต้องล็อกอิน Google หรือยังไม่เปิดสาธารณะ) — ไปที่ Google Apps Script > Deploy > Manage deployments แล้วตั้งค่า Who has access เป็น Anyone';
+      return error.message || 'เกิดข้อผิดพลาดในการเชื่อมต่อ';
+    }
+
+    // อ่าน response โดยตรวจเนื้อหาจริง (GAS มักคืน JSON พร้อม header text/html)
+    function parseResponseBody(response) {
+      return response.text().then(text => {
+        const trimmed = text.trim();
+        if (!trimmed) throw new Error('API ตอบกลับว่างเปล่า');
+        // ถ้าเป็น HTML (หน้า login/error ของ Google) → แจ้งเตือนชัดเจน
+        if (trimmed.charAt(0) === '<') {
+          const e = new Error('API ตอบกลับเป็นหน้า HTML (ต้องล็อกอิน Google หรือยังไม่เปิดสาธารณะ) — ไปที่ Google Apps Script > Deploy > Manage deployments แล้วตั้งค่า Who has access เป็น Anyone');
+          e.apiError = true;
+          throw e;
+        }
+        try {
+          return JSON.parse(trimmed);
+        } catch (e) {
+          const err = new Error('API ตอบกลับไม่ใช่ JSON ที่ถูกต้อง: ' + trimmed.slice(0, 80));
+          err.apiError = true;
+          throw err;
+        }
+      });
     }
 
     // เติมตัวเลือกใน Select และสร้าง/อัปเดต Tom Select (กัน option ซ้ำ)
@@ -874,11 +904,41 @@
       const cached = getCache(cacheKey);
       if (cached && cached.length) fillSelect(selectId, cached, placeholder);
 
-      // ถ้า GAS ตอบช้า/ค้าง (cold start) ให้ timeout 30 วินาที
+      // ถ้า GAS ตอบช้า/ค้าง (cold start) ให้ timeout 60 วินาที
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 30000);
+      const timer = setTimeout(() => controller.abort(), 60000);
+
+      // ถ้าเกิน 8 วิ ยังไม่ตอบ → แจ้งว่ากำลังโหลด (กันผู้ใช้คิดว่าค้าง) — เฉพาะครั้งแรกที่ยังไม่มีแคช
+      let slowNotified = false;
+      const slowTimer = setTimeout(() => {
+        if (!cached || !cached.length) {
+          slowNotified = true;
+          Swal.fire({
+            icon: 'info',
+            title: 'กำลังโหลดข้อมูล...',
+            text: 'API กำลังตอบช้า (Google Apps Script cold start) — กรุณารอสักครู่ ถ้ายังไม่โหลดให้กดลองใหม่',
+            timer: 6000,
+            showConfirmButton: false,
+            confirmButtonColor: '#059669'
+          });
+        }
+      }, 8000);
+
       return fetch(url, { signal: controller.signal })
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            // GAS คืน HTTP error (403 = ไม่เปิดสาธารณะ, 404 = URL ผิด/ถูกลบ)
+            const statusText = response.status === 403
+              ? 'API ยังไม่เปิดใช้งานสาธารณะ (HTTP 403) — ไปที่ Google Apps Script > Deploy > Manage deployments แล้วตั้งค่า Who has access เป็น Anyone'
+              : response.status === 404
+                ? 'ไม่พบ API (HTTP 404) — ตรวจสอบ URL ของ Google Apps Script หรือ Deployment ถูกลบไปแล้ว'
+                : 'API ตอบกลับ HTTP ' + response.status;
+            const e = new Error(statusText);
+            e.apiError = true;
+            throw e;
+          }
+          return parseResponseBody(response);
+        })
         .then(data => {
           if (data.error) {
             // มีข้อมูลแคชแสดงอยู่แล้ว → ไม่ต้องเด้ง error ซ้ำ
@@ -897,9 +957,20 @@
             console.warn('อัปเดต ' + errorLabel + ' ไม่สำเร็จ ใช้ข้อมูลเก่า:', error);
             return;
           }
-          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message, confirmButtonColor: '#059669' });
+          const msg = error.apiError ? error.message : 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + describeApiError(error);
+          Swal.fire({
+            icon: 'error',
+            title: 'ข้อผิดพลาด',
+            text: msg,
+            confirmButtonColor: '#059669',
+            showCancelButton: true,
+            confirmButtonText: 'ลองใหม่',
+            cancelButtonText: 'ปิด'
+          }).then(result => {
+            if (result.isConfirmed) loadSelect(action, selectId, cacheKey, placeholder, errorLabel);
+          });
         })
-        .finally(() => clearTimeout(timer));
+        .finally(() => { clearTimeout(timer); clearTimeout(slowTimer); });
     }
 
     // โหลด Select ทั้ง 3 ช่องแบบขนาน (ไม่ต้องรอ GPS)
