@@ -8,10 +8,10 @@
   <link rel="icon" type="image/png" sizes="96x96" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.min.css" rel="stylesheet" />
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -249,24 +249,31 @@
     .submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(5, 150, 105, 0.45); }
     .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    /* Select2 green styling */
-    .select2-container { width: 100% !important; }
-    .select2-container--default .select2-selection--single {
-      height: 44px;
-      padding: 8px 12px;
-      border-radius: 12px;
-      border: 1.5px solid #d1d5db;
-      font-size: 0.9rem;
+    /* Tom Select green styling */
+    .ts-wrapper { width: 100% !important; }
+    .ts-control {
+      border: 1.5px solid #d1d5db !important;
+      border-radius: 12px !important;
+      background-color: #ffffff !important;
+      padding: 0.6rem 1rem !important;
+      font-size: 0.9rem !important;
+      color: #374151 !important;
+      min-height: 44px !important;
+      font-family: 'Prompt', sans-serif !important;
+      cursor: pointer;
     }
-    .select2-selection__rendered { line-height: 26px !important; font-family: 'Prompt', sans-serif; }
-    .select2-container--default.select2-container--open .select2-selection--single {
-      border-color: #10b981;
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+    .ts-wrapper.focus .ts-control {
+      border-color: #10b981 !important;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18) !important;
     }
-    .select2-container--default .select2-results__option { font-family: 'Prompt', sans-serif; }
-    .select2-container--default .select2-results__option--highlighted[aria-selected] {
-      background-color: #059669;
+    .ts-dropdown {
+      border-radius: 12px !important;
+      border: 1.5px solid #d1d5db !important;
+      font-family: 'Prompt', sans-serif !important;
+      font-size: 0.9rem !important;
     }
+    .ts-dropdown .option { font-family: 'Prompt', sans-serif !important; padding: 0.5rem 1rem; }
+    .ts-dropdown .option.active { background-color: #059669 !important; color: #fff !important; }
 
     /* Loading overlay */
     .loading-overlay {
@@ -662,9 +669,9 @@
             Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลดชื่อได้: ' + data.error, confirmButtonColor: '#059669' });
             return;
           }
-          const selectElement = $('#firstName');
-          data.forEach(name => selectElement.append(new Option(name, name)));
-          selectElement.select2({ placeholder: "กรุณาเลือกชื่อ", allowClear: true });
+          const selectElement = document.getElementById('firstName');
+          data.forEach(name => { const o = document.createElement('option'); o.value = name; o.text = name; selectElement.appendChild(o); });
+          new TomSelect('#firstName', { placeholder: 'กรุณาเลือกชื่อ', allowEmptyOption: true });
         })
         .catch(error => {
           Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message, confirmButtonColor: '#059669' });
@@ -679,14 +686,13 @@
             Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลดเขตได้: ' + data.error, confirmButtonColor: '#059669' });
             return;
           }
-          const selectElement = $('#district');
-          data.forEach(district => selectElement.append(new Option(district, district)));
-          selectElement.select2({ placeholder: "กรุณาเลือกเขต", allowClear: true });
+          const selectElement = document.getElementById('district');
+          data.forEach(district => { const o = document.createElement('option'); o.value = district; o.text = district; selectElement.appendChild(o); });
+          const tsDistrict = new TomSelect('#district', { placeholder: 'กรุณาเลือกเขต', allowEmptyOption: true });
 
-          selectElement.on('change', function () {
-            const selectedDistrict = $(this).val();
-            if (selectedDistrict) {
-              fetchAutoData(selectedDistrict);
+          tsDistrict.on('change', function (value) {
+            if (value) {
+              fetchAutoData(value);
             } else {
               document.getElementById('village').value = '';
               document.getElementById('subDistrict').value = '';
