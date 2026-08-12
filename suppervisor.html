@@ -667,51 +667,92 @@
       reader.readAsDataURL(fileInput);
     });
 
-    function fetchPromoterNames() {
-      fetch('https://script.google.com/macros/s/AKfycbyE8tvOVYAAR6WOiCVDEb2Fp1Yq3ebTAri9ZQYonpduMjQCFzod8xi0glBVXc6A6_qOeA/exec?action=getPromoterNames')
+    // ---------- โหลด Select (แคช + ดึงข้อมูล) ----------
+    const SUPERVISOR_API_URL = 'https://script.google.com/macros/s/AKfycbyE8tvOVYAAR6WOiCVDEb2Fp1Yq3ebTAri9ZQYonpduMjQCFzod8xi0glBVXc6A6_qOeA/exec';
+    const CACHE_TTL = 60 * 60 * 1000; // 1 ชั่วโมง
+
+    function getCache(key) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return null;
+        const { ts, data } = JSON.parse(raw);
+        if (Date.now() - ts > CACHE_TTL) return null;
+        return data;
+      } catch (e) { return null; }
+    }
+
+    function setCache(key, data) {
+      try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data: data })); } catch (e) { /* localStorage ไม่พร้อมใช้งาน */ }
+    }
+
+    // เติมตัวเลือกใน Select และสร้าง/อัปเดต Tom Select (กัน option ซ้ำ)
+    // onCreated: เรียกหลังสร้าง TomSelect ครั้งแรก (สำหรับผูก event พิเศษ เช่น เขต → ดึงข้อมูลอัตโนมัติ)
+    function fillSelect(selectId, items, placeholder, onCreated) {
+      if (!Array.isArray(items) || !items.length) return;
+      const selectEl = document.getElementById(selectId);
+      if (!selectEl) return;
+      const existing = selectEl._tomSelect;
+      if (existing) {
+        existing.clearOptions();
+        existing.addOptions(items.map(v => ({ value: v, text: v })));
+        existing.refreshOptions(false);
+        return;
+      }
+      items.forEach(name => {
+        const o = document.createElement('option');
+        o.value = name;
+        o.text = name;
+        selectEl.appendChild(o);
+      });
+      selectEl._tomSelect = new TomSelect('#' + selectId, { placeholder: placeholder, allowEmptyOption: true });
+      if (onCreated) onCreated(selectEl._tomSelect);
+    }
+
+    // โหลดข้อมูล Select: ใช้แคชทันที แล้วค่อยดึงจาก API อัปเดตเบื้องหลัง
+    function loadSelect(action, selectId, cacheKey, placeholder, errorLabel, onCreated) {
+      const url = SUPERVISOR_API_URL + '?action=' + action;
+      const cached = getCache(cacheKey);
+      if (cached && cached.length) fillSelect(selectId, cached, placeholder, onCreated);
+
+      return fetch(url)
         .then(response => response.json())
         .then(data => {
           if (data.error) {
-            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลดชื่อได้: ' + data.error, confirmButtonColor: '#059669' });
+            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลด ' + errorLabel + ' ได้: ' + data.error, confirmButtonColor: '#059669' });
             return;
           }
-          const selectElement = document.getElementById('firstName');
-          data.forEach(name => { const o = document.createElement('option'); o.value = name; o.text = name; selectElement.appendChild(o); });
-          new TomSelect('#firstName', { placeholder: 'กรุณาเลือกชื่อ', allowEmptyOption: true });
+          if (!Array.isArray(data) || !data.length) return;
+          setCache(cacheKey, data);
+          fillSelect(selectId, data, placeholder, onCreated);
         })
         .catch(error => {
+          // มีข้อมูลแคชแสดงอยู่แล้ว → แค่ log ไม่ต้องเด้ง error ซ้ำ
+          if (cached && cached.length) {
+            console.warn('อัปเดต ' + errorLabel + ' ไม่สำเร็จ ใช้ข้อมูลเก่า:', error);
+            return;
+          }
           Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message, confirmButtonColor: '#059669' });
         });
     }
 
-    function fetchDistricts() {
-      fetch('https://script.google.com/macros/s/AKfycbyE8tvOVYAAR6WOiCVDEb2Fp1Yq3ebTAri9ZQYonpduMjQCFzod8xi0glBVXc6A6_qOeA/exec?action=getDistricts')
-        .then(response => response.json())
-        .then(data => {
-          if (data.error) {
-            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลดเขตได้: ' + data.error, confirmButtonColor: '#059669' });
-            return;
+    // โหลด Select ทั้ง 2 ช่องแบบขนาน (ไม่ต้องรอ LIFF/GPS)
+    function loadSelectData() {
+      loadSelect('getPromoterNames', 'firstName', 'apm_supervisorNames_v1', 'กรุณาเลือกชื่อ', 'ชื่อ');
+      loadSelect('getDistricts', 'district', 'apm_districts_v1', 'กรุณาเลือกเขต', 'เขต', function (tsDistrict) {
+        // เลือกเขตแล้ว → ดึงหมู่บ้าน/ตำบลอัตโนมัติ
+        tsDistrict.on('change', function (value) {
+          if (value) {
+            fetchAutoData(value);
+          } else {
+            document.getElementById('village').value = '';
+            document.getElementById('subDistrict').value = '';
           }
-          const selectElement = document.getElementById('district');
-          data.forEach(district => { const o = document.createElement('option'); o.value = district; o.text = district; selectElement.appendChild(o); });
-          const tsDistrict = new TomSelect('#district', { placeholder: 'กรุณาเลือกเขต', allowEmptyOption: true });
-
-          tsDistrict.on('change', function (value) {
-            if (value) {
-              fetchAutoData(value);
-            } else {
-              document.getElementById('village').value = '';
-              document.getElementById('subDistrict').value = '';
-            }
-          });
-        })
-        .catch(error => {
-          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message, confirmButtonColor: '#059669' });
         });
+      });
     }
 
     function fetchAutoData(district) {
-      fetch(`https://script.google.com/macros/s/AKfycbyE8tvOVYAAR6WOiCVDEb2Fp1Yq3ebTAri9ZQYonpduMjQCFzod8xi0glBVXc6A6_qOeA/exec?action=getAutoData&district=${encodeURIComponent(district)}`)
+      fetch(SUPERVISOR_API_URL + '?action=getAutoData&district=' + encodeURIComponent(district))
         .then(response => response.json())
         .then(data => {
           if (data.error) {
@@ -727,11 +768,10 @@
     }
 
     window.onload = function () {
+      loadSelectData(); // เริ่มโหลด Select ทันที (ไม่ต้องรอ LIFF/GPS)
       initializeLiff().then(() => {
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('date').value = today;
-        fetchPromoterNames();
-        fetchDistricts();
         startGpsCheck();
       });
     };

@@ -653,12 +653,6 @@
 
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('date').value = today;
-
-        await Promise.all([
-          fetchPromoterNames(),
-          fetchCollectors(),
-          fetchPlantTypes()
-        ]);
       } catch (error) {
         console.error('GPS Error:', error.message);
 
@@ -835,60 +829,83 @@
       reader.readAsDataURL(fileInput);
     });
 
-    function fetchPromoterNames() {
-      return fetch('https://script.google.com/macros/s/AKfycbzniYO49YaS_3gv-V1WoLakPP14j6D9HScO6XCMDMzl3LdkADSI_RN1gVpaygghwdLD/exec?action=getPromoterNames')
+    // ---------- โหลด Select (แคช + ดึงข้อมูล) ----------
+    const SCRIPT_BASE_URL = 'https://script.google.com/macros/s/AKfycbzniYO49YaS_3gv-V1WoLakPP14j6D9HScO6XCMDMzl3LdkADSI_RN1gVpaygghwdLD/exec';
+    const CACHE_TTL = 60 * 60 * 1000; // 1 ชั่วโมง
+
+    function getCache(key) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return null;
+        const { ts, data } = JSON.parse(raw);
+        if (Date.now() - ts > CACHE_TTL) return null;
+        return data;
+      } catch (e) { return null; }
+    }
+
+    function setCache(key, data) {
+      try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data: data })); } catch (e) { /* localStorage ไม่พร้อมใช้งาน */ }
+    }
+
+    // เติมตัวเลือกใน Select และสร้าง/อัปเดต Tom Select (กัน option ซ้ำ)
+    function fillSelect(selectId, items, placeholder) {
+      if (!Array.isArray(items) || !items.length) return;
+      const selectEl = document.getElementById(selectId);
+      if (!selectEl) return;
+      const existing = selectEl._tomSelect;
+      if (existing) {
+        existing.clearOptions();
+        existing.addOptions(items.map(v => ({ value: v, text: v })));
+        existing.refreshOptions(false);
+        return;
+      }
+      items.forEach(name => {
+        const o = document.createElement('option');
+        o.value = name;
+        o.text = name;
+        selectEl.appendChild(o);
+      });
+      selectEl._tomSelect = new TomSelect('#' + selectId, { placeholder: placeholder, allowEmptyOption: true });
+    }
+
+    // โหลดข้อมูล Select: ใช้แคชทันที แล้วค่อยดึงจาก API อัปเดตเบื้องหลัง
+    function loadSelect(action, selectId, cacheKey, placeholder, errorLabel) {
+      const url = SCRIPT_BASE_URL + '?action=' + action;
+      const cached = getCache(cacheKey);
+      if (cached && cached.length) fillSelect(selectId, cached, placeholder);
+
+      return fetch(url)
         .then(response => response.json())
         .then(data => {
           if (data.error) {
-            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลดชื่อส่งเสริมได้: ' + data.error, confirmButtonColor: '#059669' });
+            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลด ' + errorLabel + ' ได้: ' + data.error, confirmButtonColor: '#059669' });
             return;
           }
-          const selectElement = document.getElementById('firstName');
-          data.forEach(name => { const o = document.createElement('option'); o.value = name; o.text = name; selectElement.appendChild(o); });
-          new TomSelect('#firstName', { placeholder: 'กรุณาเลือกชื่อส่งเสริม', allowEmptyOption: true });
+          if (!Array.isArray(data) || !data.length) return;
+          setCache(cacheKey, data);
+          fillSelect(selectId, data, placeholder);
         })
         .catch(error => {
+          // มีข้อมูลแคชแสดงอยู่แล้ว → แค่ log ไม่ต้องเด้ง error ซ้ำ
+          if (cached && cached.length) {
+            console.warn('อัปเดต ' + errorLabel + ' ไม่สำเร็จ ใช้ข้อมูลเก่า:', error);
+            return;
+          }
           Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message, confirmButtonColor: '#059669' });
         });
     }
 
-    function fetchCollectors() {
-      return fetch('https://script.google.com/macros/s/AKfycbzniYO49YaS_3gv-V1WoLakPP14j6D9HScO6XCMDMzl3LdkADSI_RN1gVpaygghwdLD/exec?action=getCollectors')
-        .then(response => response.json())
-        .then(data => {
-          if (data.error) {
-            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลด Collectors ได้: ' + data.error, confirmButtonColor: '#059669' });
-            return;
-          }
-          const selectElement = document.getElementById('collector');
-          data.forEach(name => { const o = document.createElement('option'); o.value = name; o.text = name; selectElement.appendChild(o); });
-          new TomSelect('#collector', { placeholder: 'กรุณาเลือก Collector', allowEmptyOption: true });
-        })
-        .catch(error => {
-          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message, confirmButtonColor: '#059669' });
-        });
-    }
-
-    function fetchPlantTypes() {
-      return fetch('https://script.google.com/macros/s/AKfycbzniYO49YaS_3gv-V1WoLakPP14j6D9HScO6XCMDMzl3LdkADSI_RN1gVpaygghwdLD/exec?action=getPlantTypes')
-        .then(response => response.json())
-        .then(data => {
-          if (data.error) {
-            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลดชนิดพืชได้: ' + data.error, confirmButtonColor: '#059669' });
-            return;
-          }
-          const selectElement = document.getElementById('plantType');
-          data.forEach(type => { const o = document.createElement('option'); o.value = type; o.text = type; selectElement.appendChild(o); });
-          new TomSelect('#plantType', { placeholder: 'กรุณาเลือกชนิดพืช', allowEmptyOption: true });
-        })
-        .catch(error => {
-          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message, confirmButtonColor: '#059669' });
-        });
+    // โหลด Select ทั้ง 3 ช่องแบบขนาน (ไม่ต้องรอ GPS)
+    function loadSelectData() {
+      loadSelect('getPromoterNames', 'firstName', 'apm_promoterNames_v1', 'กรุณาเลือกชื่อส่งเสริม', 'ชื่อส่งเสริม');
+      loadSelect('getCollectors', 'collector', 'apm_collectors_v1', 'กรุณาเลือก Collector', 'Collector');
+      loadSelect('getPlantTypes', 'plantType', 'apm_plantTypes_v1', 'กรุณาเลือกชนิดพืช', 'ชนิดพืช');
     }
 
     // Initialize when page loads
     window.onload = function () {
       initializeApp();
+      loadSelectData(); // เริ่มโหลด Select ทันที ขนานกับ GPS/LIFF
     };
   </script>
 </body>
