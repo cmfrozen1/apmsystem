@@ -412,6 +412,23 @@
       tomSelectInstance.refreshOptions(false);
     }
 
+    // อ่าน response โดยตรวจเนื้อหาจริง (GAS มักคืน JSON พร้อม header text/html)
+    function parseKeywordResponse(response) {
+      return response.text().then(text => {
+        const trimmed = text.trim();
+        if (!trimmed) throw new Error('API ตอบกลับว่างเปล่า');
+        // ถ้าเป็น HTML (หน้า login/error ของ Google) → ให้ catch จัดการเป็นข้อความชัดเจน
+        if (trimmed.charAt(0) === '<') {
+          throw new SyntaxError('The string did not match the expected pattern');
+        }
+        try {
+          return JSON.parse(trimmed);
+        } catch (e) {
+          throw new SyntaxError('The string did not match the expected pattern');
+        }
+      });
+    }
+
     // รองรับข้อมูลหลายรูปแบบ: array ของ object {keyword}, array ของ string, หรือ object { data: [...] }
     function normalizeKeywords(raw) {
       const list = Array.isArray(raw) ? raw : (raw && Array.isArray(raw.data) ? raw.data : []);
@@ -440,13 +457,28 @@
         initTomSelect([]);
       }
 
-      // ถ้า GAS ตอบช้า/ค้าง (cold start) ให้ timeout 30 วินาทีแทนที่จะรอตลอดไป
+      // ถ้า GAS ตอบช้า/ค้าง (cold start) ให้ timeout 60 วินาทีแทนที่จะรอตลอดไป
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 30000);
+      const timer = setTimeout(() => controller.abort(), 60000);
+
+      // ถ้าเกิน 8 วิ ยังไม่ตอบ → แจ้งว่ากำลังโหลด (กันผู้ใช้คิดว่าค้าง) — เฉพาะครั้งแรกที่ยังไม่มีแคช
+      const slowTimer = setTimeout(() => {
+        if (!cached || !cached.length) {
+          Swal.fire({
+            icon: 'info',
+            title: 'กำลังโหลดข้อมูล...',
+            text: 'API กำลังตอบช้า (Google Apps Script cold start) — กรุณารอสักครู่ ถ้ายังไม่โหลดให้กดลองใหม่',
+            timer: 6000,
+            showConfirmButton: false,
+            confirmButtonColor: '#059669'
+          });
+        }
+      }, 8000);
+
       try {
         const response = await fetch(API_URL, { signal: controller.signal });
         if (!response.ok) throw new Error('HTTP ' + response.status);
-        const raw = await response.json();
+        const raw = await parseKeywordResponse(response);
         const options = normalizeKeywords(raw);
         if (!options.length) return;
 
@@ -459,17 +491,30 @@
           return;
         }
         console.error('Error fetching keywords:', err);
-        const is403 = err && err.message === 'HTTP 403';
+        let msg = 'เกิดข้อผิดพลาดในการโหลด Keyword';
+        if (err && err.name === 'AbortError') {
+          msg = 'API ตอบช้าเกินไป (หมดเวลา 60 วินาที) — ลองเปิดหน้าใหม่อีกครั้ง';
+        } else if (err && (err.message === 'HTTP 403' || err.message === 'Failed to fetch')) {
+          // GAS ที่ยังไม่เปิดสาธารณะจะโดน CORS บล็อก → เบราว์เซอร์เห็นเป็น Failed to fetch
+          msg = 'API ยังไม่เปิดใช้งานสาธารณะ (HTTP 403) — ไปที่ Google Apps Script > Deploy > Manage deployments แล้วตั้งค่า Who has access เป็น Anyone';
+        } else if (err && /Unexpected token|did not match the expected pattern/.test(err.message)) {
+          // เบราว์เซอร์พยายามแปลงหน้า HTML (login/error) เป็น JSON
+          msg = 'API ตอบกลับเป็นหน้า HTML (ต้องล็อกอิน Google หรือยังไม่เปิดสาธารณะ) — ไปที่ Google Apps Script > Deploy > Manage deployments แล้วตั้งค่า Who has access เป็น Anyone';
+        }
         Swal.fire({
           icon: 'error',
           title: 'ข้อผิดพลาด',
-          text: is403
-            ? 'API ยังไม่เปิดใช้งานสาธารณะ (HTTP 403) — ไปที่ Google Apps Script > Deploy > Manage deployments แล้วตั้งค่า Who has access เป็น Anyone'
-            : 'เกิดข้อผิดพลาดในการโหลด Keyword',
-          confirmButtonColor: '#059669'
+          text: msg,
+          confirmButtonColor: '#059669',
+          showCancelButton: true,
+          confirmButtonText: 'ลองใหม่',
+          cancelButtonText: 'ปิด'
+        }).then(result => {
+          if (result.isConfirmed) fetchKeywords();
         });
       } finally {
         clearTimeout(timer);
+        clearTimeout(slowTimer);
       }
     }
 
