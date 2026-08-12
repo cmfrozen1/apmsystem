@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <title>ระบบส่งงานส่งเสริมและการเกษตร</title>
+    <meta charset="UTF-8">
+    <meta name="title" content="จัดการข้อมูล ส่งเสริม, Collector และ ชุปเปอร์ไวเซอร์">
+  <meta name="description" content="จัดการข้อมูล ส่งเสริม, Collector และ ชุปเปอร์ไวเซอร์">
+  <meta name="keywords" content="จัดการข้อมูล ส่งเสริม, Collector และ ชุปเปอร์ไวเซอร์">
+
+  <!-- Facebook meta -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="จัดการข้อมูลส่งงาน">
+  <meta property="og:description" content="จัดการข้อมูลส่งงาน">
+  <meta property="og:image" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <meta property="og:url" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+
+  <!-- Twitter meta -->
+  <meta property="twitter:title" content="จัดการข้อมูลส่งงาน">
+  <meta property="twitter:description" content="จัดการข้อมูลส่งงาน">
+  <meta property="twitter:image" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <meta property="twitter:card" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+
+  <!-- MS APP -->
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+
+  <!-- APPLE APP -->
+  <meta name="apple-mobile-web-app-title" content="จัดการข้อมูลส่งงาน">
+  <meta name="apple-mobile-web-app-status-bar-style" content="จัดการข้อมูลส่งงาน">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="apple-touch-icon" sizes="152x152" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="apple-touch-icon" sizes="167x167" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 621px) and (device-height: 1104px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+
+  <!-- FAVICON -->
+  <link rel="icon" type="image/png" sizes="96x96" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="shortcut icon" type="image/x-icon" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="icon" type="image/x-icon" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- LineSeed Fonts -->
+    <link href="https://cdn.jsdelivr.net/gh/maketline/goodday/font/stylesheet.min.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            font-family: 'line_seed_sans_th';
+            background-color: #f8fafc;
+            padding-top: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #ffffff52;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 500px;
+        }
+
+        .logo-container {
+            margin-bottom: 20px;
+        }
+
+        .pulse-spinner {
+            display: inline-block;
+            border: 3px solid #e3e3e3;
+            border-radius: 50%;
+            border-top: 3px solid #38b2ac;
+            width: 50px;
+            height: 50px;
+            animation: spin 1.5s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: #2d3748;
+            font-weight: 700;
+            margin-top: 20px;
+            line-height: 1.3;
+        }
+
+        .img-fluid {
+            margin-bottom: 20px;
+        }
+
+        .wrapper {
+            margin-top: 20px;
+        }
+
+        .button-container {
+            margin-top: 30px;
+        }
+
+        .btn-custom {
+            background-color: #38b2ac;
+            color: white;
+            border-radius: 50px;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            width: 100%;
+            border: none;
+            transition: background-color 0.3s;
+        }
+
+        .btn-custom:hover {
+            background-color: #319795;
+        }
+
+        /* Adding smooth hover effect for the logo */
+        .logo-container img {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .logo-container img:hover {
+            transform: scale(1.1);
+        }
+
+        body {
+            margin: 0;
+            height: 100vh; /* Ensure the body takes up the full height of the viewport */
+            background-image: url('https://media.istockphoto.com/id/506164764/th/%E0%B8%A3%E0%B8%B9%E0%B8%9B%E0%B8%96%E0%B9%88%E0%B8%B2%E0%B8%A2/%E0%B8%A3%E0%B8%96%E0%B9%81%E0%B8%97%E0%B8%A3%E0%B8%81%E0%B9%80%E0%B8%95%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%89%E0%B8%B5%E0%B8%94%E0%B8%9E%E0%B9%88%E0%B8%99%E0%B8%97%E0%B8%B8%E0%B9%88%E0%B8%87%E0%B8%96%E0%B8%B1%E0%B9%88%E0%B8%A7%E0%B9%80%E0%B8%AB%E0%B8%A5%E0%B8%B7%E0%B8%AD%E0%B8%87.jpg?s=612x612&w=0&k=20&c=thEZCIG5FEe2EHDa51JBK1GSz6cl8TlQAB7QbwLrwHA=');
+            background-size: cover; /* Ensure the background covers the entire body */
+            background-position: center; /* Center the background image */
+            background-repeat: no-repeat; /* Don't repeat the background image */
+        }
+    </style>
+    <title>กำลังพาท่านเข้าสู่หน้าเว็บ...</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <img src="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" class="img-fluid" width="150px" alt="ระบบส่งงานส่งเสริมและการเกษตร">
+        </div>
+        <h1>ระบบส่งงานส่งเสริมและการเกษตร</h1>
+        <div class="wrapper">
+            <div class="pulse-spinner"></div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://static.line-scdn.net/liff/edge/versions/2.9.0/sdk.js"></script>
+    <script>
+        $(document).ready(function () {
+            var path = new URL(window.location);
+            var liffId = path.searchParams.get('linkurl');
+            liff.init({
+                liffId: "2007528760-v8N7EXG1" //วางLiffId ตรงนี้
+            })
+                .then(() => {
+                    if (liff.isInClient()) {
+                        if (liff.getOS() == "ios") {
+                            window.location.replace("" + liffId);
+                        } else if (liff.getOS() == "android") {
+                            window.location.replace("" + liffId);
+                        }
+
+                        setTimeout(function () { liff.closeWindow(); }, 50000); //เปลี่ยนเวลาที่ต้องการ Redirect
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        });
+
+        // Check if LIFF is initialized
+        if (liff.isInClient()) {
+            // Add a click event listener to the close button
+            document.getElementById("closeButton").addEventListener("click", function () {
+                // Close the LIFF app when the button is clicked
+                liff.closeWindow();
+            });
+        } else {
+            // Handle the case when the app is not running in the LINE app
+            console.log("This app is not running in the LINE app.");
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
