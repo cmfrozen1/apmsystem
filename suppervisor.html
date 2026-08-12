@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Supervisor Agriculture Report</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>รายงานการกำกับดูแล (Supervisor)</title>
+  <meta name="description" content="แบบฟอร์มรายงานการกำกับดูแล ชุปเปอร์ไวเซอร์">
+  <link rel="icon" type="image/png" sizes="96x96" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -12,147 +14,392 @@
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background-image: url('https://www.tkkfer.com/wp-content/uploads/2017/06/maize-272894_960_720-960x658.jpg');
-      background-size: cover;
-      background-position: center;
+      font-family: 'Prompt', sans-serif;
+      background: linear-gradient(155deg, #f0fdf4 0%, #ecfdf5 45%, #d1fae5 100%);
+      min-height: 100vh;
+      padding-bottom: 3rem;
+      background-attachment: fixed;
     }
-    .form-container {
-      background-color: rgba(255, 255, 255, 0.9);
-      border-radius: 15px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    /* Header */
+    .app-header {
+      background: linear-gradient(120deg, #065f46, #059669 55%, #10b981);
+      color: #fff;
+      padding: 1.3rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      box-shadow: 0 8px 24px rgba(5, 150, 105, 0.28);
+      position: sticky;
+      top: 0;
+      z-index: 500;
+    }
+    .avatar {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: #d1fae5;
+      border: 2px solid rgba(255,255,255,0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #047857;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .avatar.no-photo img { display: none; }
+    .app-header .titles { flex: 1; min-width: 0; }
+    .app-header .titles h1 { font-size: 1.05rem; font-weight: 700; line-height: 1.35; }
+    .app-header .titles p { font-size: 0.78rem; color: #d1fae5; }
+    .leaf-badge {
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .card {
+      max-width: 540px;
+      margin: 1.2rem auto 0;
+      background: #fff;
+      border-radius: 22px;
+      box-shadow: 0 18px 44px rgba(2, 44, 34, 0.14);
+      padding: 1.6rem 1.5rem 1.8rem;
       position: relative;
+      border: 1px solid #eef2ef;
     }
-    .form-container h2 {
-      color: #333;
+
+    /* GPS checking / error screen */
+    .gps-checking {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       text-align: center;
-      margin-bottom: 20px;
+      padding: 3rem 1.2rem;
+      min-height: 420px;
     }
-    .form-container label {
-      font-weight: bold;
+    .gps-icon-wrap {
+      width: 96px; height: 96px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.6rem;
+      box-shadow: 0 12px 30px rgba(5, 150, 105, 0.25);
+      animation: gpsPulse 2.2s ease-in-out infinite;
     }
-    .form-container input, .form-container textarea {
-      border-color: #ccc;
-      border-radius: 8px;
+    .gps-icon-wrap i { font-size: 2.6rem; color: #047857; }
+    @keyframes gpsPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 12px 30px rgba(5, 150, 105, 0.25); }
+      50% { transform: scale(1.06); box-shadow: 0 14px 38px rgba(5, 150, 105, 0.4); }
     }
-    .form-container button {
-      background-color: #4CAF50;
-      border-radius: 8px;
+    .gps-icon-wrap.error {
+      background: linear-gradient(135deg, #fee2e2, #fecaca);
+      animation: none;
     }
-    .form-container button:hover {
-      background-color: #45a049;
+    .gps-icon-wrap.error i { color: #dc2626; }
+    .gps-checking h3 { font-size: 1.3rem; font-weight: 700; color: #064e3b; margin-bottom: 0.6rem; }
+    .gps-checking p { color: #6b7280; font-size: 0.9rem; margin-bottom: 1.8rem; }
+    .spinner {
+      width: 42px; height: 42px;
+      border: 4px solid #d1fae5;
+      border-top: 4px solid #059669;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
     }
-    .map-container, .image-preview {
-      margin-top: 20px;
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .retry-btn {
+      padding: 0.8rem 2rem;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      font-family: 'Prompt', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #fff;
+      background: linear-gradient(120deg, #059669, #10b981);
+      box-shadow: 0 8px 20px rgba(5, 150, 105, 0.32);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.25s ease;
     }
+    .retry-btn:hover { transform: translateY(-2px); }
+    .hidden { display: none !important; }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #065f46;
+      margin: 1.3rem 0 0.7rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #f0fdf4;
+    }
+    .section-head:first-of-type { margin-top: 0; }
+    .section-head .icon {
+      width: 30px; height: 30px;
+      border-radius: 9px;
+      background: #d1fae5;
+      color: #047857;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+    }
+
+    .field { margin-bottom: 0.9rem; }
+    .field label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: #4b5563;
+      margin-bottom: 0.35rem;
+    }
+    .field label .req { color: #dc2626; }
+    input[type="text"], input[type="date"], input[type="file"], textarea {
+      width: 100%;
+      padding: 0.72rem 0.9rem;
+      border: 1.5px solid #d1d5db;
+      border-radius: 12px;
+      outline: none;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.9rem;
+      background: #fff;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      color: #1f2937;
+    }
+    input:focus, textarea:focus {
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+    }
+    input[readonly] { background: #f8fafc; color: #6b7280; }
+    textarea { min-height: 96px; resize: vertical; }
+    input[type="file"] { padding: 0.5rem 0.9rem; }
+
+    .file-box {
+      border: 2px dashed #a7f3d0;
+      border-radius: 14px;
+      padding: 1.1rem;
+      text-align: center;
+      color: #047857;
+      font-size: 0.85rem;
+      background: #f0fdf4;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .file-box:hover { border-color: #059669; background: #ecfdf5; }
+    .file-box i { font-size: 1.4rem; display: block; margin-bottom: 0.3rem; }
+
+    .image-preview { margin-top: 0.8rem; }
     .image-preview img {
-      max-width: 100%;
-      border-radius: 8px;
+      width: 100%;
+      max-height: 260px;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 2px solid #d1fae5;
+      box-shadow: 0 8px 20px rgba(2, 44, 34, 0.12);
     }
+    .map-container iframe { border-radius: 14px; border: 2px solid #d1fae5; }
+    .coords-note {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      color: #047857;
+      background: #f0fdf4;
+      padding: 0.45rem 0.8rem;
+      border-radius: 10px;
+      margin-top: 0.5rem;
+      word-break: break-all;
+    }
+    .coords-note i { flex-shrink: 0; }
+
+    .submit-btn {
+      width: 100%;
+      margin-top: 1.4rem;
+      padding: 0.95rem 1rem;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      font-family: 'Prompt', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #fff;
+      background: linear-gradient(120deg, #059669, #10b981);
+      box-shadow: 0 10px 26px rgba(5, 150, 105, 0.35);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      transition: all 0.25s ease;
+    }
+    .submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(5, 150, 105, 0.45); }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* Select2 green styling */
+    .select2-container { width: 100% !important; }
     .select2-container--default .select2-selection--single {
-      height: 42px;
-      padding: 8px;
-      border-radius: 8px;
-      border-color: #ccc;
+      height: 44px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      border: 1.5px solid #d1d5db;
+      font-size: 0.9rem;
     }
-    .select2-selection__rendered {
-      line-height: 24px !important;
+    .select2-selection__rendered { line-height: 26px !important; font-family: 'Prompt', sans-serif; }
+    .select2-container--default.select2-container--open .select2-selection--single {
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
     }
+    .select2-container--default .select2-results__option { font-family: 'Prompt', sans-serif; }
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+      background-color: #059669;
+    }
+
+    /* Loading overlay */
     .loading-overlay {
       display: none;
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      border-radius: 15px;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(4px);
+      border-radius: 22px;
       z-index: 1000;
+      align-items: center;
+      justify-content: center;
     }
     .loader {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 50px;
-      height: 50px;
-      border: 5px solid #f3f3f3;
-      border-top: 5px solid #4CAF50;
+      width: 50px; height: 50px;
+      border: 5px solid #d1fae5;
+      border-top: 5px solid #059669;
       border-radius: 50%;
-      animation: spin 1s linear infinite;
+      animation: spin 0.9s linear infinite;
     }
-    @keyframes spin {
-      0% { transform: translate(-50%, -50%) rotate(0deg); }
-      100% { transform: translate(-50%, -50%) rotate(360deg); }
+
+    .footnote {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #9ca3af;
+      margin-top: 1.4rem;
     }
-    .profile-container {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .profile-container img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      margin-right: 10px;
+
+    @media (max-width: 480px) {
+      .card { margin: 0.9rem 0.8rem 0; padding: 1.3rem 1.1rem 1.5rem; }
+      .app-header { padding: 1rem 0.9rem; }
     }
   </style>
 </head>
-<body class="bg-gray-100 p-6">
-  <div class="max-w-md mx-auto form-container p-8 rounded-lg shadow-md">
+<body>
+  <!-- Header -->
+  <header class="app-header">
+    <div class="avatar" id="avatarBox"><img id="profileImage" src="" alt="Profile"><i class="fas fa-user-shield"></i></div>
+    <div class="titles">
+      <h1>รายงานการกำกับดูแล</h1>
+      <p id="displayName">กำลังโหลด...</p>
+    </div>
+    <div class="leaf-badge"><i class="fas fa-leaf"></i></div>
+  </header>
+
+  <div class="card">
     <div class="loading-overlay" id="loadingOverlay">
       <div class="loader"></div>
     </div>
-    <div class="profile-container" id="profileContainer">
-      <img id="profileImage" src="" alt="Profile">
-      <span id="displayName"></span>
+
+    <!-- GPS Checking Screen -->
+    <div id="gpsCheckingScreen" class="gps-checking">
+      <div class="gps-icon-wrap" id="gpsIcon"><i class="fas fa-map-marker-alt"></i></div>
+      <h3 id="gpsTitle">กำลังตรวจสอบ GPS</h3>
+      <p id="gpsDesc">กรุณารอสักครู่ขณะที่เราตรวจสอบตำแหน่งของคุณ...</p>
+      <div class="spinner" id="gpsSpinner"></div>
+      <button class="retry-btn hidden" id="gpsRetry" onclick="startGpsCheck()"><i class="fas fa-sync-alt"></i> ลองอีกครั้ง</button>
     </div>
-    <h2 class="text-2xl font-bold mb-6">Supervisor Agriculture Report</h2>
-    <form id="dataForm">
-      <div class="mb-4">
-        <label class="block text-gray-700">วันที่</label>
-        <input type="date" name="date" id="date" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+
+    <!-- Main Form (Hidden until GPS ready) -->
+    <form id="dataForm" class="hidden">
+      <div class="section-head">
+        <div class="icon"><i class="fas fa-calendar-day"></i></div> วันที่ปฏิบัติงาน
       </div>
-      <div class="mb-4">
-        <label class="block text-gray-700">ชื่อชุปเปอร์ไวเซอร์</label>
-        <select name="firstName" id="firstName" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      <div class="field">
+        <input type="date" name="date" id="date" required>
+      </div>
+
+      <div class="section-head">
+        <div class="icon"><i class="fas fa-user-tie"></i></div> ข้อมูลผู้ส่งงาน
+      </div>
+      <div class="field">
+        <label>ชื่อชุปเปอร์ไวเซอร์ <span class="req">*</span></label>
+        <select name="firstName" id="firstName" required>
           <option value="">กรุณาเลือกชื่อ</option>
         </select>
       </div>
-      <div class="mb-4">
-        <label class="block text-gray-700">เขต</label>
-        <select name="district" id="district" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      <div class="field">
+        <label>เขต <span class="req">*</span></label>
+        <select name="district" id="district" required>
           <option value="">กรุณาเลือกเขต</option>
         </select>
       </div>
-      <div class="mb-4">
-        <label class="block text-gray-700">หมู่บ้าน</label>
-        <input type="text" name="village" id="village" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" readonly>
+
+      <div class="section-head">
+        <div class="icon"><i class="fas fa-map-marked-alt"></i></div> ข้อมูลพื้นที่ (อัตโนมัติ)
       </div>
-      <div class="mb-4">
-        <label class="block text-gray-700">ตำบล</label>
-        <input type="text" name="subDistrict" id="subDistrict" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" readonly>
+      <div class="field">
+        <label>หมู่บ้าน</label>
+        <input type="text" name="village" id="village" readonly>
       </div>
-      <div class="mb-4">
-        <label class="block text-gray-700">รายละเอียดปฏิบัติงาน</label>
-        <textarea name="details" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required placeholder="ระบุรายละเอียดการปฏิบัติงาน"></textarea>
+      <div class="field">
+        <label>ตำบล</label>
+        <input type="text" name="subDistrict" id="subDistrict" readonly>
       </div>
-      <div class="mb-4">
-        <label class="block text-gray-700">พิกัด</label>
+
+      <div class="section-head">
+        <div class="icon"><i class="fas fa-clipboard-list"></i></div> รายละเอียดปฏิบัติงาน
+      </div>
+      <div class="field">
+        <textarea name="details" required placeholder="ระบุรายละเอียดการปฏิบัติงาน"></textarea>
+      </div>
+
+      <div class="section-head">
+        <div class="icon"><i class="fas fa-map-pin"></i></div> พิกัด
+      </div>
+      <div class="field">
         <div class="map-container" id="mapContainer"></div>
+        <div class="coords-note hidden" id="coordsNote"><i class="fas fa-crosshairs"></i><span id="coordsText"></span></div>
       </div>
-      <div class="mb-4 image-preview" id="imagePreview"></div>
-      <div class="mb-4">
-        <label class="block text-gray-700">รูปภาพ</label>
-        <input type="file" name="imageFile" id="imageFile" accept="image/*" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+
+      <div class="section-head">
+        <div class="icon"><i class="fas fa-camera"></i></div> รูปภาพ
       </div>
-      <button type="submit" id="sub" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">บันทึกการกำกับดูแล</button>
+      <div class="field">
+        <label class="file-box" for="imageFile">
+          <i class="fas fa-cloud-upload-alt"></i>
+          เลือกรูปภาพ (จำเป็น)
+        </label>
+        <input type="file" name="imageFile" id="imageFile" accept="image/*" class="hidden" required>
+        <div class="image-preview" id="imagePreview"></div>
+      </div>
+
+      <button type="submit" id="sub" class="submit-btn"><i class="fas fa-paper-plane"></i> บันทึกการกำกับดูแล</button>
+      <p class="footnote"><i class="fas fa-leaf"></i> ระบบส่งเสริมการเกษตร • บริษัทเชียงใหม่โฟรเซ่นฟูดส์ จำกัด (มหาชน)</p>
     </form>
   </div>
 
   <script>
     let currentCoordinates = '';
     let userId = '';
+    let locationReady = false;
 
     // Initialize LIFF
     async function initializeLiff() {
@@ -161,75 +408,133 @@
         if (liff.isLoggedIn()) {
           const profile = await liff.getProfile();
           userId = profile.userId;
-          document.getElementById('profileImage').src = profile.pictureUrl;
           document.getElementById('displayName').textContent = profile.displayName;
+          const avatarBox = document.getElementById('avatarBox');
+          if (profile.pictureUrl) {
+            document.getElementById('profileImage').src = profile.pictureUrl;
+            avatarBox.classList.remove('no-photo');
+          } else {
+            avatarBox.classList.add('no-photo');
+          }
         } else {
           liff.login();
         }
       } catch (error) {
+        document.getElementById('displayName').textContent = 'ยินดีต้อนรับ';
+        document.getElementById('avatarBox').classList.add('no-photo');
         Swal.fire({
           icon: 'error',
           title: 'LIFF Initialization Failed',
-          text: error.message
+          text: error.message,
+          confirmButtonColor: '#059669'
         });
       }
     }
 
+    // GPS with timeout
     function getLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition, showError);
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'ไม่สามารถรับพิกัดได้',
-          text: 'เบราว์เซอร์ของคุณไม่สนับสนุนการรับพิกัด'
-        });
-      }
+      return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject(new Error('เบราว์เซอร์ของคุณไม่สนับสนุนการรับพิกัด GPS'));
+          return;
+        }
+        const timeoutId = setTimeout(() => reject(new Error('การตรวจสอบตำแหน่งหมดเวลา')), 15000);
+        navigator.geolocation.getCurrentPosition(
+          (position) => { clearTimeout(timeoutId); resolve(position); },
+          (error) => {
+            clearTimeout(timeoutId);
+            let msg = '';
+            switch (error.code) {
+              case error.PERMISSION_DENIED: msg = 'ไม่อนุญาตให้ LINE เข้าถึงตำแหน่ง'; break;
+              case error.POSITION_UNAVAILABLE: msg = 'ไม่สามารถระบุตำแหน่งได้'; break;
+              case error.TIMEOUT: msg = 'การตรวจสอบตำแหน่งหมดเวลา'; break;
+              default: msg = 'เกิดข้อผิดพลาดในการรับตำแหน่ง'; break;
+            }
+            reject(new Error(msg));
+          },
+          { enableHighAccuracy: true, timeout: 13000, maximumAge: 30000 }
+        );
+      });
     }
 
     function showPosition(position) {
       currentCoordinates = position.coords.latitude + ", " + position.coords.longitude;
       const mapHtml = `<iframe width="100%" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q=${currentCoordinates}&t=&z=15&ie=UTF8&iwloc=&output=embed"></iframe>`;
       document.getElementById('mapContainer').innerHTML = mapHtml;
+      const note = document.getElementById('coordsNote');
+      note.classList.remove('hidden');
+      document.getElementById('coordsText').textContent = 'พิกัด: ' + currentCoordinates;
     }
 
-    function showError(error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'ข้อผิดพลาดตำแหน่ง',
-        text: 'ไม่สามารถรับตำแหน่งได้: ' + error.message
-      });
+    // GPS flow: show form only when coordinates are ready (prevents NaN submission)
+    function startGpsCheck() {
+      locationReady = false;
+      const screen = document.getElementById('gpsCheckingScreen');
+      document.getElementById('gpsIcon').className = 'gps-icon-wrap';
+      document.getElementById('gpsIcon').innerHTML = '<i class="fas fa-map-marker-alt"></i>';
+      document.getElementById('gpsTitle').textContent = 'กำลังตรวจสอบ GPS';
+      document.getElementById('gpsDesc').textContent = 'กรุณารอสักครู่ขณะที่เราตรวจสอบตำแหน่งของคุณ...';
+      document.getElementById('gpsSpinner').classList.remove('hidden');
+      document.getElementById('gpsRetry').classList.add('hidden');
+      screen.style.display = 'flex';
+      document.getElementById('dataForm').classList.add('hidden');
+
+      getLocation()
+        .then((position) => {
+          showPosition(position);
+          locationReady = true;
+          screen.style.display = 'none';
+          document.getElementById('dataForm').classList.remove('hidden');
+        })
+        .catch((err) => {
+          console.error('GPS error:', err.message);
+          document.getElementById('gpsIcon').className = 'gps-icon-wrap error';
+          document.getElementById('gpsIcon').innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+          document.getElementById('gpsTitle').textContent = 'ไม่สามารถรับตำแหน่งได้';
+          document.getElementById('gpsDesc').textContent = err.message + ' กรุณาเปิด GPS และอนุญาตสิทธิ์ตำแหน่ง แล้วลองใหม่อีกครั้ง';
+          document.getElementById('gpsSpinner').classList.add('hidden');
+          document.getElementById('gpsRetry').classList.remove('hidden');
+        });
     }
 
-    document.getElementById('imageFile').addEventListener('change', function(event) {
+    document.getElementById('imageFile').addEventListener('change', function (event) {
       const file = event.target.files[0];
       if (file) {
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
           document.getElementById('imagePreview').innerHTML = `<img src="${e.target.result}" alt="Image Preview">`;
         };
         reader.readAsDataURL(file);
       }
     });
 
-    document.getElementById('dataForm').addEventListener('submit', async function(event) {
+    document.getElementById('dataForm').addEventListener('submit', async function (event) {
       event.preventDefault();
-      
+
+      const fileInput = document.getElementById('imageFile').files[0];
+      if (!fileInput) {
+        Swal.fire({ icon: 'warning', title: 'กรุณาเลือกรูปภาพ', text: 'ต้องแนบรูปภาพก่อนบันทึกข้อมูล', confirmButtonColor: '#059669' });
+        return;
+      }
+      if (!locationReady || !currentCoordinates) {
+        Swal.fire({ icon: 'warning', title: 'ยังไม่มีพิกัด GPS', text: 'กรุณารอให้ระบบตรวจสอบตำแหน่งสำเร็จก่อนบันทึกข้อมูล', confirmButtonColor: '#059669' });
+        return;
+      }
+
       const loadingOverlay = document.getElementById('loadingOverlay');
-      loadingOverlay.style.display = 'block';
+      loadingOverlay.style.display = 'flex';
 
       const submitButton = document.getElementById('sub');
       submitButton.disabled = true;
       submitButton.textContent = "กำลังบันทึก...";
 
       const formData = new FormData(this);
-      const fileInput = document.getElementById('imageFile').files[0];
       const submitDate = new Date().toLocaleDateString();
       const submitTime = new Date().toLocaleTimeString();
       const location = `https://maps.google.com/maps?q=${currentCoordinates}`;
 
       const reader = new FileReader();
-      reader.onload = async function(event) {
+      reader.onload = async function (event) {
         const base64 = event.target.result.split(',')[1];
         const data = {
           date: formData.get('date'),
@@ -249,12 +554,11 @@
         };
 
         try {
-          // Save to Google Apps Script
           const response = await fetch('https://script.google.com/macros/s/AKfycbyE8tvOVYAAR6WOiCVDEb2Fp1Yq3ebTAri9ZQYonpduMjQCFzod8xi0glBVXc6A6_qOeA/exec', {
             method: "POST",
             body: JSON.stringify(data)
           });
-           const result = await response.json();
+          const result = await response.json();
 
           if (result.status !== "success") {
             throw new Error(result.message || "Failed to upload data and image");
@@ -262,53 +566,49 @@
 
           const fileLink = result.fileLink;
 
-          // Adapted Flex Message
           const flexMessage = {
-                type: "flex",
-                altText: "รายงานการทำงานSupervisor",
-                contents: {
-                  type: "bubble",
-                  body: {
+            type: "flex",
+            altText: "รายงานการทำงานSupervisor",
+            contents: {
+              type: "bubble",
+              body: {
+                type: "box",
+                layout: "vertical",
+                contents: [
+                  {
+                    type: "text",
+                    text: "รายงานการทำงานSupervisor",
+                    weight: "bold",
+                    size: "md",
+                    wrap: true
+                  },
+                  {
                     type: "box",
                     layout: "vertical",
+                    margin: "lg",
+                    spacing: "sm",
                     contents: [
-                      {
-                        type: "text",
-                        text: "รายงานการทำงานSupervisor",
-                        weight: "bold",
-                        size: "md",
-                        wrap: true
-                      },
-                      {
-                        type: "box",
-                        layout: "vertical",
-                        margin: "lg",
-                        spacing: "sm",
-                        contents: [
-                          { type: "text", text: `วันที่: ${data.date}`, wrap: true },
-                          { type: "text", text: `ชื่อชุปเปอร์ไซเชอร์: ${data.firstName}`, wrap: true },
-                          { type: "text", text: `เขต: ${data.district}`, wrap: true },
-                          { type: "text", text: `หมู่บ้าน: ${data.village}`, wrap: true },
-                          { type: "text", text: `ตำบล: ${data.subDistrict}`, wrap: true },
-                          { type: "text", text: `รายละเอียดปฏิบัติงาน: ${data.details}`, wrap: true },
-                          { type: "text", text: `พิกัด: ${data.coordinates}`, wrap: true },
-                          { type: "text", text: `ส่งเมื่อ: ${data.submitDate} ${data.submitTime}`, wrap: true }
-                        ]
-                      }
+                      { type: "text", text: `วันที่: ${data.date}`, wrap: true },
+                      { type: "text", text: `ชื่อชุปเปอร์ไวเซอร์: ${data.firstName}`, wrap: true },
+                      { type: "text", text: `เขต: ${data.district}`, wrap: true },
+                      { type: "text", text: `หมู่บ้าน: ${data.village}`, wrap: true },
+                      { type: "text", text: `ตำบล: ${data.subDistrict}`, wrap: true },
+                      { type: "text", text: `รายละเอียดปฏิบัติงาน: ${data.details}`, wrap: true },
+                      { type: "text", text: `พิกัด: ${data.coordinates}`, wrap: true },
+                      { type: "text", text: `ส่งเมื่อ: ${data.submitDate} ${data.submitTime}`, wrap: true }
                     ]
                   }
-                }
-              };
-          
-            
-          // Create Image Message
+                ]
+              }
+            }
+          };
+
           const imageMessage = {
             type: "image",
             originalContentUrl: fileLink,
             previewImageUrl: fileLink
           };
-          
-          // Send Flex Message and Location
+
           await liff.sendMessages([
             flexMessage,
             imageMessage,
@@ -322,6 +622,11 @@
           ]);
 
           loadingOverlay.style.display = 'none';
+          submitButton.textContent = "บันทึกการกำกับดูแล";
+          submitButton.disabled = false;
+          document.getElementById('dataForm').reset();
+          document.getElementById('imagePreview').innerHTML = '';
+
           Swal.fire({
             icon: 'success',
             title: 'บันทึกและส่งสำเร็จ!',
@@ -329,18 +634,18 @@
             timer: 2000,
             showConfirmButton: false
           });
-          liff.closeWindow();
 
-          submitButton.textContent = "บันทึกการกำกับดูแล";
-          submitButton.disabled = false;
-          document.getElementById('dataForm').reset();
-          document.getElementById('imagePreview').innerHTML = '';
+          // ปิดหน้าต่างหลังจากแสดงข้อความสำเร็จแล้ว (ไม่ปิดทันทีจนมองไม่เห็น Toast)
+          setTimeout(function () {
+            try { liff.closeWindow(); } catch (e) { /* noop */ }
+          }, 1600);
         } catch (error) {
           loadingOverlay.style.display = 'none';
           Swal.fire({
             icon: 'error',
             title: 'เกิดข้อผิดพลาด',
-            text: 'ไม่สามารถบันทึกหรือส่งข้อมูลได้: ' + error.message
+            text: 'ไม่สามารถบันทึกหรือส่งข้อมูลได้: ' + error.message,
+            confirmButtonColor: '#059669'
           });
           submitButton.textContent = "บันทึกการกำกับดูแล";
           submitButton.disabled = false;
@@ -354,7 +659,7 @@
         .then(response => response.json())
         .then(data => {
           if (data.error) {
-            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลดชื่อได้: ' + data.error });
+            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลดชื่อได้: ' + data.error, confirmButtonColor: '#059669' });
             return;
           }
           const selectElement = $('#firstName');
@@ -362,7 +667,7 @@
           selectElement.select2({ placeholder: "กรุณาเลือกชื่อ", allowClear: true });
         })
         .catch(error => {
-          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message });
+          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message, confirmButtonColor: '#059669' });
         });
     }
 
@@ -371,15 +676,14 @@
         .then(response => response.json())
         .then(data => {
           if (data.error) {
-            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลดเขตได้: ' + data.error });
+            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลดเขตได้: ' + data.error, confirmButtonColor: '#059669' });
             return;
           }
           const selectElement = $('#district');
           data.forEach(district => selectElement.append(new Option(district, district)));
           selectElement.select2({ placeholder: "กรุณาเลือกเขต", allowClear: true });
 
-          // Add event listener for district change
-          selectElement.on('change', function() {
+          selectElement.on('change', function () {
             const selectedDistrict = $(this).val();
             if (selectedDistrict) {
               fetchAutoData(selectedDistrict);
@@ -390,7 +694,7 @@
           });
         })
         .catch(error => {
-          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message });
+          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message, confirmButtonColor: '#059669' });
         });
     }
 
@@ -399,24 +703,24 @@
         .then(response => response.json())
         .then(data => {
           if (data.error) {
-            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลดข้อมูลได้: ' + data.error });
+            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลดข้อมูลได้: ' + data.error, confirmButtonColor: '#059669' });
             return;
           }
           document.getElementById('village').value = data.village || '';
           document.getElementById('subDistrict').value = data.subDistrict || '';
         })
         .catch(error => {
-          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message });
+          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message, confirmButtonColor: '#059669' });
         });
     }
 
-    window.onload = function() {
+    window.onload = function () {
       initializeLiff().then(() => {
-        getLocation();
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('date').value = today;
         fetchPromoterNames();
         fetchDistricts();
+        startGpsCheck();
       });
     };
   </script>

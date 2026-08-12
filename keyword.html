@@ -1,94 +1,260 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>เลือก Keyword ที่ต้องการถาม</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="description" content="เลือก Keyword เพื่อส่งคำถามผ่าน LINE">
+  <link rel="icon" type="image/png" sizes="96x96" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <!-- Add jQuery for Select2 -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <!-- Add Select2 CSS and JS -->
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
-    /* Custom styles for Select2 to match Tailwind design */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: linear-gradient(155deg, #ecfdf5 0%, #d1fae5 50%, #a7f3d0 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+      background-attachment: fixed;
+    }
+
+    .hero {
+      width: 100%;
+      max-width: 460px;
+      background: linear-gradient(120deg, #065f46, #059669 55%, #10b981);
+      border-radius: 22px 22px 0 0;
+      padding: 1.6rem 1.5rem 1.4rem;
+      color: #fff;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 14px 34px rgba(5, 150, 105, 0.3);
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: -50px; right: -30px;
+      width: 170px; height: 170px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+    }
+    .avatar {
+      width: 76px; height: 76px;
+      border-radius: 50%;
+      margin: 0 auto 0.8rem;
+      border: 3px solid rgba(255,255,255,0.85);
+      background: #d1fae5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #047857;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(2, 44, 34, 0.3);
+      position: relative;
+    }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .avatar i { display: none; }
+    .avatar.no-photo img { display: none; }
+    .avatar.no-photo i { display: inline; }
+    #userName {
+      font-size: 1.05rem;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+    .banner {
+      display: none;
+      background: #fef3c7;
+      color: #92400e;
+      font-size: 0.78rem;
+      padding: 0.6rem 0.9rem;
+      border-radius: 12px;
+      margin-top: 0.8rem;
+      text-align: left;
+      position: relative;
+      z-index: 1;
+    }
+    .banner i { margin-right: 0.35rem; }
+
+    .card {
+      width: 100%;
+      max-width: 460px;
+      background: #fff;
+      border-radius: 0 0 22px 22px;
+      padding: 1.6rem 1.5rem 1.8rem;
+      box-shadow: 0 20px 50px rgba(2, 44, 34, 0.15);
+    }
+    .card h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #064e3b;
+      text-align: center;
+      margin-bottom: 1.2rem;
+    }
+
+    .btn {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      font-family: 'Prompt', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.85rem 1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.25s ease;
+      color: #fff;
+    }
+    .btn-toggle {
+      background: #fff;
+      color: #047857;
+      border: 2px solid #a7f3d0;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.12);
+    }
+    .btn-toggle:hover { background: #f0fdf4; transform: translateY(-1px); }
+    .btn-toggle.active {
+      background: linear-gradient(120deg, #059669, #10b981);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 6px 16px rgba(5, 150, 105, 0.32);
+    }
+    .btn-send {
+      background: linear-gradient(120deg, #059669, #10b981);
+      box-shadow: 0 8px 20px rgba(5, 150, 105, 0.32);
+      margin-top: 0.4rem;
+    }
+    .btn-send:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(5, 150, 105, 0.42); }
+    .btn:active { transform: translateY(0); }
+
+    .search-container { display: none; margin-bottom: 1rem; }
+    .search-container.show { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    .footnote {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #6b7280;
+      margin-top: 1rem;
+    }
+    .footnote i { color: #10b981; }
+
+    /* Select2 green styling */
+    .select2-container { width: 100% !important; }
     .select2-container--default .select2-selection--single {
-      border: 1px solid #d1d5db;
-      border-radius: 0.375rem;
+      border: 1.5px solid #d1d5db;
+      border-radius: 12px;
       background-color: #ffffff;
-      padding: 0.75rem 1rem;
-      font-size: 1rem;
+      padding: 0.7rem 1rem;
+      font-size: 0.95rem;
       line-height: 1.5rem;
       color: #374151;
+      height: 48px;
     }
     .select2-container--default .select2-selection--single .select2-selection__rendered {
       color: #374151;
+      font-family: 'Prompt', sans-serif;
     }
     .select2-container--default .select2-selection--single .select2-selection__arrow {
       height: 100%;
-      right: 0.75rem;
+      right: 0.9rem;
     }
-    .select2-container--default .select2-selection--single:focus {
-      outline: none;
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+    .select2-container--default.select2-container--open .select2-selection--single {
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
     }
     .select2-container--default .select2-search--dropdown .select2-search__field {
       border: 1px solid #d1d5db;
-      border-radius: 0.375rem;
+      border-radius: 10px;
       padding: 0.5rem;
-      font-size: 1rem;
+      font-size: 0.95rem;
+      font-family: 'Prompt', sans-serif;
     }
     .select2-container--default .select2-results__option--highlighted[aria-selected] {
-      background-color: #3b82f6;
+      background-color: #059669;
       color: #ffffff;
     }
-    .select2-container {
-      width: 100% !important;
+    .select2-container--default .select2-results__option {
+      font-family: 'Prompt', sans-serif;
+    }
+
+    @media (max-width: 480px) {
+      .hero { border-radius: 18px 18px 0 0; }
+      .card { border-radius: 0 0 18px 18px; padding: 1.4rem 1.2rem 1.5rem; }
     }
   </style>
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col items-center justify-center py-10">
+<body>
+  <!-- Header -->
+  <div class="hero">
+    <div class="avatar" id="avatarBox"><img id="userProfilePic" src="" alt="Profile Picture"><i class="fas fa-user"></i></div>
+    <p id="userName">กำลังโหลดชื่อผู้ใช้...</p>
+    <div class="banner" id="browserNotice"><i class="fas fa-info-circle"></i>คุณกำลังเปิดนอกแอป LINE — ฟังก์ชันส่งข้อความจะใช้งานได้เฉพาะภายใน LINE เท่านั้น</div>
+  </div>
 
-  <!-- Card Container -->
-  <div class="bg-white shadow-lg rounded-lg p-8 w-11/12 max-w-md">
-    
-    <!-- User Info Section -->
-    <div class="flex flex-col items-center mb-6">
-      <img id="userProfilePic" src="" alt="Profile Picture" class="w-20 h-20 rounded-full shadow-md mb-4 hidden">
-      <p id="userName" class="text-lg font-medium text-gray-700">กำลังโหลดชื่อผู้ใช้...</p>
-    </div>
-    
-    <h1 class="text-2xl font-semibold text-center mb-6 text-gray-800">เลือก Keyword</h1>
-    
-    <!-- Toggle Button for Search -->
-    <button id="toggleSearch" class="w-full bg-indigo-600 text-white py-3 px-5 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none mb-6 transition">
-      ค้นหาคำค้น
+  <!-- Card -->
+  <div class="card">
+    <h1>เลือก Keyword ที่ต้องการถาม</h1>
+
+    <button id="toggleSearch" class="btn btn-toggle">
+      <i class="fas fa-search"></i> ค้นหาคำค้น
     </button>
-    
-    <!-- Search Dropdown -->
-    <div id="searchContainer" class="relative mb-6 hidden">
+
+    <div id="searchContainer" class="search-container">
       <select id="dropdown" class="block w-full"></select>
     </div>
-    
-    <!-- Send Button -->
-    <button onclick="sendToChat()" class="w-full bg-blue-600 text-white py-3 px-5 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none transition">
-      ส่งค่า
+
+    <button onclick="sendToChat()" class="btn btn-send">
+      <i class="fas fa-paper-plane"></i> ส่งค่า
     </button>
+
+    <p class="footnote"><i class="fas fa-leaf"></i> ระบบส่งเสริมการเกษตร</p>
   </div>
 
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbxzhmCEXRd0sqYTAkqFA-X2HvV773QoGIdndRuEcDUqi2kXrqHkdjEMCAUUx-cTKyLg1g/exec'; // ใส่ URL ของ JSON API
     const LIFF_ID = '2007528760-v8N7EXG1'; // ใส่ LIFF ID ของคุณ
 
+    let liffReady = false;
+
     // เริ่ม LIFF
     async function initializeLiff() {
-      await liff.init({ liffId: LIFF_ID });
-      if (!liff.isLoggedIn()) {
-        liff.login();
+      try {
+        await liff.init({ liffId: LIFF_ID });
+        liffReady = true;
+
+        if (!liff.isLoggedIn()) {
+          // เปิดในแอป LINE: ให้ login ต่อ — เปิดในเบราว์เซอร์: แสดงแบนเนอร์แทนการ redirect
+          if (typeof liff.isInClient === 'function' && liff.isInClient()) {
+            try { liff.login(); } catch (e) { /* fallback */ }
+          } else {
+            document.getElementById('browserNotice').style.display = 'block';
+            document.getElementById('userName').textContent = 'ยินดีต้อนรับ';
+          }
+        } else {
+          displayUserProfile();
+        }
+      } catch (err) {
+        // LIFF init ล้มเหลว — แสดงแบนเนอร์แจ้งเตือน
+        console.error('LIFF init failed (outside LINE?):', err);
+        liffReady = false;
+        document.getElementById('browserNotice').style.display = 'block';
+        document.getElementById('userName').textContent = 'ยินดีต้อนรับ';
       }
-      displayUserProfile();
       fetchKeywords();
     }
 
@@ -98,13 +264,20 @@
         const profile = await liff.getProfile();
         const userNameElement = document.getElementById('userName');
         const userProfilePicElement = document.getElementById('userProfilePic');
-        
+        const avatarBox = document.getElementById('avatarBox');
+
         userNameElement.textContent = `สวัสดี, ${profile.displayName}`;
-        userProfilePicElement.src = profile.pictureUrl;
-        userProfilePicElement.classList.remove('hidden'); // แสดงรูปโปรไฟล์
+
+        if (profile.pictureUrl) {
+          userProfilePicElement.src = profile.pictureUrl;
+          avatarBox.classList.remove('no-photo');
+        } else {
+          avatarBox.classList.add('no-photo');
+        }
       } catch (err) {
         console.error('Error fetching profile:', err);
-        document.getElementById('userName').textContent = 'ไม่สามารถโหลดชื่อผู้ใช้ได้';
+        document.getElementById('userName').textContent = 'ยินดีต้อนรับ';
+        document.getElementById('avatarBox').classList.add('no-photo');
       }
     }
 
@@ -112,11 +285,13 @@
     async function fetchKeywords() {
       try {
         const response = await fetch(API_URL);
+        if (!response.ok) throw new Error('HTTP ' + response.status);
         const keywords = await response.json();
 
         const $dropdown = $('#dropdown');
-        keywords.forEach(item => {
-          $dropdown.append(`<option value="${item.keyword}">${item.keyword}</option>`);
+        (Array.isArray(keywords) ? keywords : []).forEach(item => {
+          // ใช้ new Option เพื่อความปลอดภัย — กัน XSS จากข้อมูล keyword
+          $dropdown.append(new Option(item.keyword, item.keyword));
         });
 
         // Initialize Select2
@@ -124,21 +299,23 @@
           placeholder: 'ค้นหา Keyword',
           allowClear: true,
           width: '100%',
-          language: {
-            noResults: () => 'ไม่พบผลลัพธ์'
-          }
+          language: { noResults: () => 'ไม่พบผลลัพธ์' }
         });
       } catch (err) {
         console.error('Error fetching keywords:', err);
-        alert('เกิดข้อผิดพลาดในการโหลด Keyword');
+        Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการโหลด Keyword', confirmButtonColor: '#059669' });
       }
     }
 
-    // ฟังก์ชันที่ใช้เพื่อแสดง/ซ่อนช่องค้นหาตามการคลิกปุ่ม
+    // แสดง/ซ่อนช่องค้นหา
     document.getElementById('toggleSearch').addEventListener('click', () => {
       const searchContainer = document.getElementById('searchContainer');
-      const isHidden = searchContainer.classList.contains('hidden');
-      searchContainer.classList.toggle('hidden', !isHidden);
+      const isHidden = !searchContainer.classList.contains('show');
+      searchContainer.classList.toggle('show', isHidden);
+      document.getElementById('toggleSearch').classList.toggle('active', isHidden);
+      if (isHidden) {
+        setTimeout(() => { $('#dropdown').select2('open'); }, 250);
+      }
     });
 
     // ส่งค่าเข้า LINE Chat
@@ -147,23 +324,30 @@
       const selectedValue = $dropdown.val();
 
       if (!selectedValue) {
-        alert('กรุณาเลือก Keyword');
+        Swal.fire({ icon: 'warning', title: 'กรุณาเลือก Keyword', text: 'เลือกคำค้นก่อนกดส่งค่า', confirmButtonColor: '#059669' });
+        return;
+      }
+
+      if (!liffReady) {
+        Swal.fire({
+          icon: 'info',
+          title: 'ต้องใช้งานใน LINE',
+          text: 'ฟังก์ชันส่งข้อความใช้งานได้เฉพาะภายในแอป LINE เท่านั้น',
+          confirmButtonColor: '#059669'
+        });
         return;
       }
 
       if (liff.isApiAvailable('shareTargetPicker')) {
         try {
-          await liff.sendMessages([{
-            type: 'text',
-            text: `${selectedValue}`
-          }]);
+          await liff.sendMessages([{ type: 'text', text: `${selectedValue}` }]);
           liff.closeWindow(); // ปิด LIFF ทันที
         } catch (err) {
           console.error(err);
-          alert('เกิดข้อผิดพลาดในการส่งข้อความ');
+          Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการส่งข้อความ', confirmButtonColor: '#059669' });
         }
       } else {
-        alert('ไม่สามารถใช้งานฟังก์ชันส่งข้อความได้');
+        Swal.fire({ icon: 'info', title: 'ไม่สามารถส่งข้อความได้', text: 'ไม่สามารถใช้งานฟังก์ชันส่งข้อความได้', confirmButtonColor: '#059669' });
       }
     }
 

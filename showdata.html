@@ -4,122 +4,507 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>รายงานการส่งเสริมการเกษตร</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="96x96" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
-    .table-container {
-      background-color: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      overflow-x: auto;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: linear-gradient(150deg, #f0fdf4 0%, #ecfdf5 40%, #d1fae5 100%);
+      min-height: 100vh;
+      padding: 1.5rem 1rem 3rem;
+      background-attachment: fixed;
     }
-    th, td {
+    .wrap { max-width: 1200px; margin: 0 auto; }
+
+    /* Header */
+    .hero {
+      background: linear-gradient(120deg, #065f46, #059669 55%, #10b981);
+      border-radius: 22px;
+      padding: 2rem 1.5rem;
+      color: #fff;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(5, 150, 105, 0.3);
+      margin-bottom: 1.5rem;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -40px;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: -30px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.07);
+    }
+    .hero h1 { font-size: 1.6rem; font-weight: 700; position: relative; }
+    .hero p { font-size: 0.85rem; color: #d1fae5; margin-top: 0.3rem; position: relative; }
+    .hero .updated {
+      display: inline-block;
+      margin-top: 0.8rem;
+      font-size: 0.75rem;
+      background: rgba(255,255,255,0.16);
+      padding: 0.25rem 0.9rem;
+      border-radius: 999px;
+      position: relative;
+    }
+
+    /* Stat cards */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+    .stat {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1rem 1.1rem;
+      box-shadow: 0 6px 18px rgba(2, 44, 34, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      border: 1px solid #eef2ef;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .stat:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(2, 44, 34, 0.14); }
+    .stat .icon {
+      width: 46px; height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+    .stat .icon.g1 { background: #d1fae5; color: #047857; }
+    .stat .icon.g2 { background: #dcfce7; color: #15803d; }
+    .stat .icon.g3 { background: #fef3c7; color: #b45309; }
+    .stat .icon.g4 { background: #e0e7ff; color: #4338ca; }
+    .stat .num { font-size: 1.5rem; font-weight: 700; color: #064e3b; line-height: 1.1; }
+    .stat .lbl { font-size: 0.75rem; color: #6b7280; }
+
+    /* Toolbar */
+    .toolbar {
+      display: flex;
+      gap: 0.7rem;
+      margin-bottom: 1.2rem;
+      flex-wrap: wrap;
+    }
+    .search-wrap { position: relative; flex: 1; min-width: 220px; }
+    .search-wrap i {
+      position: absolute; left: 1rem; top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af; font-size: 0.9rem;
+    }
+    .search-wrap input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      border: 1.5px solid #d1d5db;
+      border-radius: 14px;
+      outline: none;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.9rem;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      background: #fff;
+    }
+    .search-wrap input:focus {
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+    }
+    .refresh-btn {
+      padding: 0.75rem 1.4rem;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      font-family: 'Prompt', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #fff;
+      background: linear-gradient(120deg, #059669, #10b981);
+      box-shadow: 0 6px 16px rgba(5, 150, 105, 0.28);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.25s ease;
+    }
+    .refresh-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(5, 150, 105, 0.4); }
+    .refresh-btn i.spinning { animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Table card */
+    .table-card {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 8px 26px rgba(2, 44, 34, 0.1);
+      overflow-x: auto;
+      border: 1px solid #eef2ef;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 1080px; }
+    thead th {
+      background: #f0fdf4;
+      color: #065f46;
+      font-weight: 600;
+      font-size: 0.75rem;
+      letter-spacing: 0.4px;
+      padding: 0.85rem 0.9rem;
+      text-align: left;
       white-space: nowrap;
     }
-    .image-preview {
-      max-width: 100px;
-      border-radius: 5px;
+    tbody td {
+      padding: 0.8rem 0.9rem;
+      border-top: 1px solid #f1f5f4;
+      color: #374151;
+      white-space: nowrap;
+      vertical-align: middle;
     }
-    .truncate {
-      max-width: 150px;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    tbody tr { transition: background 0.18s ease; }
+    tbody tr:hover { background: #f0fdf4; }
+    .cell-details { max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .chip {
+      display: inline-block;
+      padding: 0.18rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 500;
+      background: #dcfce7;
+      color: #166534;
+    }
+    .map-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: #047857;
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-decoration: none;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      background: #d1fae5;
+      transition: all 0.2s ease;
+    }
+    .map-link:hover { background: #059669; color: #fff; }
+    .thumb {
+      width: 64px; height: 48px;
+      object-fit: cover;
+      border-radius: 10px;
+      cursor: zoom-in;
+      border: 2px solid #eef2ef;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+      display: block;
+    }
+    .thumb:hover { transform: scale(1.06); border-color: #10b981; }
+    .no-img { font-size: 0.8rem; color: #9ca3af; }
+    .empty-row td { text-align: center; color: #9ca3af; padding: 3rem 0.5rem; font-size: 0.95rem; }
+    .empty-row i { font-size: 2rem; display: block; margin-bottom: 0.5rem; opacity: 0.4; }
+
+    /* Loading */
+    .loading-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 1rem;
+      color: #6b7280;
+    }
+    .loading-state .spinner {
+      width: 48px; height: 48px;
+      border: 4px solid #d1fae5;
+      border-top: 4px solid #059669;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin-bottom: 1rem;
+    }
+    .loading-state p { font-size: 0.9rem; }
+
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(6, 78, 59, 0.88);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      cursor: zoom-out;
+    }
+    .lightbox.open { display: flex; animation: fadeIn 0.25s ease; }
+    .lightbox img {
+      max-width: 92vw;
+      max-height: 88vh;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    @media (max-width: 900px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 1.25rem; }
+      .stat { padding: 0.8rem; }
+      .stat .num { font-size: 1.2rem; }
     }
   </style>
 </head>
-<body class="bg-gray-100 p-6">
-  <div class="max-w-7xl mx-auto">
-    <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">รายงานการส่งเสริมการเกษตร</h1>
-    <div class="table-container p-4">
-      <table id="dataTable" class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1>&#127806; รายงานการส่งเสริมการเกษตร</h1>
+      <p>ข้อมูลการปฏิบัติงานส่งเสริมการเกษตรประจำวัน</p>
+      <span class="updated" id="lastUpdated">กำลังโหลดข้อมูล...</span>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="icon g1"><i class="fas fa-file-alt"></i></div>
+        <div><div class="num" id="statTotal">0</div><div class="lbl">รายการทั้งหมด</div></div>
+      </div>
+      <div class="stat">
+        <div class="icon g2"><i class="fas fa-users"></i></div>
+        <div><div class="num" id="statPromoters">0</div><div class="lbl">ผู้ส่งงาน</div></div>
+      </div>
+      <div class="stat">
+        <div class="icon g3"><i class="fas fa-camera"></i></div>
+        <div><div class="num" id="statImages">0</div><div class="lbl">รายการมีรูป</div></div>
+      </div>
+      <div class="stat">
+        <div class="icon g4"><i class="fas fa-calendar-check"></i></div>
+        <div><div class="num" id="statLatest" style="font-size:0.95rem;">-</div><div class="lbl">ส่งงานล่าสุด</div></div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="ค้นหารายงาน (ชื่อ, อำเภอ, Collector, พืช...)" onkeyup="applyFilter()">
+      </div>
+      <button class="refresh-btn" id="refreshBtn" onclick="fetchData()"><i class="fas fa-sync-alt" id="refreshIcon"></i> รีเฟรช</button>
+    </div>
+
+    <div class="loading-state" id="loadingState">
+      <div class="spinner"></div>
+      <p>กำลังโหลดข้อมูลจาก Google Sheet...</p>
+    </div>
+
+    <div class="table-card">
+      <table id="dataTable">
+        <thead>
           <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">วันที่</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ชื่อ สกุล</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">อำเภอ</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Collector</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ผู้ติดต่อ</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ชนิดพืช</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">อื่นๆ</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">รายละเอียด</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">พิกัด</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">สถานที่</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">รูปภาพ</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">วันที่ส่งงาน</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">เวลาส่งงาน</th>
+            <th>วันที่</th>
+            <th>ชื่อ สกุล</th>
+            <th>อำเภอ</th>
+            <th>Collector</th>
+            <th>ผู้ติดต่อ</th>
+            <th>ชนิดพืช</th>
+            <th>อื่นๆ</th>
+            <th>รายละเอียด</th>
+            <th>พิกัด</th>
+            <th>สถานที่</th>
+            <th>รูปภาพ</th>
+            <th>วันที่ส่งงาน</th>
+            <th>เวลาส่งงาน</th>
           </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <!-- Data will be populated here -->
+        <tbody id="dataBody">
+          <tr class="empty-row">
+            <td colspan="13"><i class="fas fa-spinner fa-spin"></i>กำลังโหลดข้อมูล...</td>
+          </tr>
         </tbody>
       </table>
     </div>
   </div>
 
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <img id="lightboxImg" src="" alt="รูปภาพงาน">
+  </div>
+
   <script>
-    async function fetchData() {
-      try {
-        const url = 'https://script.google.com/macros/s/AKfycbx71XodbTvqXjFclnOgjfFEm46nDuIYO7TQoX6_tesfztpAennb4YEJbraCNsvvU3Oz/exec'; // Replace with your NEW deployed URL
-        console.log("Step 1: Fetching data from:", url);
+    let allData = [];
 
-        const response = await fetch(url);
-        console.log("Step 2: Response status:", response.status);
+    // Build DOM nodes with textContent — no HTML injection from sheet data
+    function makeTd(text, extraClass) {
+      const td = document.createElement('td');
+      td.textContent = (text === null || text === undefined || text === '') ? '-' : String(text);
+      if (extraClass) td.className = extraClass;
+      return td;
+    }
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+    function renderRows() {
+      const tbody = document.getElementById('dataBody');
+      tbody.innerHTML = '';
+      const filter = document.getElementById('searchInput').value.toLowerCase();
+
+      const filtered = allData.filter(row =>
+        Object.values(row).some(v => String(v || '').toLowerCase().includes(filter))
+      );
+
+      if (!filtered.length) {
+        const tr = document.createElement('tr');
+        tr.className = 'empty-row';
+        const td = document.createElement('td');
+        td.colSpan = 13;
+        td.innerHTML = '<i class="fas fa-inbox"></i>ไม่พบข้อมูล';
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+        return;
+      }
+
+      filtered.forEach(row => {
+        const tr = document.createElement('tr');
+
+        tr.appendChild(makeTd(row.date));
+        tr.appendChild(makeTd(row.firstName));
+        tr.appendChild(makeTd(row.district));
+        tr.appendChild(makeTd(row.collector));
+        tr.appendChild(makeTd(row.contact));
+        tr.appendChild(makeTd(row.plantType));
+
+        const other = makeTd(row.other);
+        if (row.other) {
+          other.innerHTML = '';
+          const chip = document.createElement('span');
+          chip.className = 'chip';
+          chip.textContent = row.other;
+          other.appendChild(chip);
         }
+        tr.appendChild(other);
+
+        const details = makeTd(row.details, 'cell-details');
+        details.title = row.details || '';
+        tr.appendChild(details);
+
+        tr.appendChild(makeTd(row.coordinates));
+
+        // Map link
+        const tdMap = document.createElement('td');
+        if (row.location) {
+          const a = document.createElement('a');
+          a.className = 'map-link';
+          a.target = '_blank';
+          a.rel = 'noopener';
+          a.href = /^https?:\/\//i.test(row.location) ? row.location : 'https://maps.google.com/maps?q=' + encodeURIComponent(row.location);
+          a.innerHTML = '<i class="fas fa-map-marker-alt"></i> ดูแผนที่';
+          tdMap.appendChild(a);
+        } else {
+          tdMap.textContent = '-';
+        }
+        tr.appendChild(tdMap);
+
+        // Image thumb with lightbox
+        const tdImg = document.createElement('td');
+        if (row.image) {
+          const img = document.createElement('img');
+          img.className = 'thumb';
+          img.loading = 'lazy';
+          img.alt = 'ภาพงาน';
+          img.src = row.image;
+          img.onerror = function () {
+            this.outerHTML = '<span class="no-img">ไม่พบรูป</span>';
+          };
+          img.onclick = function () { openLightbox(this.src); };
+          tdImg.appendChild(img);
+        } else {
+          tdImg.textContent = '-';
+        }
+        tr.appendChild(tdImg);
+
+        tr.appendChild(makeTd(row.submitDate));
+        tr.appendChild(makeTd(row.submitTime));
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderStats() {
+      document.getElementById('statTotal').textContent = allData.length;
+      const promoters = new Set(allData.map(r => r.firstName).filter(Boolean));
+      document.getElementById('statPromoters').textContent = promoters.size;
+      document.getElementById('statImages').textContent = allData.filter(r => r.image).length;
+      const latest = allData
+        .map(r => r.submitDate)
+        .filter(Boolean)
+        .sort()
+        .pop();
+      document.getElementById('statLatest').textContent = latest || '-';
+    }
+
+    function applyFilter() {
+      renderRows();
+    }
+
+    function openLightbox(src) {
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightbox').classList.add('open');
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+    }
+
+    async function fetchData() {
+      const url = 'https://script.google.com/macros/s/AKfycbx71XodbTvqXjFclnOgjfFEm46nDuIYO7TQoX6_tesfztpAennb4YEJbraCNsvvU3Oz/exec';
+      const loading = document.getElementById('loadingState');
+      const refreshIcon = document.getElementById('refreshIcon');
+      const table = document.getElementById('dataTable');
+
+      loading.style.display = 'flex';
+      table.style.display = 'none';
+      refreshIcon.classList.add('spinning');
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('HTTP error! Status: ' + response.status);
 
         const result = await response.json();
-        console.log("Step 3: Fetched data:", result);
+        if (result.status !== 'success') throw new Error(result.message || 'Failed to fetch data');
 
-        if (result.status !== "success") {
-          throw new Error(result.message || "Failed to fetch data");
-        }
+        allData = Array.isArray(result.data) ? result.data : [];
 
-        const tbody = document.querySelector('#dataTable tbody');
-        tbody.innerHTML = ''; // Clear existing rows
+        document.getElementById('lastUpdated').textContent =
+          'อัปเดตล่าสุด: ' + new Date().toLocaleString('th-TH');
 
-        console.log("Step 4: Data length:", result.data ? result.data.length : "No data property");
-
-        if (!result.data || result.data.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="13" class="px-6 py-4 text-center text-sm text-gray-500">ไม่มีข้อมูลใน Google Sheet</td></tr>';
-          console.log("Step 5: No data available in result.data");
-          return;
-        }
-
-        result.data.forEach((row, index) => {
-          console.log(`Step 6: Processing row ${index + 1}:`, row);
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${row.date || '-'}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${row.firstName || '-'}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${row.district || '-'}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${row.collector || '-'}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${row.contact || '-'}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${row.plantType || '-'}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${row.other || '-'}</td>
-            <td class="px-6 py-4 text-sm text-gray-900 truncate" title="${row.details || ''}">${row.details || '-'}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${row.coordinates || '-'}</td>
-            <td class="px-6 py-4 text-sm text-blue-600 hover:underline">${row.location ? `<a href="${row.location}" target="_blank">ดูแผนที่</a>` : '-'}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              ${row.image ? `<img src="${row.image}" alt="ภาพงาน" class="image-preview" onerror="this.src='https://via.placeholder.com/100?text=Image+Not+Found';">` : '-'}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${row.submitDate || '-'}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${row.submitTime || '-'}</td>
-          `;
-          tbody.appendChild(tr);
-        });
+        renderStats();
+        renderRows();
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
+        const tbody = document.getElementById('dataBody');
+        tbody.innerHTML = '';
+        const tr = document.createElement('tr');
+        tr.className = 'empty-row';
+        const td = document.createElement('td');
+        td.colSpan = 13;
+        const icon = document.createElement('i');
+        icon.className = 'fas fa-exclamation-triangle';
+        td.appendChild(icon);
+        td.appendChild(document.createTextNode(' ไม่สามารถดึงข้อมูลได้: ' + error.message));
+        tr.appendChild(td);
+        tbody.appendChild(tr);
         Swal.fire({
           icon: 'error',
           title: 'เกิดข้อผิดพลาด',
-          text: 'ไม่สามารถดึงข้อมูลได้: ' + error.message
+          text: 'ไม่สามารถดึงข้อมูลได้: ' + error.message,
+          confirmButtonColor: '#059669'
         });
+      } finally {
+        loading.style.display = 'none';
+        table.style.display = 'table';
+        refreshIcon.classList.remove('spinning');
       }
     }
 
-    window.onload = function() {
+    window.onload = function () {
       fetchData();
     };
   </script>

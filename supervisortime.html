@@ -112,7 +112,7 @@
         }
         
         .mobile-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
         }
         
         .tab-indicator {
@@ -164,12 +164,12 @@
         }
         
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(to bottom, #667eea, #764ba2);
+            background: linear-gradient(to bottom, #10b981, #059669);
             border-radius: 4px;
         }
         
         ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(to bottom, #5a67d8, #6b46c1);
+            background: linear-gradient(to bottom, #047857, #065f46);
         }
         
         /* Go to top button */
@@ -180,12 +180,12 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
             cursor: pointer;
             opacity: 0;
             visibility: hidden;
@@ -202,12 +202,12 @@
         
         .go-to-top:hover {
             transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
         }
         
         /* Footer styles */
         .footer-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
         }
         
         .footer-content {
@@ -217,11 +217,11 @@
         /* For Firefox */
         * {
             scrollbar-width: thin;
-            scrollbar-color: #667eea #f1f5f9;
+            scrollbar-color: #10b981 #f1f5f9;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen overflow-hidden">
+<body class="bg-gradient-to-br from-emerald-50 via-green-50 to-teal-100 min-h-screen overflow-hidden">
     <!-- Mobile App Container -->
     <div class="h-screen flex flex-col">
         <!-- Header with gradient -->
@@ -239,17 +239,17 @@
                 <div id="supervisor-loading" class="h-full flex flex-col items-center justify-center bg-gradient-to-b from-blue-50 to-white">
                     <div class="mb-8 animate-float">
                         <div class="relative">
-                            <div class="w-20 h-20 border-4 border-blue-200 rounded-full animate-spin"></div>
-                            <div class="absolute top-2 left-2 w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-blue-500 rounded-full"></div>
+                            <div class="w-20 h-20 border-4 border-emerald-200 rounded-full animate-spin"></div>
+                            <div class="absolute top-2 left-2 w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-emerald-500 rounded-full"></div>
                         </div>
                     </div>
                     <h3 class="text-2xl font-bold text-gray-800 mb-3 animate-bounce-gentle">กำลังโหลดข้อมูล</h3>
                     <p class="text-gray-500 text-center px-8 mb-6">ชุปเปอร์ไวเซอร์ • กรุณารอสักครู่...</p>
                     <div class="flex space-x-2">
-                        <div class="w-3 h-3 bg-blue-500 rounded-full loading-dots"></div>
-                        <div class="w-3 h-3 bg-blue-500 rounded-full loading-dots"></div>
-                        <div class="w-3 h-3 bg-blue-500 rounded-full loading-dots"></div>
+                        <div class="w-3 h-3 bg-emerald-500 rounded-full loading-dots"></div>
+                        <div class="w-3 h-3 bg-emerald-500 rounded-full loading-dots"></div>
+                        <div class="w-3 h-3 bg-emerald-500 rounded-full loading-dots"></div>
                     </div>
                 </div>
                 <iframe id="supervisor-iframe" 
@@ -262,17 +262,17 @@
                 <div id="promoter-loading" class="h-full flex flex-col items-center justify-center bg-gradient-to-b from-purple-50 to-white hidden">
                     <div class="mb-8 animate-float">
                         <div class="relative">
-                            <div class="w-20 h-20 border-4 border-purple-200 rounded-full animate-spin"></div>
-                            <div class="absolute top-2 left-2 w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
-                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-purple-500 rounded-full"></div>
+                            <div class="w-20 h-20 border-4 border-lime-200 rounded-full animate-spin"></div>
+                            <div class="absolute top-2 left-2 w-16 h-16 border-4 border-lime-500 border-t-transparent rounded-full animate-spin"></div>
+                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-lime-500 rounded-full"></div>
                         </div>
                     </div>
                     <h3 class="text-2xl font-bold text-gray-800 mb-3 animate-bounce-gentle">กำลังโหลดข้อมูล</h3>
                     <p class="text-gray-500 text-center px-8 mb-6">เจ้าหน้าที่ส่งเสริมฯ • กรุณารอสักครู่...</p>
                     <div class="flex space-x-2">
-                        <div class="w-3 h-3 bg-purple-500 rounded-full loading-dots"></div>
-                        <div class="w-3 h-3 bg-purple-500 rounded-full loading-dots"></div>
-                        <div class="w-3 h-3 bg-purple-500 rounded-full loading-dots"></div>
+                        <div class="w-3 h-3 bg-lime-500 rounded-full loading-dots"></div>
+                        <div class="w-3 h-3 bg-lime-500 rounded-full loading-dots"></div>
+                        <div class="w-3 h-3 bg-lime-500 rounded-full loading-dots"></div>
                     </div>
                 </div>
                 <iframe id="promoter-iframe" 
@@ -289,15 +289,15 @@
                             class="tab-button flex-1 flex flex-col items-center py-3 px-4 rounded-2xl transition-all duration-300 group"
                             onclick="switchTab('supervisor')">
                         <div class="relative mb-2">
-                            <div class="w-8 h-8 rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
+                            <div class="w-8 h-8 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
                                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                                 </svg>
                             </div>
                             <div class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full notification-dot"></div>
                         </div>
-                        <span class="text-sm font-semibold text-blue-600">ชุปเปอร์ไวเซอร์</span>
-                        <div class="w-8 h-1 bg-blue-500 rounded-full mt-1 opacity-100"></div>
+                        <span class="text-sm font-semibold text-emerald-600">ชุปเปอร์ไวเซอร์</span>
+                        <div class="w-8 h-1 bg-emerald-500 rounded-full mt-1 opacity-100"></div>
                     </button>
 
                     <!-- Promoter Tab -->
@@ -305,13 +305,13 @@
                             class="tab-button flex-1 flex flex-col items-center py-3 px-4 rounded-2xl transition-all duration-300 group"
                             onclick="switchTab('promoter')">
                         <div class="relative mb-2">
-                            <div class="w-8 h-8 rounded-2xl bg-gray-200 flex items-center justify-center transition-all duration-300 group-hover:bg-purple-100">
-                                <svg class="w-5 h-5 text-gray-500 group-hover:text-purple-500 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="w-8 h-8 rounded-2xl bg-gray-200 flex items-center justify-center transition-all duration-300 group-hover:bg-emerald-100">
+                                <svg class="w-5 h-5 text-gray-500 group-hover:text-emerald-500 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                                 </svg>
                             </div>
                         </div>
-                        <span class="text-sm font-medium text-gray-500 group-hover:text-purple-500 transition-colors duration-300">เจ้าหน้าที่ส่งเสริมฯ</span>
+                        <span class="text-sm font-medium text-gray-500 group-hover:text-emerald-500 transition-colors duration-300">เจ้าหน้าที่ส่งเสริมฯ</span>
                         <div class="w-8 h-1 bg-transparent rounded-full mt-1"></div>
                     </button>
                 </div>
@@ -378,17 +378,17 @@
                 const supervisorText = supervisorBtn.querySelector('span');
                 const supervisorIndicator = supervisorBtn.querySelector('.w-8.h-1');
                 
-                supervisorIcon.className = 'w-8 h-8 rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300';
-                supervisorText.className = 'text-sm font-semibold text-blue-600';
-                supervisorIndicator.className = 'w-8 h-1 bg-blue-500 rounded-full mt-1 opacity-100';
+                supervisorIcon.className = 'w-8 h-8 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300';
+                supervisorText.className = 'text-sm font-semibold text-emerald-600';
+                supervisorIndicator.className = 'w-8 h-1 bg-emerald-500 rounded-full mt-1 opacity-100';
                 
                 // Update promoter button (inactive state)
                 const promoterIcon = promoterBtn.querySelector('.w-8.h-8');
                 const promoterText = promoterBtn.querySelector('span');
                 const promoterIndicator = promoterBtn.querySelector('.w-8.h-1');
                 
-                promoterIcon.className = 'w-8 h-8 rounded-2xl bg-gray-200 flex items-center justify-center transition-all duration-300 group-hover:bg-purple-100';
-                promoterText.className = 'text-sm font-medium text-gray-500 group-hover:text-purple-500 transition-colors duration-300';
+                promoterIcon.className = 'w-8 h-8 rounded-2xl bg-gray-200 flex items-center justify-center transition-all duration-300 group-hover:bg-emerald-100';
+                promoterText.className = 'text-sm font-medium text-gray-500 group-hover:text-emerald-500 transition-colors duration-300';
                 promoterIndicator.className = 'w-8 h-1 bg-transparent rounded-full mt-1';
                 
             } else {
@@ -401,17 +401,17 @@
                 const promoterText = promoterBtn.querySelector('span');
                 const promoterIndicator = promoterBtn.querySelector('.w-8.h-1');
                 
-                promoterIcon.className = 'w-8 h-8 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-600 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300';
-                promoterText.className = 'text-sm font-semibold text-purple-600';
-                promoterIndicator.className = 'w-8 h-1 bg-purple-500 rounded-full mt-1 opacity-100';
+                promoterIcon.className = 'w-8 h-8 rounded-2xl bg-gradient-to-r from-lime-400 to-emerald-500 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300';
+                promoterText.className = 'text-sm font-semibold text-lime-600';
+                promoterIndicator.className = 'w-8 h-1 bg-lime-500 rounded-full mt-1 opacity-100';
                 
                 // Update supervisor button (inactive state)
                 const supervisorIcon = supervisorBtn.querySelector('.w-8.h-8');
                 const supervisorText = supervisorBtn.querySelector('span');
                 const supervisorIndicator = supervisorBtn.querySelector('.w-8.h-1');
                 
-                supervisorIcon.className = 'w-8 h-8 rounded-2xl bg-gray-200 flex items-center justify-center transition-all duration-300 group-hover:bg-blue-100';
-                supervisorText.className = 'text-sm font-medium text-gray-500 group-hover:text-blue-500 transition-colors duration-300';
+                supervisorIcon.className = 'w-8 h-8 rounded-2xl bg-gray-200 flex items-center justify-center transition-all duration-300 group-hover:bg-teal-100';
+                supervisorText.className = 'text-sm font-medium text-gray-500 group-hover:text-teal-500 transition-colors duration-300';
                 supervisorIndicator.className = 'w-8 h-1 bg-transparent rounded-full mt-1';
                 
                 // Load promoter iframe if not loaded

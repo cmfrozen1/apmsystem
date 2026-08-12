@@ -2,211 +2,278 @@
 <html lang="th">
 
 <head>
-    <title>ระบบส่งงานส่งเสริมและการเกษตร</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบส่งงานส่งเสริมและการเกษตร</title>
     <meta name="title" content="จัดการข้อมูล ส่งเสริม, Collector และ ชุปเปอร์ไวเซอร์">
-  <meta name="description" content="จัดการข้อมูล ส่งเสริม, Collector และ ชุปเปอร์ไวเซอร์">
-  <meta name="keywords" content="จัดการข้อมูล ส่งเสริม, Collector และ ชุปเปอร์ไวเซอร์">
+    <meta name="description" content="จัดการข้อมูล ส่งเสริม, Collector และ ชุปเปอร์ไวเซอร์">
+    <meta name="keywords" content="จัดการข้อมูล ส่งเสริม, Collector และ ชุปเปอร์ไวเซอร์">
 
-  <!-- Facebook meta -->
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="จัดการข้อมูลส่งงาน">
-  <meta property="og:description" content="จัดการข้อมูลส่งงาน">
-  <meta property="og:image" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
-  <meta property="og:url" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+    <!-- Facebook meta -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="จัดการข้อมูลส่งงาน">
+    <meta property="og:description" content="จัดการข้อมูลส่งงาน">
+    <meta property="og:image" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+    <meta property="og:url" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
 
-  <!-- Twitter meta -->
-  <meta property="twitter:title" content="จัดการข้อมูลส่งงาน">
-  <meta property="twitter:description" content="จัดการข้อมูลส่งงาน">
-  <meta property="twitter:image" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
-  <meta property="twitter:card" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+    <!-- Twitter meta -->
+    <meta property="twitter:title" content="จัดการข้อมูลส่งงาน">
+    <meta property="twitter:description" content="จัดการข้อมูลส่งงาน">
+    <meta property="twitter:image" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
 
-  <!-- MS APP -->
-  <meta name="msapplication-TileColor" content="#ffffff">
-  <meta name="msapplication-TileImage" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+    <!-- APPLE / MS APP -->
+    <meta name="apple-mobile-web-app-title" content="จัดการข้อมูลส่งงาน">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="msapplication-TileColor" content="#059669">
 
-  <!-- APPLE APP -->
-  <meta name="apple-mobile-web-app-title" content="จัดการข้อมูลส่งงาน">
-  <meta name="apple-mobile-web-app-status-bar-style" content="จัดการข้อมูลส่งงาน">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" sizes="96x96" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+    <link rel="shortcut icon" type="image/x-icon" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
 
-  <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
-  <link rel="apple-touch-icon" sizes="180x180" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
-  <link rel="apple-touch-icon" sizes="152x152" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
-  <link rel="apple-touch-icon" sizes="167x167" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
-  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
-  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 621px) and (device-height: 1104px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image">
-  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image">
-  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
-  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image">
-  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
-  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
-  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
-  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
-
-  <!-- FAVICON -->
-  <link rel="icon" type="image/png" sizes="96x96" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
-  <link rel="icon" type="image/png" sizes="32x32" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
-  <link rel="icon" type="image/png" sizes="16x16" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
-  <link rel="shortcut icon" type="image/x-icon" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
-  <link rel="icon" type="image/x-icon" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- LineSeed Fonts -->
-    <link href="https://cdn.jsdelivr.net/gh/maketline/goodday/font/stylesheet.min.css" rel="stylesheet">
     <style type="text/css">
-        body {
-            font-family: 'line_seed_sans_th';
-            background-color: #f8fafc;
-            padding-top: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        * {
+            box-sizing: border-box;
             margin: 0;
+            padding: 0;
         }
 
-        .container {
-            text-align: center;
-            background-color: #ffffff52;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            max-width: 500px;
+        body {
+            font-family: 'Prompt', 'Sukhumvit Set', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            background: linear-gradient(155deg, #047857 0%, #059669 45%, #10b981 75%, #84cc16 100%);
+            background-attachment: fixed;
+            overflow: hidden;
+            position: relative;
         }
 
-        .logo-container {
-            margin-bottom: 20px;
-        }
-
-        .pulse-spinner {
-            display: inline-block;
-            border: 3px solid #e3e3e3;
+        /* Decorative floating blobs */
+        .blob {
+            position: fixed;
             border-radius: 50%;
-            border-top: 3px solid #38b2ac;
-            width: 50px;
-            height: 50px;
-            animation: spin 1.5s linear infinite;
+            filter: blur(60px);
+            opacity: 0.45;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .blob-1 {
+            width: 340px;
+            height: 340px;
+            background: #a7f3d0;
+            top: -90px;
+            left: -90px;
+            animation: float 7s ease-in-out infinite;
+        }
+        .blob-2 {
+            width: 280px;
+            height: 280px;
+            background: #d9f99d;
+            bottom: -70px;
+            right: -70px;
+            animation: float 9s ease-in-out infinite reverse;
+        }
+        .blob-3 {
+            width: 180px;
+            height: 180px;
+            background: #fde68a;
+            top: 55%;
+            right: 12%;
+            animation: float 11s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-24px) scale(1.06); }
         }
 
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
+        .card {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 440px;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 28px;
+            padding: 2.6rem 2.2rem 2.4rem;
+            text-align: center;
+            box-shadow: 0 24px 60px rgba(2, 44, 34, 0.35), 0 4px 14px rgba(2, 44, 34, 0.12);
+            animation: cardIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(28px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
 
-            100% {
-                transform: rotate(360deg);
-            }
+        .logo-wrap {
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 1.2rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            border: 3px solid #a7f3d0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 10px 24px rgba(5, 150, 105, 0.25);
+            animation: logoPulse 2.6s ease-in-out infinite;
+        }
+        .logo-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        @keyframes logoPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         h1 {
-            font-size: 2.2rem;
-            color: #2d3748;
+            font-size: 1.55rem;
             font-weight: 700;
-            margin-top: 20px;
-            line-height: 1.3;
+            color: #064e3b;
+            line-height: 1.4;
+            margin-bottom: 0.35rem;
+        }
+        .subtitle {
+            font-size: 0.85rem;
+            color: #6b7280;
+            font-weight: 400;
+            margin-bottom: 1.6rem;
         }
 
-        .img-fluid {
-            margin-bottom: 20px;
+        .spinner-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.1rem;
+        }
+        .spinner {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: 4px solid #d1fae5;
+            border-top-color: #059669;
+            animation: spin 0.9s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
-        .wrapper {
-            margin-top: 20px;
+        .status {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #065f46;
+            min-height: 1.5em;
+        }
+        .status small {
+            display: block;
+            font-weight: 400;
+            color: #9ca3af;
+            font-size: 0.78rem;
+            margin-top: 0.2rem;
         }
 
-        .button-container {
-            margin-top: 30px;
+        .go-link {
+            display: inline-block;
+            margin-top: 0.9rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #059669;
+            text-decoration: none;
+            padding: 0.5rem 1.4rem;
+            border: 2px solid #a7f3d0;
+            border-radius: 999px;
+            transition: all 0.25s ease;
+        }
+        .go-link:hover {
+            background: #ecfdf5;
+            border-color: #059669;
+        }
+        .hidden {
+            display: none !important;
         }
 
-        .btn-custom {
-            background-color: #38b2ac;
-            color: white;
-            border-radius: 50px;
-            padding: 12px 25px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            width: 100%;
-            border: none;
-            transition: background-color 0.3s;
-        }
-
-        .btn-custom:hover {
-            background-color: #319795;
-        }
-
-        /* Adding smooth hover effect for the logo */
-        .logo-container img {
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .logo-container img:hover {
-            transform: scale(1.1);
-        }
-
-        body {
-            margin: 0;
-            height: 100vh; /* Ensure the body takes up the full height of the viewport */
-            background-image: url('https://media.istockphoto.com/id/506164764/th/%E0%B8%A3%E0%B8%B9%E0%B8%9B%E0%B8%96%E0%B9%88%E0%B8%B2%E0%B8%A2/%E0%B8%A3%E0%B8%96%E0%B9%81%E0%B8%97%E0%B8%A3%E0%B8%81%E0%B9%80%E0%B8%95%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%89%E0%B8%B5%E0%B8%94%E0%B8%9E%E0%B9%88%E0%B8%99%E0%B8%97%E0%B8%B8%E0%B9%88%E0%B8%87%E0%B8%96%E0%B8%B1%E0%B9%88%E0%B8%A7%E0%B9%80%E0%B8%AB%E0%B8%A5%E0%B8%B7%E0%B8%AD%E0%B8%87.jpg?s=612x612&w=0&k=20&c=thEZCIG5FEe2EHDa51JBK1GSz6cl8TlQAB7QbwLrwHA=');
-            background-size: cover; /* Ensure the background covers the entire body */
-            background-position: center; /* Center the background image */
-            background-repeat: no-repeat; /* Don't repeat the background image */
+        .badge-green {
+            display: inline-block;
+            margin-top: 1.3rem;
+            padding: 0.3rem 0.9rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #065f46;
+            background: #d1fae5;
+            border-radius: 999px;
+            letter-spacing: 0.3px;
         }
     </style>
-    <title>กำลังพาท่านเข้าสู่หน้าเว็บ...</title>
 </head>
 
 <body>
-    <div class="container">
-        <div class="logo-container">
-            <img src="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" class="img-fluid" width="150px" alt="ระบบส่งงานส่งเสริมและการเกษตร">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="card">
+        <div class="logo-wrap">
+            <img src="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no"
+                 alt="ระบบส่งงานส่งเสริมและการเกษตร">
         </div>
         <h1>ระบบส่งงานส่งเสริมและการเกษตร</h1>
-        <div class="wrapper">
-            <div class="pulse-spinner"></div>
-        </div>
+        <p class="subtitle">บริษัทเชียงใหม่โฟรเซ่นฟูดส์ จำกัด (มหาชน)</p>
+        <div class="spinner-wrap"><div class="spinner"></div></div>
+        <p id="statusText" class="status">กำลังเชื่อมต่อกับระบบ...</p>
+        <a id="goLink" href="#" class="go-link hidden">คลิกที่นี่เพื่อไปต่อ ➜</a>
+        <div class="badge-green">🌱 ส่งเสริมการเกษตร</div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://static.line-scdn.net/liff/edge/versions/2.9.0/sdk.js"></script>
     <script>
         $(document).ready(function () {
-            var path = new URL(window.location);
-            var liffId = path.searchParams.get('linkurl');
-            liff.init({
-                liffId: "2007528760-v8N7EXG1" //วางLiffId ตรงนี้
-            })
-                .then(() => {
-                    if (liff.isInClient()) {
-                        if (liff.getOS() == "ios") {
-                            window.location.replace("" + liffId);
-                        } else if (liff.getOS() == "android") {
-                            window.location.replace("" + liffId);
-                        }
+            var target = new URL(window.location).searchParams.get('linkurl');
 
-                        setTimeout(function () { liff.closeWindow(); }, 50000); //เปลี่ยนเวลาที่ต้องการ Redirect
-                    }
+            function goToTarget() {
+                if (!target) {
+                    document.getElementById('statusText').innerHTML = 'ไม่พบลิงก์ปลายทาง<br><small>กรุณาเปิดระบบจากเมนู LINE อีกครั้ง</small>';
+                    var link = document.getElementById('goLink');
+                    link.href = '#';
+                    link.classList.remove('hidden');
+                    return;
+                }
+                document.getElementById('statusText').textContent = 'กำลังนำทางไปยังหน้างาน...';
+                var link = document.getElementById('goLink');
+                link.href = target;
+                link.classList.remove('hidden');
+
+                // Redirect to the target page (works inside LINE and in a normal browser)
+                setTimeout(function () {
+                    window.location.replace(target);
+                }, 1800);
+
+                // Safety: close the LIFF window after a while (only meaningful inside LINE)
+                setTimeout(function () {
+                    try { if (window.liff && liff.closeWindow) liff.closeWindow(); } catch (e) { /* noop */ }
+                }, 50000);
+            }
+
+            // Initialize LIFF, then decide where to go
+            liff.init({ liffId: "2007528760-v8N7EXG1" })
+                .then(function () {
+                    goToTarget();
                 })
-                .catch((err) => {
-                    console.log(err);
+                .catch(function (err) {
+                    // Opened outside LINE or LIFF init failed — still redirect if we have a target
+                    console.log("LIFF init failed (opened outside LINE?):", err);
+                    goToTarget();
                 });
         });
-
-        // Check if LIFF is initialized
-        if (liff.isInClient()) {
-            // Add a click event listener to the close button
-            document.getElementById("closeButton").addEventListener("click", function () {
-                // Close the LIFF app when the button is clicked
-                liff.closeWindow();
-            });
-        } else {
-            // Handle the case when the app is not running in the LINE app
-            console.log("This app is not running in the LINE app.");
-        }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

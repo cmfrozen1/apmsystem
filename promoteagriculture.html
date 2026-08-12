@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Promote Agriculture</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>ส่งงานส่งเสริมการเกษตร</title>
+  <meta name="description" content="แบบฟอร์มส่งงานส่งเสริมการเกษตร">
+  <link rel="icon" type="image/png" sizes="96x96" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -12,182 +14,375 @@
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background-image: url('https://www.nanagarden.com/picture/product/400/webp/359610.webp');
-      background-size: cover;
-      background-position: center;
+      font-family: 'Prompt', sans-serif;
+      background: linear-gradient(155deg, #f0fdf4 0%, #ecfdf5 45%, #d1fae5 100%);
+      min-height: 100vh;
+      padding-bottom: 3rem;
+      background-attachment: fixed;
     }
-    .form-container {
-      background-color: rgba(255, 255, 255, 0.9);
-      border-radius: 15px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      position: relative;
-    }
-    .form-container h2 {
-      color: #333;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .form-container label {
-      font-weight: bold;
-    }
-    .form-container input, .form-container textarea {
-      border-color: #ccc;
-      border-radius: 8px;
-    }
-    .form-container button {
-      background-color: #4CAF50;
-      border-radius: 8px;
-    }
-    .form-container button:hover {
-      background-color: #45a049;
-    }
-    .map-container, .image-preview {
-      margin-top: 20px;
-    }
-    .image-preview img {
-      max-width: 100%;
-      border-radius: 8px;
-    }
-    .select2-container--default .select2-selection--single {
-      height: 42px;
-      padding: 8px;
-      border-radius: 8px;
-      border-color: #ccc;
-    }
-    .select2-selection__rendered {
-      line-height: 24px !important;
-    }
-    .loading-overlay {
-      display: none;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      border-radius: 15px;
-      z-index: 1000;
-    }
-    .loader {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 50px;
-      height: 50px;
-      border: 5px solid #f3f3f3;
-      border-top: 5px solid #4CAF50;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      0% { transform: translate(-50%, -50%) rotate(0deg); }
-      100% { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-    .profile-container {
+
+    /* Header */
+    .app-header {
+      background: linear-gradient(120deg, #065f46, #059669 55%, #10b981);
+      color: #fff;
+      padding: 1.3rem 1.2rem;
       display: flex;
       align-items: center;
-      margin-bottom: 20px;
+      gap: 0.9rem;
+      box-shadow: 0 8px 24px rgba(5, 150, 105, 0.28);
+      position: sticky;
+      top: 0;
+      z-index: 500;
     }
-    .profile-container img {
-      width: 40px;
-      height: 40px;
+    .avatar {
+      width: 48px; height: 48px;
       border-radius: 50%;
-      margin-right: 10px;
+      background: #d1fae5;
+      border: 2px solid rgba(255,255,255,0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #047857;
+      overflow: hidden;
+      flex-shrink: 0;
     }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .avatar.no-photo img { display: none; }
+    .app-header .titles { flex: 1; min-width: 0; }
+    .app-header .titles h1 { font-size: 1.05rem; font-weight: 700; line-height: 1.35; }
+    .app-header .titles p { font-size: 0.78rem; color: #d1fae5; }
+    .leaf-badge {
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .card {
+      max-width: 540px;
+      margin: 1.2rem auto 0;
+      background: #fff;
+      border-radius: 22px;
+      box-shadow: 0 18px 44px rgba(2, 44, 34, 0.14);
+      padding: 1.6rem 1.5rem 1.8rem;
+      position: relative;
+      border: 1px solid #eef2ef;
+    }
+
+    /* GPS checking screen */
     .gps-checking {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 20px;
+      padding: 3rem 1.2rem;
+      min-height: 420px;
     }
-    .gps-icon {
-      font-size: 3rem;
-      color: #4CAF50;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+    .gps-icon-wrap {
+      width: 96px; height: 96px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.6rem;
+      box-shadow: 0 12px 30px rgba(5, 150, 105, 0.25);
+      animation: gpsPulse 2.2s ease-in-out infinite;
     }
-    @keyframes pulse {
-      0% { opacity: 1; }
-      50% { opacity: 0.5; }
-      100% { opacity: 1; }
+    .gps-icon-wrap i { font-size: 2.6rem; color: #047857; }
+    @keyframes gpsPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 12px 30px rgba(5, 150, 105, 0.25); }
+      50% { transform: scale(1.06); box-shadow: 0 14px 38px rgba(5, 150, 105, 0.4); }
+    }
+    .gps-checking h3 { font-size: 1.3rem; font-weight: 700; color: #064e3b; margin-bottom: 0.6rem; }
+    .gps-checking p { color: #6b7280; font-size: 0.9rem; margin-bottom: 1.8rem; }
+    .spinner {
+      width: 42px; height: 42px;
+      border: 4px solid #d1fae5;
+      border-top: 4px solid #059669;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .hidden { display: none !important; }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #065f46;
+      margin: 1.3rem 0 0.7rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #f0fdf4;
+    }
+    .section-head:first-of-type { margin-top: 0; }
+    .section-head .icon {
+      width: 30px; height: 30px;
+      border-radius: 9px;
+      background: #d1fae5;
+      color: #047857;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+    }
+
+    .field { margin-bottom: 0.9rem; }
+    .field label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: #4b5563;
+      margin-bottom: 0.35rem;
+    }
+    .field label .req { color: #dc2626; }
+    input[type="text"], input[type="date"], input[type="file"], textarea {
+      width: 100%;
+      padding: 0.72rem 0.9rem;
+      border: 1.5px solid #d1d5db;
+      border-radius: 12px;
+      outline: none;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.9rem;
+      background: #fff;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      color: #1f2937;
+    }
+    input:focus, textarea:focus {
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+    }
+    textarea { min-height: 96px; resize: vertical; }
+    input[type="file"] { padding: 0.5rem 0.9rem; }
+
+    .file-box {
+      border: 2px dashed #a7f3d0;
+      border-radius: 14px;
+      padding: 1.1rem;
+      text-align: center;
+      color: #047857;
+      font-size: 0.85rem;
+      background: #f0fdf4;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .file-box:hover { border-color: #059669; background: #ecfdf5; }
+    .file-box i { font-size: 1.4rem; display: block; margin-bottom: 0.3rem; }
+
+    .image-preview { margin-top: 0.8rem; }
+    .image-preview img {
+      width: 100%;
+      max-height: 260px;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 2px solid #d1fae5;
+      box-shadow: 0 8px 20px rgba(2, 44, 34, 0.12);
+    }
+    .map-container iframe { border-radius: 14px; border: 2px solid #d1fae5; }
+    .coords-note {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      color: #047857;
+      background: #f0fdf4;
+      padding: 0.45rem 0.8rem;
+      border-radius: 10px;
+      margin-top: 0.5rem;
+      word-break: break-all;
+    }
+    .coords-note i { flex-shrink: 0; }
+
+    .submit-btn {
+      width: 100%;
+      margin-top: 1.4rem;
+      padding: 0.95rem 1rem;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      font-family: 'Prompt', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #fff;
+      background: linear-gradient(120deg, #059669, #10b981);
+      box-shadow: 0 10px 26px rgba(5, 150, 105, 0.35);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      transition: all 0.25s ease;
+    }
+    .submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(5, 150, 105, 0.45); }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* Select2 green styling */
+    .select2-container { width: 100% !important; }
+    .select2-container--default .select2-selection--single {
+      height: 44px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      border: 1.5px solid #d1d5db;
+      font-size: 0.9rem;
+    }
+    .select2-selection__rendered { line-height: 26px !important; font-family: 'Prompt', sans-serif; }
+    .select2-container--default.select2-container--open .select2-selection--single {
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+    }
+    .select2-container--default .select2-results__option {
+      font-family: 'Prompt', sans-serif;
+    }
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+      background-color: #059669;
+    }
+
+    /* Loading overlay */
+    .loading-overlay {
+      display: none;
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(4px);
+      border-radius: 22px;
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .loader {
+      width: 50px; height: 50px;
+      border: 5px solid #d1fae5;
+      border-top: 5px solid #059669;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    .footnote {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #9ca3af;
+      margin-top: 1.4rem;
+    }
+
+    @media (max-width: 480px) {
+      .card { margin: 0.9rem 0.8rem 0; padding: 1.3rem 1.1rem 1.5rem; }
+      .app-header { padding: 1rem 0.9rem; }
     }
   </style>
 </head>
-<body class="bg-gray-100 p-6">
-  <div class="max-w-md mx-auto form-container p-8 rounded-lg shadow-md">
+<body>
+  <!-- Header -->
+  <header class="app-header">
+    <div class="avatar" id="avatarBox"><img id="profileImage" src="" alt="Profile"><i class="fas fa-user"></i></div>
+    <div class="titles">
+      <h1>ส่งงานส่งเสริมการเกษตร</h1>
+      <p id="displayName">กำลังโหลด...</p>
+    </div>
+    <div class="leaf-badge"><i class="fas fa-leaf"></i></div>
+  </header>
+
+  <div class="card">
     <div class="loading-overlay" id="loadingOverlay">
       <div class="loader"></div>
     </div>
-    
+
     <!-- GPS Checking Screen -->
     <div id="gpsCheckingScreen" class="gps-checking">
-      <i class="fas fa-map-marker-alt gps-icon"></i>
-      <h3 class="text-xl font-bold mb-4">กำลังตรวจสอบ GPS</h3>
-      <p class="text-gray-600">กรุณารอสักครู่ขณะที่เราตรวจสอบตำแหน่งของคุณ...</p>
+      <div class="gps-icon-wrap"><i class="fas fa-map-marker-alt"></i></div>
+      <h3>กำลังตรวจสอบ GPS</h3>
+      <p>กรุณารอสักครู่ขณะที่เราตรวจสอบตำแหน่งของคุณ...</p>
+      <div class="spinner"></div>
     </div>
 
-    <!-- Main Form (Hidden initially) -->
-    <div id="mainForm" style="display: none;">
-      <div class="profile-container" id="profileContainer">
-        <img id="profileImage" src="" alt="Profile">
-        <span id="displayName"></span>
+    <!-- Main Form (Hidden until GPS ready) -->
+    <form id="dataForm" class="hidden">
+      <div class="section-head">
+        <div class="icon"><i class="fas fa-calendar-day"></i></div> วันที่ปฏิบัติงาน
       </div>
-      <h2 class="text-2xl font-bold mb-6">Promote Agriculture</h2>
-      <form id="dataForm">
-        <div class="mb-4">
-          <label class="block text-gray-700">วันที่</label>
-          <input type="date" name="date" id="date" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">ชื่อส่งเสริม</label>
-          <select name="firstName" id="firstName" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-            <option value="">กรุณาเลือกชื่อส่งเสริม</option>
-          </select>
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">อำเภอ</label>
-          <input type="text" name="district" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">Collector</label>
-          <select name="collector" id="collector" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-            <option value="">กรุณาเลือก Collector</option>
-          </select>
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">ผู้ติดต่อ</label>
-          <input type="text" name="contact" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">ชนิดพืช</label>
-          <select name="plantType" id="plantType" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-            <option value="">กรุณาเลือกชนิดพืช</option>
-          </select>
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">อื่นๆ ถ้ามี</label>
-          <input type="text" name="other" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">รายละเอียดการปฏิบัติงาน</label>
-          <textarea name="details" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">สถานที่เข้าทำงาน</label>
-          <div class="map-container" id="mapContainer"></div>
-        </div>
-        <div class="mb-4 image-preview" id="imagePreview"></div>
-        <div class="mb-4">
-          <label class="block text-gray-700">รูปภาพ</label>
-          <input type="file" name="imageFile" id="imageFile" accept="image/*" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-        </div>
-        <button type="submit" id="sub" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">บันทึกการส่งงาน</button>
-      </form>
-    </div>
+      <div class="field">
+        <input type="date" name="date" id="date" required>
+      </div>
+
+      <div class="section-head">
+        <div class="icon"><i class="fas fa-user-tie"></i></div> ข้อมูลผู้ส่งงาน
+      </div>
+      <div class="field">
+        <label>ชื่อส่งเสริม <span class="req">*</span></label>
+        <select name="firstName" id="firstName" required>
+          <option value="">กรุณาเลือกชื่อส่งเสริม</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Collector <span class="req">*</span></label>
+        <select name="collector" id="collector" required>
+          <option value="">กรุณาเลือก Collector</option>
+        </select>
+      </div>
+
+      <div class="section-head">
+        <div class="icon"><i class="fas fa-map-marked-alt"></i></div> ข้อมูลพื้นที่
+      </div>
+      <div class="field">
+        <label>อำเภอ <span class="req">*</span></label>
+        <input type="text" name="district" required>
+      </div>
+      <div class="field">
+        <label>ผู้ติดต่อ <span class="req">*</span></label>
+        <input type="text" name="contact" required>
+      </div>
+      <div class="field">
+        <label>ชนิดพืช <span class="req">*</span></label>
+        <select name="plantType" id="plantType" required>
+          <option value="">กรุณาเลือกชนิดพืช</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>อื่นๆ ถ้ามี</label>
+        <input type="text" name="other">
+      </div>
+
+      <div class="section-head">
+        <div class="icon"><i class="fas fa-clipboard-list"></i></div> รายละเอียดการปฏิบัติงาน
+      </div>
+      <div class="field">
+        <textarea name="details" required placeholder="ระบุรายละเอียดการปฏิบัติงาน"></textarea>
+      </div>
+
+      <div class="section-head">
+        <div class="icon"><i class="fas fa-map-pin"></i></div> สถานที่เข้าทำงาน
+      </div>
+      <div class="field">
+        <div class="map-container" id="mapContainer"></div>
+        <div class="coords-note hidden" id="coordsNote"><i class="fas fa-crosshairs"></i><span id="coordsText"></span></div>
+      </div>
+
+      <div class="section-head">
+        <div class="icon"><i class="fas fa-camera"></i></div> รูปภาพ
+      </div>
+      <div class="field">
+        <label class="file-box" for="imageFile">
+          <i class="fas fa-cloud-upload-alt"></i>
+          เลือกรูปภาพ (จำเป็น)
+        </label>
+        <input type="file" name="imageFile" id="imageFile" accept="image/*" class="hidden" required>
+        <div class="image-preview" id="imagePreview"></div>
+      </div>
+
+      <button type="submit" id="sub" class="submit-btn"><i class="fas fa-paper-plane"></i> บันทึกการส่งงาน</button>
+      <p class="footnote"><i class="fas fa-leaf"></i> ระบบส่งเสริมการเกษตร • บริษัทเชียงใหม่โฟรเซ่นฟูดส์ จำกัด (มหาชน)</p>
+    </form>
   </div>
 
   <script>
@@ -203,16 +398,25 @@
           const profile = await liff.getProfile();
           userId = profile.userId;
           userProfile = profile;
-          document.getElementById('profileImage').src = profile.pictureUrl;
           document.getElementById('displayName').textContent = profile.displayName;
+          const avatarBox = document.getElementById('avatarBox');
+          if (profile.pictureUrl) {
+            document.getElementById('profileImage').src = profile.pictureUrl;
+            avatarBox.classList.remove('no-photo');
+          } else {
+            avatarBox.classList.add('no-photo');
+          }
         } else {
           liff.login();
         }
       } catch (error) {
+        document.getElementById('displayName').textContent = 'ยินดีต้อนรับ';
+        document.getElementById('avatarBox').classList.add('no-photo');
         Swal.fire({
           icon: 'error',
           title: 'LIFF Initialization Failed',
-          text: error.message
+          text: error.message,
+          confirmButtonColor: '#059669'
         });
       }
     }
@@ -220,13 +424,12 @@
     // Send GPS warning message and close LIFF
     async function sendGPSWarningAndClose(errorType) {
       try {
-        // Determine device-specific message
         const isAndroid = /Android/i.test(navigator.userAgent);
         const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-        
+
         let deviceInstructions = [];
         let warningTitle = "ท่านยังไม่ได้เปิด GPS ขณะทำงาน";
-        
+
         if (isIOS) {
           deviceInstructions = [
             "1. ไปที่ การตั้งค่า > ความเป็นส่วนตัวและความปลอดภัย > บริการตำแหน่ง",
@@ -234,7 +437,7 @@
             "3. เลื่อนลงหา LINE และเลือก 'ขณะใช้แอป'",
             "4. เปิดแอปพลิเคชันใหม่อีกครั้ง"
           ];
-          if (errorType?.includes('DENIED')) {
+          if (errorType && errorType.includes('DENIED')) {
             warningTitle = "ไม่อนุญาตให้ LINE เข้าถึงตำแหน่ง (iOS)";
           }
         } else if (isAndroid) {
@@ -244,7 +447,7 @@
             "3. เปิดสิทธิ์ 'ตำแหน่ง'",
             "4. เปิดแอปพลิเคชันใหม่อีกครั้ง"
           ];
-          if (errorType?.includes('DENIED')) {
+          if (errorType && errorType.includes('DENIED')) {
             warningTitle = "ไม่อนุญาตให้ LINE เข้าถึงตำแหน่ง (Android)";
           }
         } else {
@@ -342,22 +545,18 @@
           }
         };
 
-        // Send message to chat immediately
         console.log(`Sending GPS warning message to chat for ${isIOS ? 'iOS' : isAndroid ? 'Android' : 'Unknown'} device...`);
         await liff.sendMessages([flexMessage]);
         console.log('GPS warning message sent successfully');
-        
-        // Wait a moment to ensure message delivery, then close
+
         await new Promise(resolve => setTimeout(resolve, 2500));
-        
         console.log('Closing LIFF window...');
         liff.closeWindow();
 
       } catch (error) {
         console.error('Error sending GPS warning message:', error);
-        // Still close LIFF even if message sending fails, but with shorter delay
         setTimeout(() => {
-          liff.closeWindow();
+          try { liff.closeWindow(); } catch (e) { /* noop */ }
         }, 500);
       }
     }
@@ -369,23 +568,20 @@
           return;
         }
 
-        // Detect device type for different handling
         const isAndroid = /Android/i.test(navigator.userAgent);
         const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-        
+
         console.log('Device detection:', { isAndroid, isIOS, userAgent: navigator.userAgent });
 
-        // Different timeout settings for different platforms
-        const timeoutDuration = isIOS ? 15000 : 10000; // iOS needs longer timeout
+        const timeoutDuration = isIOS ? 15000 : 10000;
         const locationOptions = {
           enableHighAccuracy: true,
-          timeout: timeoutDuration - 2000, // Give 2 seconds buffer
-          maximumAge: isIOS ? 30000 : 0 // iOS can use cached location up to 30 seconds
+          timeout: timeoutDuration - 2000,
+          maximumAge: isIOS ? 30000 : 0
         };
 
         console.log('GPS options:', locationOptions);
 
-        // Set timeout for GPS check
         const timeoutId = setTimeout(() => {
           reject(new Error('GPS_TIMEOUT'));
         }, timeoutDuration);
@@ -400,7 +596,7 @@
             clearTimeout(timeoutId);
             console.log('GPS error:', error);
             let errorMessage = '';
-            switch(error.code) {
+            switch (error.code) {
               case error.PERMISSION_DENIED:
                 errorMessage = isIOS ? "GPS_DENIED_IOS" : "GPS_DENIED_ANDROID";
                 break;
@@ -425,85 +621,87 @@
       currentCoordinates = position.coords.latitude + ", " + position.coords.longitude;
       const mapHtml = `<iframe width="100%" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q=${currentCoordinates}&t=&z=15&ie=UTF8&iwloc=&output=embed"></iframe>`;
       document.getElementById('mapContainer').innerHTML = mapHtml;
+      const note = document.getElementById('coordsNote');
+      note.classList.remove('hidden');
+      document.getElementById('coordsText').textContent = 'พิกัด: ' + currentCoordinates;
     }
 
     // Initialize app with GPS check
     async function initializeApp() {
       try {
-        // Show GPS checking screen
-        document.getElementById('gpsCheckingScreen').style.display = 'block';
-        document.getElementById('mainForm').style.display = 'none';
+        document.getElementById('gpsCheckingScreen').style.display = 'flex';
+        document.getElementById('dataForm').classList.add('hidden');
 
-        // Initialize LIFF first
         await initializeLiff();
 
-        // Then check GPS
         const position = await getLocation();
-        
-        // If GPS is available, show position and continue
         showPosition(position);
-        
-        // Hide GPS checking screen and show main form
+
         document.getElementById('gpsCheckingScreen').style.display = 'none';
-        document.getElementById('mainForm').style.display = 'block';
-        
-        // Initialize form data
+        document.getElementById('dataForm').classList.remove('hidden');
+
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('date').value = today;
-        
-        // Fetch dropdown data
+
         await Promise.all([
           fetchPromoterNames(),
           fetchCollectors(),
           fetchPlantTypes()
         ]);
-
       } catch (error) {
         console.error('GPS Error:', error.message);
-        
-        // If GPS related error, send warning message and close
+
         if (error.message.includes('GPS_') || error.message.includes('GPS')) {
-          // Send message immediately to chat with error type and then close
           await sendGPSWarningAndClose(error.message);
         } else {
-          // Other errors
+          document.getElementById('gpsCheckingScreen').style.display = 'flex';
           Swal.fire({
             icon: 'error',
             title: 'เกิดข้อผิดพลาด',
-            text: 'ไม่สามารถเริ่มต้นแอปพลิเคชันได้: ' + error.message
+            text: 'ไม่สามารถเริ่มต้นแอปพลิเคชันได้: ' + error.message,
+            confirmButtonColor: '#059669'
           });
         }
       }
     }
 
-    document.getElementById('imageFile').addEventListener('change', function(event) {
+    document.getElementById('imageFile').addEventListener('change', function (event) {
       const file = event.target.files[0];
       if (file) {
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
           document.getElementById('imagePreview').innerHTML = `<img src="${e.target.result}" alt="Image Preview">`;
         };
         reader.readAsDataURL(file);
       }
     });
 
-    document.getElementById('dataForm').addEventListener('submit', async function(event) {
+    document.getElementById('dataForm').addEventListener('submit', async function (event) {
       event.preventDefault();
 
+      const fileInput = document.getElementById('imageFile').files[0];
+      if (!fileInput) {
+        Swal.fire({ icon: 'warning', title: 'กรุณาเลือกรูปภาพ', text: 'ต้องแนบรูปภาพก่อนบันทึกการส่งงาน', confirmButtonColor: '#059669' });
+        return;
+      }
+      if (!currentCoordinates) {
+        Swal.fire({ icon: 'warning', title: 'ยังไม่มีพิกัด GPS', text: 'กรุณารอให้ระบบตรวจสอบตำแหน่งสำเร็จก่อนส่งงาน', confirmButtonColor: '#059669' });
+        return;
+      }
+
       const loadingOverlay = document.getElementById('loadingOverlay');
-      loadingOverlay.style.display = 'block';
+      loadingOverlay.style.display = 'flex';
 
       const submitButton = document.getElementById('sub');
       submitButton.disabled = true;
-      submitButton.textContent = "Submitting..";
+      submitButton.textContent = "กำลังบันทึก...";
 
       const formData = new FormData(this);
-      const fileInput = document.getElementById('imageFile').files[0];
       const submitDate = new Date().toLocaleDateString();
       const submitTime = new Date().toLocaleTimeString();
 
       const reader = new FileReader();
-      reader.onload = async function(event) {
+      reader.onload = async function (event) {
         const base64 = event.target.result.split(',')[1];
         const data = {
           date: formData.get('date'),
@@ -525,7 +723,6 @@
         };
 
         try {
-          // Save to Google Apps Script and get response
           const response = await fetch('https://script.google.com/macros/s/AKfycbzniYO49YaS_3gv-V1WoLakPP14j6D9HScO6XCMDMzl3LdkADSI_RN1gVpaygghwdLD/exec', {
             method: "POST",
             body: JSON.stringify(data)
@@ -538,7 +735,6 @@
 
           const fileLink = result.fileLink;
 
-          // Create Flex Message
           const flexMessage = {
             type: "flex",
             altText: "รายงานการทำงานส่งเสริมการเกษตร",
@@ -577,14 +773,12 @@
             }
           };
 
-          // Create Image Message
           const imageMessage = {
             type: "image",
             originalContentUrl: fileLink,
             previewImageUrl: fileLink
           };
 
-          // Send Flex Message, Image, and Location
           await liff.sendMessages([
             flexMessage,
             imageMessage,
@@ -598,6 +792,11 @@
           ]);
 
           loadingOverlay.style.display = 'none';
+          submitButton.textContent = "บันทึกการส่งงาน";
+          submitButton.disabled = false;
+          document.getElementById('dataForm').reset();
+          document.getElementById('imagePreview').innerHTML = '';
+
           Swal.fire({
             icon: 'success',
             title: 'บันทึกและส่งสำเร็จ!',
@@ -606,18 +805,17 @@
             showConfirmButton: false
           });
 
-          liff.closeWindow();
-
-          submitButton.textContent = "บันทึกการส่งงาน";
-          submitButton.disabled = false;
-          document.getElementById('dataForm').reset();
-          document.getElementById('imagePreview').innerHTML = '';
+          // ปิดหน้าต่างหลังจากแสดงข้อความสำเร็จแล้ว (ไม่ปิดทันทีจนมองไม่เห็น Toast)
+          setTimeout(function () {
+            try { liff.closeWindow(); } catch (e) { /* noop */ }
+          }, 1600);
         } catch (error) {
           loadingOverlay.style.display = 'none';
           Swal.fire({
             icon: 'error',
             title: 'เกิดข้อผิดพลาด',
-            text: 'ไม่สามารถบันทึกหรือส่งข้อมูลได้: ' + error.message
+            text: 'ไม่สามารถบันทึกหรือส่งข้อมูลได้: ' + error.message,
+            confirmButtonColor: '#059669'
           });
           submitButton.textContent = "บันทึกการส่งงาน";
           submitButton.disabled = false;
@@ -631,7 +829,7 @@
         .then(response => response.json())
         .then(data => {
           if (data.error) {
-            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลดชื่อส่งเสริมได้: ' + data.error });
+            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลดชื่อส่งเสริมได้: ' + data.error, confirmButtonColor: '#059669' });
             return;
           }
           const selectElement = $('#firstName');
@@ -639,7 +837,7 @@
           selectElement.select2({ placeholder: "กรุณาเลือกชื่อส่งเสริม", allowClear: true });
         })
         .catch(error => {
-          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message });
+          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message, confirmButtonColor: '#059669' });
         });
     }
 
@@ -648,7 +846,7 @@
         .then(response => response.json())
         .then(data => {
           if (data.error) {
-            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลด Collectors ได้: ' + data.error });
+            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลด Collectors ได้: ' + data.error, confirmButtonColor: '#059669' });
             return;
           }
           const selectElement = $('#collector');
@@ -656,7 +854,7 @@
           selectElement.select2({ placeholder: "กรุณาเลือก Collector", allowClear: true });
         })
         .catch(error => {
-          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message });
+          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message, confirmButtonColor: '#059669' });
         });
     }
 
@@ -665,7 +863,7 @@
         .then(response => response.json())
         .then(data => {
           if (data.error) {
-            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลดชนิดพืชได้: ' + data.error });
+            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลดชนิดพืชได้: ' + data.error, confirmButtonColor: '#059669' });
             return;
           }
           const selectElement = $('#plantType');
@@ -673,12 +871,12 @@
           selectElement.select2({ placeholder: "กรุณาเลือกชนิดพืช", allowClear: true });
         })
         .catch(error => {
-          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message });
+          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message, confirmButtonColor: '#059669' });
         });
     }
 
     // Initialize when page loads
-    window.onload = function() {
+    window.onload = function () {
       initializeApp();
     };
   </script>
