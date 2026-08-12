@@ -313,6 +313,19 @@
       box-shadow: 0 8px 20px rgba(2, 44, 34, 0.12);
     }
 
+    .img-size-note {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      color: #047857;
+      background: #f0fdf4;
+      padding: 0.45rem 0.8rem;
+      border-radius: 10px;
+      margin-top: 0.5rem;
+      word-break: break-all;
+    }
+
     .map-container iframe {
       border-radius: 14px;
       border: 2px solid #d1fae5;
@@ -566,6 +579,72 @@
     let currentCoordinates = '';
     let userId = '';
     let userProfile = null;
+
+    // ---------- บีบอัดรูปอัตโนมัติ (ลดขนาดก่อนอัปโหลด เพื่อให้บันทึกเร็วขึ้น) ----------
+    let compressedUpload = null; // { base64, type, name } ของรูปที่บีบอัดแล้ว
+    const IMAGE_MAX_DIM = 1280; // ความยาวด้านที่ยาวที่สุด (px)
+    const IMAGE_QUALITY = 0.75; // คุณภาพ JPEG (0-1)
+    const COMPRESS_THRESHOLD = 300 * 1024; // รูป ≤ 300KB ส่งไฟล์เดิมได้เลย
+
+    function formatBytes(bytes) {
+      if (!bytes && bytes !== 0) return '0 KB';
+      if (bytes < 1024) return bytes + ' B';
+      return (bytes / 1024).toFixed(0) + ' KB';
+    }
+
+    // บีบอัดรูปด้วย Canvas → คืน Blob JPEG ถ้าทำได้ / null = ใช้ไฟล์เดิม
+    function compressImage(file) {
+      return new Promise((resolve) => {
+        if (!file || !file.type || file.size <= COMPRESS_THRESHOLD || file.type === 'image/gif') {
+          resolve(null); // เล็กอยู่แล้ว / GIF ภาพเคลื่อนไหว → ไม่บีบ
+          return;
+        }
+        try {
+          const img = new Image();
+          const objectUrl = URL.createObjectURL(file);
+          img.onload = function () {
+            URL.revokeObjectURL(objectUrl);
+            try {
+              let width = img.naturalWidth || img.width;
+              let height = img.naturalHeight || img.height;
+              if (!width || !height) { resolve(null); return; }
+              if (width > IMAGE_MAX_DIM || height > IMAGE_MAX_DIM) {
+                const ratio = Math.min(IMAGE_MAX_DIM / width, IMAGE_MAX_DIM / height);
+                width = Math.round(width * ratio);
+                height = Math.round(height * ratio);
+              }
+              const canvas = document.createElement('canvas');
+              canvas.width = width;
+              canvas.height = height;
+              canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+              canvas.toBlob(function (blob) {
+                if (!blob) { resolve(null); return; }
+                resolve(blob);
+              }, 'image/jpeg', IMAGE_QUALITY);
+            } catch (e) {
+              resolve(null); // เปิด/วาดภาพไม่ได้ → ใช้ไฟล์เดิม
+            }
+          };
+          img.onerror = function () {
+            URL.revokeObjectURL(objectUrl);
+            resolve(null);
+          };
+          img.src = objectUrl;
+        } catch (e) {
+          resolve(null);
+        }
+      });
+    }
+
+    // แปลง Blob → base64 (เฉพาะข้อมูล ไม่มี prefix)
+    function blobToBase64(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = () => reject(new Error('อ่านรูปที่บีบอัดไม่ได้'));
+        reader.readAsDataURL(blob);
+      });
+    }
 
     // Initialize LIFF
     async function initializeLiff() {
@@ -836,15 +915,37 @@
       }
     }
 
-    document.getElementById('imageFile').addEventListener('change', function (event) {
+    document.getElementById('imageFile').addEventListener('change', async function (event) {
       const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          document.getElementById('imagePreview').innerHTML = `<img src="${e.target.result}" alt="Image Preview">`;
-        };
-        reader.readAsDataURL(file);
-      }
+      compressedUpload = null;
+      if (!file) return;
+
+      const previewEl = document.getElementById('imagePreview');
+
+      // บีบอัดรูปอัตโนมัติก่อนแสดงตัวอย่าง (ตรงกับไฟล์ที่จะอัปโหลด)
+      try {
+        const blob = await compressImage(file);
+        // ผู้ใช้เปลี่ยนไปเลือกรูปอื่นระหว่างบีบอัด → ไม่เอา result เก่ามาทับ
+        if (document.getElementById('imageFile').files[0] !== file) return;
+        if (blob) {
+          const base64 = await blobToBase64(blob);
+          if (document.getElementById('imageFile').files[0] !== file) return;
+          const baseName = (file.name || 'image').replace(/\.[^.]+$/, '') || 'image';
+          compressedUpload = { base64: base64, type: 'image/jpeg', name: baseName + '.jpg' };
+          previewEl.innerHTML =
+            `<img src="data:image/jpeg;base64,${base64}" alt="Image Preview">` +
+            `<p class="img-size-note"><i class="fas fa-compress-arrows-alt"></i> บีบอัดแล้ว: ${formatBytes(file.size)} → ${formatBytes(Math.round(base64.length * 3 / 4))}</p>`;
+          return;
+        }
+      } catch (e) { /* บีบอัดไม่ได้ → ใช้ไฟล์เดิม */ }
+
+      // รูปเล็กอยู่แล้ว / บีบอัดไม่ได้ → แสดงและใช้ไฟล์เดิม
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        if (document.getElementById('imageFile').files[0] !== file) return;
+        previewEl.innerHTML = `<img src="${e.target.result}" alt="Image Preview">`;
+      };
+      reader.readAsDataURL(file);
     });
 
     document.getElementById('dataForm').addEventListener('submit', async function (event) {
@@ -874,7 +975,10 @@
 
       const reader = new FileReader();
       reader.onload = async function (event) {
-        const base64 = event.target.result.split(',')[1];
+        // ใช้รูปที่บีบอัดแล้ว (ถ้ามี) เพื่อลดขนาดไฟล์ที่ส่งไปอัปโหลด
+        const base64 = compressedUpload ? compressedUpload.base64 : event.target.result.split(',')[1];
+        const uploadType = compressedUpload ? compressedUpload.type : fileInput.type;
+        const uploadName = compressedUpload ? compressedUpload.name : fileInput.name;
         const data = {
           date: formData.get('date'),
           firstName: formData.get('firstName'),
@@ -887,8 +991,8 @@
           coordinates: currentCoordinates,
           location: `https://maps.google.com/maps?q=${currentCoordinates}`,
           base64: base64,
-          type: fileInput.type,
-          name: fileInput.name,
+          type: uploadType,
+          name: uploadName,
           submitDate: submitDate,
           submitTime: submitTime,
           userId: userId
@@ -969,6 +1073,7 @@
           submitButton.disabled = false;
           document.getElementById('dataForm').reset();
           document.getElementById('imagePreview').innerHTML = '';
+          compressedUpload = null;
 
           Swal.fire({
             icon: 'success',
