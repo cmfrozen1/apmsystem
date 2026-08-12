@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>จัดการข้อมูล ส่งเสริม, Collector และ ชุปเปอร์ไวเซอร์</title>
+  <meta name="title" content="จัดการข้อมูล ส่งเสริม, Collector และ ชุปเปอร์ไวเซอร์">
+  <meta name="description" content="จัดการข้อมูล ส่งเสริม, Collector และ ชุปเปอร์ไวเซอร์">
+  <meta name="keywords" content="จัดการข้อมูล ส่งเสริม, Collector และ ชุปเปอร์ไวเซอร์">
+
+  <!-- Facebook meta -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="จัดการข้อมูลส่งงาน">
+  <meta property="og:description" content="จัดการข้อมูลส่งงาน">
+  <meta property="og:image" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <meta property="og:url" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+
+  <!-- Twitter meta -->
+  <meta property="twitter:title" content="จัดการข้อมูลส่งงาน">
+  <meta property="twitter:description" content="จัดการข้อมูลส่งงาน">
+  <meta property="twitter:image" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <meta property="twitter:card" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+
+  <!-- MS APP -->
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+
+  <!-- APPLE APP -->
+  <meta name="apple-mobile-web-app-title" content="จัดการข้อมูลส่งงาน">
+  <meta name="apple-mobile-web-app-status-bar-style" content="จัดการข้อมูลส่งงาน">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="apple-touch-icon" sizes="152x152" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="apple-touch-icon" sizes="167x167" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 621px) and (device-height: 1104px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+
+  <!-- FAVICON -->
+  <link rel="icon" type="image/png" sizes="96x96" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="shortcut icon" type="image/x-icon" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="icon" type="image/x-icon" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+      min-height: 100vh;
+      padding: 1rem;
+      margin: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      position: relative;
+      display: none; /* Hidden by default until authenticated */
+    }
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 0.5rem;
+      cursor: pointer;
+      background: #e5e7eb;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .tab.active {
+      background: #10b981;
+      color: white;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+    }
+    th, td {
+      padding: 0.5rem;
+      border: 1px solid #e5e7eb;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    th {
+      background: #f3f4f6;
+      font-weight: 600;
+    }
+    td .button-group {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: flex-start;
+    }
+    td button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+      flex: 1;
+      max-width: 80px;
+    }
+    .form-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.3s ease;
+      font-size: 0.9rem;
+    }
+    input[type="text"]:focus {
+      border-color: #10b981;
+    }
+    button {
+      padding: 0.75rem 1.5rem;
+      background: #10b981;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+    button:hover {
+      background: #059669;
+    }
+    .delete-btn {
+      background: #ef4444;
+    }
+    .delete-btn:hover {
+      background: #dc2626;
+    }
+    .loading-overlay {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 12px;
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #10b981;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.3s ease;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    .search-input:focus {
+      border-color: #10b981;
+    }
+    @media (max-width: 640px) {
+      .container {
+        padding: 1rem;
+      }
+      .tabs {
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+      .tab {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+      }
+      .form-group {
+        flex-direction: column;
+      }
+      input[type="text"] {
+        padding: 0.6rem;
+        font-size: 0.85rem;
+      }
+      button {
+        width: 100%;
+        justify-content: center;
+        padding: 0.6rem;
+        font-size: 0.85rem;
+      }
+      th, td {
+        padding: 0.4rem;
+      }
+      td .button-group {
+        gap: 0.3rem;
+      }
+      td button {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.75rem;
+        max-width: 70px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="mainContainer">
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="spinner"></div>
+    </div>
+    <h2 class="text-xl font-bold mb-4 text-center text-gray-800">จัดการข้อมูล ส่งเสริม, Collector และ ชุปเปอร์ไวเซอร์</h2>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="promoter"><i class="fas fa-user-tie"></i> ส่งเสริม</div>
+      <div class="tab" data-tab="collector"><i class="fas fa-truck"></i> Collector</div>
+      <div class="tab" data-tab="supervisor"><i class="fas fa-user-shield"></i> ชุปเปอร์ไวเซอร์</div>
+    </div>
+
+    <!-- Promoter Tab -->
+    <div class="tab-content active" id="promoter">
+      <div class="form-group">
+        <input type="text" id="promoterName" placeholder="ชื่อส่งเสริม">
+        <button onclick="addData('promoter')"><i class="fas fa-plus"></i> เพิ่ม</button>
+      </div>
+      <div class="form-group">
+        <input type="text" id="searchPromoter" placeholder="ค้นหาส่งเสริม" onkeyup="searchTable('promoter')" class="search-input">
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>ชื่อ</th>
+            <th>แก้ไข/ลบ</th>
+          </tr>
+        </thead>
+        <tbody id="promoterTable"></tbody>
+      </table>
+    </div>
+
+    <!-- Collector Tab -->
+    <div class="tab-content" id="collector">
+      <div class="form-group">
+        <input type="text" id="collectorName" placeholder="ชื่อ Collector">
+        <button onclick="addData('collector')"><i class="fas fa-plus"></i> เพิ่ม</button>
+      </div>
+      <div class="form-group">
+        <input type="text" id="searchCollector" placeholder="ค้นหา Collector" onkeyup="searchTable('collector')" class="search-input">
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>ชื่อ</th>
+            <th>แก้ไข/ลบ</th>
+          </tr>
+        </thead>
+        <tbody id="collectorTable"></tbody>
+      </table>
+    </div>
+
+    <!-- Supervisor Tab -->
+    <div class="tab-content" id="supervisor">
+      <div class="form-group">
+        <input type="text" id="supervisorName" placeholder="ชื่อชุปเปอร์ไวเซอร์">
+        <button onclick="addData('supervisor')"><i class="fas fa-plus"></i> เพิ่ม</button>
+      </div>
+      <div class="form-group">
+        <input type="text" id="searchSupervisor" placeholder="ค้นหาชุปเปอร์ไวเซอร์" onkeyup="searchTable('supervisor')" class="search-input">
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>ชื่อ</th>
+            <th>แก้ไข/ลบ</th>
+          </tr>
+        </thead>
+        <tbody id="supervisorTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJ6CKgir6gaKJGRs5_IU8HVaqJ91FfZCbuE0ZO4CNr73H47gDrK0bV0KCMpvtrD6s/exec";
+    const PASSWORD = "admin"; // Hardcoded password
+
+    // Password prompt on page load
+    window.onload = function() {
+      Swal.fire({
+        title: 'กรุณาใส่รหัสผ่าน',
+        input: 'password',
+        inputPlaceholder: 'รหัสผ่าน',
+        showCancelButton: false,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        confirmButtonText: 'เข้าสู่ระบบ',
+        inputValidator: (value) => {
+          if (!value) {
+            return 'กรุณากรอกรหัสผ่าน!';
+          }
+          if (value !== PASSWORD) {
+            return 'รหัสผ่านไม่ถูกต้อง!';
+          }
+        }
+      }).then((result) => {
+        if (result.isConfirmed && result.value === PASSWORD) {
+          document.getElementById('mainContainer').style.display = 'block';
+          loadData('promoter');
+          loadData('collector');
+          loadData('supervisor');
+        }
+      });
+    };
+
+    // Tab switching
+    $('.tab').on('click', function() {
+      $('.tab').removeClass('active');
+      $('.tab-content').removeClass('active');
+      $(this).addClass('active');
+      $(`#${$(this).data('tab')}`).addClass('active');
+    });
+
+    // Load data for tables
+    function loadData(type) {
+      fetch(`${SCRIPT_URL}?action=get${type === 'promoter' ? 'Promoter' : type === 'collector' ? 'Collector' : 'Supervisor'}Names`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            Swal.fire('ข้อผิดพลาด', data.error, 'error');
+            return;
+          }
+          const tbody = document.getElementById(`${type}Table`);
+          tbody.innerHTML = '';
+          data.forEach((name, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${name}</td>
+              <td>
+                <div class="button-group">
+                  <button onclick="editData('${type}', ${index + 2}, '${name}')"><i class="fas fa-edit"></i> แก้ไข</button>
+                  <button class="delete-btn" onclick="deleteData('${type}', ${index + 2})"><i class="fas fa-trash"></i> ลบ</button>
+                </div>
+              </td>
+            `;
+            tbody.appendChild(row);
+          });
+        })
+        .catch(error => Swal.fire('ข้อผิดพลาด', 'เกิดข้อผิดพลาดในการโหลดข้อมูล: ' + error.message, 'error'));
+    }
+
+    // Add new data with loading animation
+    function addData(type) {
+      const input = document.getElementById(`${type}Name`);
+      const name = input.value.trim();
+      if (!name) {
+        Swal.fire('ข้อผิดพลาด', 'กรุณากรอกชื่อ', 'warning');
+        return;
+      }
+
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      loadingOverlay.style.display = 'flex';
+
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: `add${type === 'promoter' ? 'Promoter' : type === 'collector' ? 'Collector' : 'Supervisor'}`,
+          name: name
+        })
+      })
+      .then(response => response.json())
+      .then(result => {
+        loadingOverlay.style.display = 'none';
+        if (result.status === 'success') {
+          Swal.fire('สำเร็จ', 'เพิ่มข้อมูลเรียบร้อย', 'success');
+          input.value = '';
+          loadData(type);
+        } else {
+          Swal.fire('ข้อผิดพลาด', result.message, 'error');
+        }
+      })
+      .catch(error => {
+        loadingOverlay.style.display = 'none';
+        Swal.fire('ข้อผิดพลาด', 'เกิดข้อผิดพลาดในการเพิ่มข้อมูล: ' + error.message, 'error');
+      });
+    }
+
+    // Edit existing data with loading animation
+    function editData(type, row, oldName) {
+      Swal.fire({
+        title: 'แก้ไขชื่อ',
+        input: 'text',
+        inputValue: oldName,
+        showCancelButton: true,
+        confirmButtonText: 'บันทึก',
+        cancelButtonText: 'ยกเลิก'
+      }).then(result => {
+        if (result.isConfirmed && result.value) {
+          const loadingOverlay = document.getElementById('loadingOverlay');
+          loadingOverlay.style.display = 'flex';
+
+          fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+              action: `edit${type === 'promoter' ? 'Promoter' : type === 'collector' ? 'Collector' : 'Supervisor'}`,
+              row: row,
+              name: result.value
+            })
+          })
+          .then(response => response.json())
+          .then(result => {
+            loadingOverlay.style.display = 'none';
+            if (result.status === 'success') {
+              Swal.fire('สำเร็จ', 'แก้ไขข้อมูลเรียบร้อย', 'success');
+              loadData(type);
+            } else {
+              Swal.fire('ข้อผิดพลาด', result.message, 'error');
+            }
+          })
+          .catch(error => {
+            loadingOverlay.style.display = 'none';
+            Swal.fire('ข้อผิดพลาด', 'เกิดข้อผิดพลาดในการแก้ไข: ' + error.message, 'error');
+          });
+        }
+      });
+    }
+
+    // Delete data with loading animation
+    function deleteData(type, row) {
+      Swal.fire({
+        title: 'แน่ใจหรือไม่?',
+        text: 'คุณต้องการลบข้อมูลนี้หรือไม่?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'ลบ',
+        cancelButtonText: 'ยกเลิก'
+      }).then(result => {
+        if (result.isConfirmed) {
+          const loadingOverlay = document.getElementById('loadingOverlay');
+          loadingOverlay.style.display = 'flex';
+
+          fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+              action: `delete${type === 'promoter' ? 'Promoter' : type === 'collector' ? 'Collector' : 'Supervisor'}`,
+              row: row
+            })
+          })
+          .then(response => response.json())
+          .then(result => {
+            loadingOverlay.style.display = 'none';
+            if (result.status === 'success') {
+              Swal.fire('สำเร็จ', 'ลบข้อมูลเรียบร้อย', 'success');
+              loadData(type);
+            } else {
+              Swal.fire('ข้อผิดพลาด', result.message, 'error');
+            }
+          })
+          .catch(error => {
+            loadingOverlay.style.display = 'none';
+            Swal.fire('ข้อผิดพลาด', 'เกิดข้อผิดพลาดในการลบ: ' + error.message, 'error');
+          });
+        }
+      });
+    }
+
+    // Search table data
+    function searchTable(type) {
+      const input = document.getElementById(`search${type.charAt(0).toUpperCase() + type.slice(1)}`);
+      const filter = input.value.toLowerCase();
+      const table = document.getElementById(`${type}Table`);
+      const rows = table.getElementsByTagName('tr');
+
+      for (let i = 0; i < rows.length; i++) {
+        const cells = rows[i].getElementsByTagName('td');
+        if (cells.length > 0) {
+          const nameCell = cells[0];
+          if (nameCell) {
+            const txtValue = nameCell.textContent || nameCell.innerText;
+            rows[i].style.display = txtValue.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>

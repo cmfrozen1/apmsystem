@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promote Agriculture</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <style>
+    body {
+      background-image: url('https://www.nanagarden.com/picture/product/400/webp/359610.webp');
+      background-size: cover;
+      background-position: center;
+    }
+    .form-container {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 15px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+    .form-container h2 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .form-container label {
+      font-weight: bold;
+    }
+    .form-container input, .form-container textarea {
+      border-color: #ccc;
+      border-radius: 8px;
+    }
+    .form-container button {
+      background-color: #4CAF50;
+      border-radius: 8px;
+    }
+    .form-container button:hover {
+      background-color: #45a049;
+    }
+    .map-container, .image-preview {
+      margin-top: 20px;
+    }
+    .image-preview img {
+      max-width: 100%;
+      border-radius: 8px;
+    }
+    .select2-container--default .select2-selection--single {
+      height: 42px;
+      padding: 8px;
+      border-radius: 8px;
+      border-color: #ccc;
+    }
+    .select2-selection__rendered {
+      line-height: 24px !important;
+    }
+    .loading-overlay {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 15px;
+      z-index: 1000;
+    }
+    .loader {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px;
+      height: 50px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #4CAF50;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    .profile-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .profile-container img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    .gps-checking {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+    .gps-icon {
+      font-size: 3rem;
+      color: #4CAF50;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-md mx-auto form-container p-8 rounded-lg shadow-md">
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loader"></div>
+    </div>
+    
+    <!-- GPS Checking Screen -->
+    <div id="gpsCheckingScreen" class="gps-checking">
+      <i class="fas fa-map-marker-alt gps-icon"></i>
+      <h3 class="text-xl font-bold mb-4">กำลังตรวจสอบ GPS</h3>
+      <p class="text-gray-600">กรุณารอสักครู่ขณะที่เราตรวจสอบตำแหน่งของคุณ...</p>
+    </div>
+
+    <!-- Main Form (Hidden initially) -->
+    <div id="mainForm" style="display: none;">
+      <div class="profile-container" id="profileContainer">
+        <img id="profileImage" src="" alt="Profile">
+        <span id="displayName"></span>
+      </div>
+      <h2 class="text-2xl font-bold mb-6">Promote Agriculture</h2>
+      <form id="dataForm">
+        <div class="mb-4">
+          <label class="block text-gray-700">วันที่</label>
+          <input type="date" name="date" id="date" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700">ชื่อส่งเสริม</label>
+          <select name="firstName" id="firstName" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            <option value="">กรุณาเลือกชื่อส่งเสริม</option>
+          </select>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700">อำเภอ</label>
+          <input type="text" name="district" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700">Collector</label>
+          <select name="collector" id="collector" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            <option value="">กรุณาเลือก Collector</option>
+          </select>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700">ผู้ติดต่อ</label>
+          <input type="text" name="contact" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700">ชนิดพืช</label>
+          <select name="plantType" id="plantType" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            <option value="">กรุณาเลือกชนิดพืช</option>
+          </select>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700">อื่นๆ ถ้ามี</label>
+          <input type="text" name="other" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700">รายละเอียดการปฏิบัติงาน</label>
+          <textarea name="details" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700">สถานที่เข้าทำงาน</label>
+          <div class="map-container" id="mapContainer"></div>
+        </div>
+        <div class="mb-4 image-preview" id="imagePreview"></div>
+        <div class="mb-4">
+          <label class="block text-gray-700">รูปภาพ</label>
+          <input type="file" name="imageFile" id="imageFile" accept="image/*" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        </div>
+        <button type="submit" id="sub" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">บันทึกการส่งงาน</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let currentCoordinates = '';
+    let userId = '';
+    let userProfile = null;
+
+    // Initialize LIFF
+    async function initializeLiff() {
+      try {
+        await liff.init({ liffId: '2007528760-v8N7EXG1' }); // Replace with your LIFF ID
+        if (liff.isLoggedIn()) {
+          const profile = await liff.getProfile();
+          userId = profile.userId;
+          userProfile = profile;
+          document.getElementById('profileImage').src = profile.pictureUrl;
+          document.getElementById('displayName').textContent = profile.displayName;
+        } else {
+          liff.login();
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'LIFF Initialization Failed',
+          text: error.message
+        });
+      }
+    }
+
+    // Send GPS warning message and close LIFF
+    async function sendGPSWarningAndClose(errorType) {
+      try {
+        // Determine device-specific message
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+        
+        let deviceInstructions = [];
+        let warningTitle = "ท่านยังไม่ได้เปิด GPS ขณะทำงาน";
+        
+        if (isIOS) {
+          deviceInstructions = [
+            "1. ไปที่ การตั้งค่า > ความเป็นส่วนตัวและความปลอดภัย > บริการตำแหน่ง",
+            "2. เปิด บริการตำแหน่ง",
+            "3. เลื่อนลงหา LINE และเลือก 'ขณะใช้แอป'",
+            "4. เปิดแอปพลิเคชันใหม่อีกครั้ง"
+          ];
+          if (errorType?.includes('DENIED')) {
+            warningTitle = "ไม่อนุญาตให้ LINE เข้าถึงตำแหน่ง (iOS)";
+          }
+        } else if (isAndroid) {
+          deviceInstructions = [
+            "1. ไปที่ การตั้งค่า > ตำแหน่ง และเปิดใช้งาน",
+            "2. การตั้งค่า > แอป > LINE > สิทธิ์",
+            "3. เปิดสิทธิ์ 'ตำแหน่ง'",
+            "4. เปิดแอปพลิเคชันใหม่อีกครั้ง"
+          ];
+          if (errorType?.includes('DENIED')) {
+            warningTitle = "ไม่อนุญาตให้ LINE เข้าถึงตำแหน่ง (Android)";
+          }
+        } else {
+          deviceInstructions = [
+            "1. เปิดการใช้งาน GPS/Location",
+            "2. อนุญาตให้ LINE เข้าถึงตำแหน่ง",
+            "3. เปิดแอปพลิเคชันใหม่อีกครั้ง"
+          ];
+        }
+
+        const instructionContents = deviceInstructions.map((instruction, index) => ({
+          type: "text",
+          text: instruction,
+          size: "sm",
+          color: "#666666",
+          margin: index === 0 ? "sm" : "xs",
+          wrap: true
+        }));
+
+        const flexMessage = {
+          type: "flex",
+          altText: "แจ้งเตือน: ไม่พบการเปิด GPS",
+          contents: {
+            type: "bubble",
+            body: {
+              type: "box",
+              layout: "vertical",
+              contents: [
+                {
+                  type: "box",
+                  layout: "vertical",
+                  contents: [
+                    {
+                      type: "text",
+                      text: isIOS ? "📱🔴" : "🤖🔴",
+                      size: "xxl",
+                      align: "center"
+                    }
+                  ],
+                  alignItems: "center",
+                  paddingBottom: "md"
+                },
+                {
+                  type: "text",
+                  text: "⚠️ แจ้งเตือน",
+                  weight: "bold",
+                  size: "xl",
+                  color: "#FF6B6B",
+                  align: "center"
+                },
+                {
+                  type: "text",
+                  text: warningTitle,
+                  size: "md",
+                  color: "#333333",
+                  align: "center",
+                  wrap: true,
+                  margin: "md"
+                },
+                {
+                  type: "text",
+                  text: `อุปกรณ์: ${isIOS ? 'iOS' : isAndroid ? 'Android' : 'อื่นๆ'}`,
+                  size: "xs",
+                  color: "#999999",
+                  align: "center",
+                  margin: "sm"
+                },
+                {
+                  type: "separator",
+                  margin: "lg"
+                },
+                {
+                  type: "box",
+                  layout: "vertical",
+                  contents: [
+                    {
+                      type: "text",
+                      text: `วิธีแก้ไขสำหรับ ${isIOS ? 'iOS' : isAndroid ? 'Android' : 'อุปกรณ์ของคุณ'}:`,
+                      weight: "bold",
+                      size: "sm",
+                      color: "#666666"
+                    },
+                    ...instructionContents
+                  ],
+                  margin: "lg",
+                  spacing: "xs"
+                }
+              ]
+            },
+            styles: {
+              body: {
+                backgroundColor: "#FFFFFF"
+              }
+            }
+          }
+        };
+
+        // Send message to chat immediately
+        console.log(`Sending GPS warning message to chat for ${isIOS ? 'iOS' : isAndroid ? 'Android' : 'Unknown'} device...`);
+        await liff.sendMessages([flexMessage]);
+        console.log('GPS warning message sent successfully');
+        
+        // Wait a moment to ensure message delivery, then close
+        await new Promise(resolve => setTimeout(resolve, 2500));
+        
+        console.log('Closing LIFF window...');
+        liff.closeWindow();
+
+      } catch (error) {
+        console.error('Error sending GPS warning message:', error);
+        // Still close LIFF even if message sending fails, but with shorter delay
+        setTimeout(() => {
+          liff.closeWindow();
+        }, 500);
+      }
+    }
+
+    function getLocation() {
+      return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject(new Error('GPS_NOT_SUPPORTED'));
+          return;
+        }
+
+        // Detect device type for different handling
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+        
+        console.log('Device detection:', { isAndroid, isIOS, userAgent: navigator.userAgent });
+
+        // Different timeout settings for different platforms
+        const timeoutDuration = isIOS ? 15000 : 10000; // iOS needs longer timeout
+        const locationOptions = {
+          enableHighAccuracy: true,
+          timeout: timeoutDuration - 2000, // Give 2 seconds buffer
+          maximumAge: isIOS ? 30000 : 0 // iOS can use cached location up to 30 seconds
+        };
+
+        console.log('GPS options:', locationOptions);
+
+        // Set timeout for GPS check
+        const timeoutId = setTimeout(() => {
+          reject(new Error('GPS_TIMEOUT'));
+        }, timeoutDuration);
+
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            clearTimeout(timeoutId);
+            console.log('GPS success:', position.coords);
+            resolve(position);
+          },
+          (error) => {
+            clearTimeout(timeoutId);
+            console.log('GPS error:', error);
+            let errorMessage = '';
+            switch(error.code) {
+              case error.PERMISSION_DENIED:
+                errorMessage = isIOS ? "GPS_DENIED_IOS" : "GPS_DENIED_ANDROID";
+                break;
+              case error.POSITION_UNAVAILABLE:
+                errorMessage = isIOS ? "GPS_UNAVAILABLE_IOS" : "GPS_UNAVAILABLE_ANDROID";
+                break;
+              case error.TIMEOUT:
+                errorMessage = isIOS ? "GPS_TIMEOUT_IOS" : "GPS_TIMEOUT_ANDROID";
+                break;
+              default:
+                errorMessage = isIOS ? "GPS_UNKNOWN_ERROR_IOS" : "GPS_UNKNOWN_ERROR_ANDROID";
+                break;
+            }
+            reject(new Error(errorMessage));
+          },
+          locationOptions
+        );
+      });
+    }
+
+    function showPosition(position) {
+      currentCoordinates = position.coords.latitude + ", " + position.coords.longitude;
+      const mapHtml = `<iframe width="100%" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q=${currentCoordinates}&t=&z=15&ie=UTF8&iwloc=&output=embed"></iframe>`;
+      document.getElementById('mapContainer').innerHTML = mapHtml;
+    }
+
+    // Initialize app with GPS check
+    async function initializeApp() {
+      try {
+        // Show GPS checking screen
+        document.getElementById('gpsCheckingScreen').style.display = 'block';
+        document.getElementById('mainForm').style.display = 'none';
+
+        // Initialize LIFF first
+        await initializeLiff();
+
+        // Then check GPS
+        const position = await getLocation();
+        
+        // If GPS is available, show position and continue
+        showPosition(position);
+        
+        // Hide GPS checking screen and show main form
+        document.getElementById('gpsCheckingScreen').style.display = 'none';
+        document.getElementById('mainForm').style.display = 'block';
+        
+        // Initialize form data
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('date').value = today;
+        
+        // Fetch dropdown data
+        await Promise.all([
+          fetchPromoterNames(),
+          fetchCollectors(),
+          fetchPlantTypes()
+        ]);
+
+      } catch (error) {
+        console.error('GPS Error:', error.message);
+        
+        // If GPS related error, send warning message and close
+        if (error.message.includes('GPS_') || error.message.includes('GPS')) {
+          // Send message immediately to chat with error type and then close
+          await sendGPSWarningAndClose(error.message);
+        } else {
+          // Other errors
+          Swal.fire({
+            icon: 'error',
+            title: 'เกิดข้อผิดพลาด',
+            text: 'ไม่สามารถเริ่มต้นแอปพลิเคชันได้: ' + error.message
+          });
+        }
+      }
+    }
+
+    document.getElementById('imageFile').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('imagePreview').innerHTML = `<img src="${e.target.result}" alt="Image Preview">`;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    document.getElementById('dataForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      loadingOverlay.style.display = 'block';
+
+      const submitButton = document.getElementById('sub');
+      submitButton.disabled = true;
+      submitButton.textContent = "Submitting..";
+
+      const formData = new FormData(this);
+      const fileInput = document.getElementById('imageFile').files[0];
+      const submitDate = new Date().toLocaleDateString();
+      const submitTime = new Date().toLocaleTimeString();
+
+      const reader = new FileReader();
+      reader.onload = async function(event) {
+        const base64 = event.target.result.split(',')[1];
+        const data = {
+          date: formData.get('date'),
+          firstName: formData.get('firstName'),
+          district: formData.get('district'),
+          collector: formData.get('collector'),
+          contact: formData.get('contact'),
+          plantType: formData.get('plantType'),
+          other: formData.get('other'),
+          details: formData.get('details'),
+          coordinates: currentCoordinates,
+          location: `https://maps.google.com/maps?q=${currentCoordinates}`,
+          base64: base64,
+          type: fileInput.type,
+          name: fileInput.name,
+          submitDate: submitDate,
+          submitTime: submitTime,
+          userId: userId
+        };
+
+        try {
+          // Save to Google Apps Script and get response
+          const response = await fetch('https://script.google.com/macros/s/AKfycbzniYO49YaS_3gv-V1WoLakPP14j6D9HScO6XCMDMzl3LdkADSI_RN1gVpaygghwdLD/exec', {
+            method: "POST",
+            body: JSON.stringify(data)
+          });
+          const result = await response.json();
+
+          if (result.status !== "success") {
+            throw new Error(result.message || "Failed to upload data and image");
+          }
+
+          const fileLink = result.fileLink;
+
+          // Create Flex Message
+          const flexMessage = {
+            type: "flex",
+            altText: "รายงานการทำงานส่งเสริมการเกษตร",
+            contents: {
+              type: "bubble",
+              body: {
+                type: "box",
+                layout: "vertical",
+                contents: [
+                  {
+                    type: "text",
+                    text: "รายงานการทำงานส่งเสริมการเกษตร",
+                    weight: "bold",
+                    size: "md",
+                    wrap: true
+                  },
+                  {
+                    type: "box",
+                    layout: "vertical",
+                    margin: "lg",
+                    spacing: "sm",
+                    contents: [
+                      { type: "text", text: `วันที่: ${data.date}`, wrap: true },
+                      { type: "text", text: `ชื่อส่งเสริม: ${data.firstName}`, wrap: true },
+                      { type: "text", text: `อำเภอ: ${data.district}`, wrap: true },
+                      { type: "text", text: `Collector: ${data.collector}`, wrap: true },
+                      { type: "text", text: `ผู้ติดต่อ: ${data.contact}`, wrap: true },
+                      { type: "text", text: `ชนิดพืช: ${data.plantType}`, wrap: true },
+                      { type: "text", text: `อื่นๆ: ${data.other || '-'}`, wrap: true },
+                      { type: "text", text: `รายละเอียด: ${data.details}`, wrap: true },
+                      { type: "text", text: `ส่งเมื่อ: ${data.submitDate} ${data.submitTime}`, wrap: true }
+                    ]
+                  }
+                ]
+              }
+            }
+          };
+
+          // Create Image Message
+          const imageMessage = {
+            type: "image",
+            originalContentUrl: fileLink,
+            previewImageUrl: fileLink
+          };
+
+          // Send Flex Message, Image, and Location
+          await liff.sendMessages([
+            flexMessage,
+            imageMessage,
+            {
+              type: "location",
+              title: "สถานที่ทำงาน",
+              address: data.district,
+              latitude: parseFloat(currentCoordinates.split(',')[0]),
+              longitude: parseFloat(currentCoordinates.split(',')[1])
+            }
+          ]);
+
+          loadingOverlay.style.display = 'none';
+          Swal.fire({
+            icon: 'success',
+            title: 'บันทึกและส่งสำเร็จ!',
+            text: 'ข้อมูลถูกบันทึกและส่งไปยัง LINE Chat เรียบร้อยแล้ว',
+            timer: 2000,
+            showConfirmButton: false
+          });
+
+          liff.closeWindow();
+
+          submitButton.textContent = "บันทึกการส่งงาน";
+          submitButton.disabled = false;
+          document.getElementById('dataForm').reset();
+          document.getElementById('imagePreview').innerHTML = '';
+        } catch (error) {
+          loadingOverlay.style.display = 'none';
+          Swal.fire({
+            icon: 'error',
+            title: 'เกิดข้อผิดพลาด',
+            text: 'ไม่สามารถบันทึกหรือส่งข้อมูลได้: ' + error.message
+          });
+          submitButton.textContent = "บันทึกการส่งงาน";
+          submitButton.disabled = false;
+        }
+      };
+      reader.readAsDataURL(fileInput);
+    });
+
+    function fetchPromoterNames() {
+      return fetch('https://script.google.com/macros/s/AKfycbzniYO49YaS_3gv-V1WoLakPP14j6D9HScO6XCMDMzl3LdkADSI_RN1gVpaygghwdLD/exec?action=getPromoterNames')
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลดชื่อส่งเสริมได้: ' + data.error });
+            return;
+          }
+          const selectElement = $('#firstName');
+          data.forEach(name => selectElement.append(new Option(name, name)));
+          selectElement.select2({ placeholder: "กรุณาเลือกชื่อส่งเสริม", allowClear: true });
+        })
+        .catch(error => {
+          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message });
+        });
+    }
+
+    function fetchCollectors() {
+      return fetch('https://script.google.com/macros/s/AKfycbzniYO49YaS_3gv-V1WoLakPP14j6D9HScO6XCMDMzl3LdkADSI_RN1gVpaygghwdLD/exec?action=getCollectors')
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลด Collectors ได้: ' + data.error });
+            return;
+          }
+          const selectElement = $('#collector');
+          data.forEach(name => selectElement.append(new Option(name, name)));
+          selectElement.select2({ placeholder: "กรุณาเลือก Collector", allowClear: true });
+        })
+        .catch(error => {
+          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message });
+        });
+    }
+
+    function fetchPlantTypes() {
+      return fetch('https://script.google.com/macros/s/AKfycbzniYO49YaS_3gv-V1WoLakPP14j6D9HScO6XCMDMzl3LdkADSI_RN1gVpaygghwdLD/exec?action=getPlantTypes')
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลดชนิดพืชได้: ' + data.error });
+            return;
+          }
+          const selectElement = $('#plantType');
+          data.forEach(type => selectElement.append(new Option(type, type)));
+          selectElement.select2({ placeholder: "กรุณาเลือกชนิดพืช", allowClear: true });
+        })
+        .catch(error => {
+          Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message });
+        });
+    }
+
+    // Initialize when page loads
+    window.onload = function() {
+      initializeApp();
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>รายงานการส่งเสริมการเกษตร</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    .table-container {
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      overflow-x: auto;
+    }
+    th, td {
+      white-space: nowrap;
+    }
+    .image-preview {
+      max-width: 100px;
+      border-radius: 5px;
+    }
+    .truncate {
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-7xl mx-auto">
+    <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">รายงานการส่งเสริมการเกษตร</h1>
+    <div class="table-container p-4">
+      <table id="dataTable" class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">วันที่</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ชื่อ สกุล</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">อำเภอ</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Collector</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ผู้ติดต่อ</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ชนิดพืช</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">อื่นๆ</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">รายละเอียด</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">พิกัด</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">สถานที่</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">รูปภาพ</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">วันที่ส่งงาน</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">เวลาส่งงาน</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <!-- Data will be populated here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    async function fetchData() {
+      try {
+        const url = 'https://script.google.com/macros/s/AKfycbx71XodbTvqXjFclnOgjfFEm46nDuIYO7TQoX6_tesfztpAennb4YEJbraCNsvvU3Oz/exec'; // Replace with your NEW deployed URL
+        console.log("Step 1: Fetching data from:", url);
+
+        const response = await fetch(url);
+        console.log("Step 2: Response status:", response.status);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log("Step 3: Fetched data:", result);
+
+        if (result.status !== "success") {
+          throw new Error(result.message || "Failed to fetch data");
+        }
+
+        const tbody = document.querySelector('#dataTable tbody');
+        tbody.innerHTML = ''; // Clear existing rows
+
+        console.log("Step 4: Data length:", result.data ? result.data.length : "No data property");
+
+        if (!result.data || result.data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="13" class="px-6 py-4 text-center text-sm text-gray-500">ไม่มีข้อมูลใน Google Sheet</td></tr>';
+          console.log("Step 5: No data available in result.data");
+          return;
+        }
+
+        result.data.forEach((row, index) => {
+          console.log(`Step 6: Processing row ${index + 1}:`, row);
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${row.date || '-'}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${row.firstName || '-'}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${row.district || '-'}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${row.collector || '-'}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${row.contact || '-'}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${row.plantType || '-'}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${row.other || '-'}</td>
+            <td class="px-6 py-4 text-sm text-gray-900 truncate" title="${row.details || ''}">${row.details || '-'}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${row.coordinates || '-'}</td>
+            <td class="px-6 py-4 text-sm text-blue-600 hover:underline">${row.location ? `<a href="${row.location}" target="_blank">ดูแผนที่</a>` : '-'}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              ${row.image ? `<img src="${row.image}" alt="ภาพงาน" class="image-preview" onerror="this.src='https://via.placeholder.com/100?text=Image+Not+Found';">` : '-'}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${row.submitDate || '-'}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${row.submitTime || '-'}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'เกิดข้อผิดพลาด',
+          text: 'ไม่สามารถดึงข้อมูลได้: ' + error.message
+        });
+      }
+    }
+
+    window.onload = function() {
+      fetchData();
+    };
+  </script>
+</body>
+</html>

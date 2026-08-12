@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <title>ระบบเช็คข้อมูลการส่งงานประจำวัน ชุปเปอร์ไวเซอร์ และเจ้าหน้าที่ส่งเสริมฯ บริษัทเชียงใหม่โฟรเซ่นฟูดส์ กำกัด(มหาชน)</title>
+   <meta name="title" content="จัดการข้อมูล ส่งเสริม, Collector และ ชุปเปอร์ไวเซอร์">
+  <meta name="description" content="จัดการข้อมูล ส่งเสริม, Collector และ ชุปเปอร์ไวเซอร์">
+  <meta name="keywords" content="จัดการข้อมูล ส่งเสริม, Collector และ ชุปเปอร์ไวเซอร์">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Facebook meta -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ระบบเช็คข้อมูลการส่งงาน">
+  <meta property="og:description" content="ระบบเช็คข้อมูลการส่งงาน">
+  <meta property="og:image" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <meta property="og:url" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+
+  <!-- Twitter meta -->
+  <meta property="twitter:title" content="ระบบเช็คข้อมูลการส่งงาน">
+  <meta property="twitter:description" content="ระบบเช็คข้อมูลการส่งงาน">
+  <meta property="twitter:image" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <meta property="twitter:card" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+
+  <!-- MS APP -->
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+
+  <!-- APPLE APP -->
+  <meta name="apple-mobile-web-app-title" content="ระบบเช็คข้อมูลการส่งงาน">
+  <meta name="apple-mobile-web-app-status-bar-style" content="ระบบเช็คข้อมูลการส่งงาน">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="apple-touch-icon" sizes="152x152" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="apple-touch-icon" sizes="167x167" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 621px) and (device-height: 1104px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+  <link href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+
+  <!-- FAVICON -->
+  <link rel="icon" type="image/png" sizes="96x96" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="shortcut icon" type="image/x-icon" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+  <link rel="icon" type="image/x-icon" href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="shortcut icon" href="https://www.cmfrozen.com/wp-content/uploads/2015/04/cropped-favicon.png" />
+    <link rel="apple-touch-icon" href="https://www.cmfrozen.com/wp-content/uploads/2015/04/cropped-favicon.png" />
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                        'bounce-gentle': 'bounceGentle 0.6s ease-out',
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        bounceGentle: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-5px)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-3px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        .mobile-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .tab-indicator {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .loading-dots {
+            animation: loading 1.4s ease-in-out infinite both;
+        }
+        
+        .loading-dots:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dots:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes loading {
+            0%, 80%, 100% {
+                transform: scale(0);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .tab-button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .tab-button:active {
+            transform: scale(0.95);
+        }
+        
+        .bottom-tab-shadow {
+            box-shadow: 0 -10px 25px -5px rgba(0, 0, 0, 0.1), 0 -4px 10px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .notification-dot {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* Custom scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #667eea, #764ba2);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, #5a67d8, #6b46c1);
+        }
+        
+        /* Go to top button */
+        .go-to-top {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .go-to-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .go-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        /* Footer styles */
+        .footer-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .footer-content {
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        /* For Firefox */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #667eea #f1f5f9;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen overflow-hidden">
+    <!-- Mobile App Container -->
+    <div class="h-screen flex flex-col">
+        <!-- Header with gradient -->
+        <div class="mobile-gradient px-6 py-6 pb-4">
+            <div class="text-white text-center">
+                <h1 class="text-xl font-bold mb-2 animate-fade-in">รายงานข้อมูลการส่งงานประจำวัน</h1>
+                <p class="text-blue-100 text-sm font-medium opacity-90">บริษัทเชียงใหม่โฟรเซ่นฟูดส์ จำกัด(มหาชน)</p>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="flex-1 relative bg-white overflow-hidden">
+            <!-- Supervisor Tab -->
+            <div id="supervisor-content" class="absolute inset-0 transition-all duration-500">
+                <div id="supervisor-loading" class="h-full flex flex-col items-center justify-center bg-gradient-to-b from-blue-50 to-white">
+                    <div class="mb-8 animate-float">
+                        <div class="relative">
+                            <div class="w-20 h-20 border-4 border-blue-200 rounded-full animate-spin"></div>
+                            <div class="absolute top-2 left-2 w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-blue-500 rounded-full"></div>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3 animate-bounce-gentle">กำลังโหลดข้อมูล</h3>
+                    <p class="text-gray-500 text-center px-8 mb-6">ชุปเปอร์ไวเซอร์ • กรุณารอสักครู่...</p>
+                    <div class="flex space-x-2">
+                        <div class="w-3 h-3 bg-blue-500 rounded-full loading-dots"></div>
+                        <div class="w-3 h-3 bg-blue-500 rounded-full loading-dots"></div>
+                        <div class="w-3 h-3 bg-blue-500 rounded-full loading-dots"></div>
+                    </div>
+                </div>
+                <iframe id="supervisor-iframe" 
+                        src="https://script.google.com/macros/s/AKfycbwASVje2CA6B-YxpusKCSw0n8VVQoSYFFy3GyH8cV9asP_zHHd8WZXSOR3dKOAiOmsvWg/exec" 
+                        class="w-full h-full hidden animate-fade-in"></iframe>
+            </div>
+
+            <!-- Promoter Tab -->
+            <div id="promoter-content" class="absolute inset-0 transition-all duration-500 translate-x-full">
+                <div id="promoter-loading" class="h-full flex flex-col items-center justify-center bg-gradient-to-b from-purple-50 to-white hidden">
+                    <div class="mb-8 animate-float">
+                        <div class="relative">
+                            <div class="w-20 h-20 border-4 border-purple-200 rounded-full animate-spin"></div>
+                            <div class="absolute top-2 left-2 w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-purple-500 rounded-full"></div>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3 animate-bounce-gentle">กำลังโหลดข้อมูล</h3>
+                    <p class="text-gray-500 text-center px-8 mb-6">เจ้าหน้าที่ส่งเสริมฯ • กรุณารอสักครู่...</p>
+                    <div class="flex space-x-2">
+                        <div class="w-3 h-3 bg-purple-500 rounded-full loading-dots"></div>
+                        <div class="w-3 h-3 bg-purple-500 rounded-full loading-dots"></div>
+                        <div class="w-3 h-3 bg-purple-500 rounded-full loading-dots"></div>
+                    </div>
+                </div>
+                <iframe id="promoter-iframe" 
+                        class="w-full h-full hidden animate-fade-in"></iframe>
+            </div>
+        </div>
+
+        <!-- Bottom Tab Bar -->
+        <div class="bg-white/95 glass-effect bottom-tab-shadow border-t border-gray-100">
+            <div class="px-6 py-3">
+                <div class="flex justify-center space-x-1">
+                    <!-- Supervisor Tab -->
+                    <button id="supervisor-btn" 
+                            class="tab-button flex-1 flex flex-col items-center py-3 px-4 rounded-2xl transition-all duration-300 group"
+                            onclick="switchTab('supervisor')">
+                        <div class="relative mb-2">
+                            <div class="w-8 h-8 rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                </svg>
+                            </div>
+                            <div class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full notification-dot"></div>
+                        </div>
+                        <span class="text-sm font-semibold text-blue-600">ชุปเปอร์ไวเซอร์</span>
+                        <div class="w-8 h-1 bg-blue-500 rounded-full mt-1 opacity-100"></div>
+                    </button>
+
+                    <!-- Promoter Tab -->
+                    <button id="promoter-btn" 
+                            class="tab-button flex-1 flex flex-col items-center py-3 px-4 rounded-2xl transition-all duration-300 group"
+                            onclick="switchTab('promoter')">
+                        <div class="relative mb-2">
+                            <div class="w-8 h-8 rounded-2xl bg-gray-200 flex items-center justify-center transition-all duration-300 group-hover:bg-purple-100">
+                                <svg class="w-5 h-5 text-gray-500 group-hover:text-purple-500 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <span class="text-sm font-medium text-gray-500 group-hover:text-purple-500 transition-colors duration-300">เจ้าหน้าที่ส่งเสริมฯ</span>
+                        <div class="w-8 h-1 bg-transparent rounded-full mt-1"></div>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- iPhone Home Indicator -->
+            <div class="flex justify-center pb-2">
+                <div class="w-32 h-1 bg-gray-300 rounded-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="footer-gradient text-white py-4 px-6 text-center footer-content">
+        <div class="max-w-md mx-auto">
+            <p class="text-sm font-medium mb-1">พัฒนาโดย</p>
+            <p class="font-semibold text-lg mb-1">นายธีรพงศ์ พรหมวัง</p>
+            <p class="text-sm mb-2">แผนกเทคโนโลยีสารสนเทศ</p>
+            <p class="text-xs opacity-90">บริษัทเชียงใหม่โฟรเซ่นฟูดส์ จำกัด(มหาชน)</p>
+        </div>
+    </footer>
+
+    <!-- Go to Top Button -->
+    <div id="go-to-top" class="go-to-top">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+        </svg>
+    </div>
+
+    <script>
+        let currentTab = 'supervisor';
+
+        // จัดการการโหลด iframe แรก
+        document.addEventListener('DOMContentLoaded', function() {
+            const supervisorIframe = document.getElementById('supervisor-iframe');
+            const supervisorLoading = document.getElementById('supervisor-loading');
+            
+            supervisorIframe.addEventListener('load', function() {
+                setTimeout(() => {
+                    supervisorLoading.classList.add('hidden');
+                    supervisorIframe.classList.remove('hidden');
+                }, 1000);
+            });
+
+            // Initialize scroll event listener
+            initScrollTopButton();
+        });
+
+        function switchTab(tab) {
+            if (currentTab === tab) return;
+            
+            const supervisorContent = document.getElementById('supervisor-content');
+            const promoterContent = document.getElementById('promoter-content');
+            const supervisorBtn = document.getElementById('supervisor-btn');
+            const promoterBtn = document.getElementById('promoter-btn');
+            
+            if (tab === 'supervisor') {
+                // Switch to supervisor
+                supervisorContent.style.transform = 'translateX(0)';
+                promoterContent.style.transform = 'translateX(100%)';
+                
+                // Update supervisor button (active state)
+                const supervisorIcon = supervisorBtn.querySelector('.w-8.h-8');
+                const supervisorText = supervisorBtn.querySelector('span');
+                const supervisorIndicator = supervisorBtn.querySelector('.w-8.h-1');
+                
+                supervisorIcon.className = 'w-8 h-8 rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300';
+                supervisorText.className = 'text-sm font-semibold text-blue-600';
+                supervisorIndicator.className = 'w-8 h-1 bg-blue-500 rounded-full mt-1 opacity-100';
+                
+                // Update promoter button (inactive state)
+                const promoterIcon = promoterBtn.querySelector('.w-8.h-8');
+                const promoterText = promoterBtn.querySelector('span');
+                const promoterIndicator = promoterBtn.querySelector('.w-8.h-1');
+                
+                promoterIcon.className = 'w-8 h-8 rounded-2xl bg-gray-200 flex items-center justify-center transition-all duration-300 group-hover:bg-purple-100';
+                promoterText.className = 'text-sm font-medium text-gray-500 group-hover:text-purple-500 transition-colors duration-300';
+                promoterIndicator.className = 'w-8 h-1 bg-transparent rounded-full mt-1';
+                
+            } else {
+                // Switch to promoter
+                supervisorContent.style.transform = 'translateX(-100%)';
+                promoterContent.style.transform = 'translateX(0)';
+                
+                // Update promoter button (active state)
+                const promoterIcon = promoterBtn.querySelector('.w-8.h-8');
+                const promoterText = promoterBtn.querySelector('span');
+                const promoterIndicator = promoterBtn.querySelector('.w-8.h-1');
+                
+                promoterIcon.className = 'w-8 h-8 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-600 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300';
+                promoterText.className = 'text-sm font-semibold text-purple-600';
+                promoterIndicator.className = 'w-8 h-1 bg-purple-500 rounded-full mt-1 opacity-100';
+                
+                // Update supervisor button (inactive state)
+                const supervisorIcon = supervisorBtn.querySelector('.w-8.h-8');
+                const supervisorText = supervisorBtn.querySelector('span');
+                const supervisorIndicator = supervisorBtn.querySelector('.w-8.h-1');
+                
+                supervisorIcon.className = 'w-8 h-8 rounded-2xl bg-gray-200 flex items-center justify-center transition-all duration-300 group-hover:bg-blue-100';
+                supervisorText.className = 'text-sm font-medium text-gray-500 group-hover:text-blue-500 transition-colors duration-300';
+                supervisorIndicator.className = 'w-8 h-1 bg-transparent rounded-full mt-1';
+                
+                // Load promoter iframe if not loaded
+                const promoterIframe = document.getElementById('promoter-iframe');
+                const promoterLoading = document.getElementById('promoter-loading');
+                
+                if (!promoterIframe.src) {
+                    promoterLoading.classList.remove('hidden');
+                    promoterIframe.src = 'https://script.google.com/macros/s/AKfycbyM1BUQOxd6XS_SsxKyEnQ-8MOaQUp7tkOn11qchlDvEDcw7oC0VwjxEl_DAAzQg1J11A/exec';
+                    
+                    promoterIframe.addEventListener('load', function() {
+                        setTimeout(() => {
+                            promoterLoading.classList.add('hidden');
+                            promoterIframe.classList.remove('hidden');
+                        }, 1000);
+                    }, { once: true });
+                }
+            }
+            
+            currentTab = tab;
+        }
+
+        // Add touch/swipe support for mobile
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+
+        document.addEventListener('touchstart', function(e) {
+            startX = e.touches[0].clientX;
+            isDragging = true;
+        }, { passive: true });
+
+        document.addEventListener('touchmove', function(e) {
+            if (!isDragging) return;
+            currentX = e.touches[0].clientX;
+        }, { passive: true });
+
+        document.addEventListener('touchend', function(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            const diffX = startX - currentX;
+            
+            if (Math.abs(diffX) > 80) { // Increased swipe threshold
+                if (diffX > 0 && currentTab === 'supervisor') {
+                    // Swipe left to promoter
+                    switchTab('promoter');
+                } else if (diffX < 0 && currentTab === 'promoter') {
+                    // Swipe right to supervisor
+                    switchTab('supervisor');
+                }
+            }
+        }, { passive: true });
+
+        // Add haptic feedback for mobile (if supported)
+        function hapticFeedback() {
+            if ('vibrate' in navigator) {
+                navigator.vibrate(10); // Very short vibration
+            }
+        }
+
+        // Add haptic to tab buttons
+        document.getElementById('supervisor-btn').addEventListener('click', hapticFeedback);
+        document.getElementById('promoter-btn').addEventListener('click', hapticFeedback);
+
+        // Prevent zooming
+        document.addEventListener('gesturestart', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('gesturechange', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('gestureend', function(e) {
+            e.preventDefault();
+        });
+
+        // Go to top functionality
+        function initScrollTopButton() {
+            const goToTopButton = document.getElementById('go-to-top');
+            
+            // Show/hide button based on scroll position
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    goToTopButton.classList.add('show');
+                } else {
+                    goToTopButton.classList.remove('show');
+                }
+            });
+            
+            // Scroll to top when button is clicked
+            goToTopButton.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Also handle iframe scrolling
+            const iframes = document.querySelectorAll('iframe');
+            iframes.forEach(iframe => {
+                iframe.addEventListener('load', function() {
+                    try {
+                        const iframeWindow = iframe.contentWindow;
+                        iframeWindow.addEventListener('scroll', function() {
+                            if (iframeWindow.pageYOffset > 300) {
+                                goToTopButton.classList.add('show');
+                            } else {
+                                goToTopButton.classList.remove('show');
+                            }
+                        });
+                        
+                        // Handle click to scroll iframe to top
+                        const originalOnClick = goToTopButton.onclick;
+                        goToTopButton.onclick = function() {
+                            iframeWindow.scrollTo({
+                                top: 0,
+                                behavior: 'smooth'
+                            });
+                            if (originalOnClick) originalOnClick();
+                        };
+                    } catch (e) {
+                        console.log('Cannot access iframe content due to cross-origin policy');
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>
