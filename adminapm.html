@@ -82,7 +82,7 @@
     .tabs {
       display: flex;
       gap: 0.5rem;
-      margin: 1.25rem 0 0;
+      margin-bottom: 1.25rem;
       background: #f1f5f4;
       padding: 0.35rem;
       border-radius: 14px;
@@ -333,6 +333,12 @@
       <p class="loading-text">กำลังบันทึก..</p>
     </div>
 
+    <div class="tabs">
+      <div class="tab active" data-tab="promoter"><i class="fas fa-user-tie"></i><span>ส่งเสริม <span class="count-badge" id="badge-promoter">0</span></span></div>
+      <div class="tab" data-tab="collector"><i class="fas fa-truck"></i><span>Collector <span class="count-badge" id="badge-collector">0</span></span></div>
+      <div class="tab" data-tab="supervisor"><i class="fas fa-user-shield"></i><span>ชุปเปอร์ไวเซอร์ <span class="count-badge" id="badge-supervisor">0</span></span></div>
+    </div>
+
     <!-- Promoter Tab -->
     <div class="tab-content active" id="promoter">
       <p class="section-title"><i class="fas fa-plus-circle"></i> เพิ่มชื่อส่งเสริม</p>
@@ -403,12 +409,6 @@
         <tbody id="supervisorTable"></tbody>
       </table>
       </div>
-    </div>
-
-    <div class="tabs">
-      <div class="tab active" data-tab="promoter"><i class="fas fa-user-tie"></i><span>ส่งเสริม <span class="count-badge" id="badge-promoter">0</span></span></div>
-      <div class="tab" data-tab="collector"><i class="fas fa-truck"></i><span>Collector <span class="count-badge" id="badge-collector">0</span></span></div>
-      <div class="tab" data-tab="supervisor"><i class="fas fa-user-shield"></i><span>ชุปเปอร์ไวเซอร์ <span class="count-badge" id="badge-supervisor">0</span></span></div>
     </div>
   </div>
 
@@ -534,15 +534,11 @@
       loadingText.textContent = 'กำลังโหลดข้อมูล...';
       showLoading(true);
       const failures = [];
-      const types = ['promoter', 'collector', 'supervisor'];
-      let remaining = types.length;
-      await Promise.allSettled(types.map(type =>
-        loadData(type, failures).then(result => {
-          remaining--;
-          loadingText.textContent = 'กำลังโหลดข้อมูล... (' + (types.length - remaining) + '/' + types.length + ')';
-          return result;
-        })
-      ));
+      await Promise.allSettled([
+        loadData('promoter', failures),
+        loadData('collector', failures),
+        loadData('supervisor', failures)
+      ]);
       loadingText.textContent = originalText;
       showLoading(false);
       // รวมข้อผิดพลาดทั้งหมดในกล่องเดียว (กัน Swal หลายกล่องซ้อนกัน)
