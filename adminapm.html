@@ -82,7 +82,7 @@
     .tabs {
       display: flex;
       gap: 0.5rem;
-      margin-bottom: 1.25rem;
+      margin: 1.25rem 0 0;
       background: #f1f5f4;
       padding: 0.35rem;
       border-radius: 14px;
@@ -279,10 +279,38 @@
 
     @media (max-width: 640px) {
       body { padding: 0.9rem; }
+      /* กันเนื้อหาด้านล่างถูกเมนู Mobile app บัง */
+      body { padding-bottom: 6.25rem; }
       .container { padding: 1rem; }
       .page-header { padding: 1.1rem 1rem; }
-      .tabs { gap: 0.25rem; padding: 0.3rem; }
-      .tab { font-size: 0.78rem; padding: 0.55rem 0.2rem; }
+      /* แท็บเป็นเมนูด้านล่างติดขอบจอ แบบ Mobile app (icon อยู่บน ข้อความอยู่ล่าง) */
+      .tabs {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: 0;
+        border-radius: 16px 16px 0 0;
+        padding: 0.5rem 0.6rem;
+        padding-bottom: calc(0.5rem + env(safe-area-inset-bottom)); /* เผื่อพื้นที่ Home Indicator ของ iPhone */
+        background: rgba(255, 255, 255, 0.97);
+        box-shadow: 0 -6px 24px rgba(2, 44, 34, 0.15);
+        z-index: 900;
+        backdrop-filter: blur(6px);
+      }
+      .tab {
+        flex-direction: column;
+        gap: 0.2rem;
+        font-size: 0.72rem;
+        padding: 0.45rem 0.2rem;
+      }
+      .tab > span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        white-space: nowrap;
+      }
+      .tab i { font-size: 1.1rem; }
       .form-group { flex-direction: column; }
       .btn { width: 100%; }
       td .button-group { justify-content: flex-start; }
@@ -303,12 +331,6 @@
     <div class="loading-overlay" id="loadingOverlay">
       <div class="spinner"></div>
       <p class="loading-text">กำลังบันทึก..</p>
-    </div>
-
-    <div class="tabs">
-      <div class="tab active" data-tab="promoter"><i class="fas fa-user-tie"></i> ส่งเสริม <span class="count-badge" id="badge-promoter">0</span></div>
-      <div class="tab" data-tab="collector"><i class="fas fa-truck"></i> Collector <span class="count-badge" id="badge-collector">0</span></div>
-      <div class="tab" data-tab="supervisor"><i class="fas fa-user-shield"></i> ชุปเปอร์ไวเซอร์ <span class="count-badge" id="badge-supervisor">0</span></div>
     </div>
 
     <!-- Promoter Tab -->
@@ -382,6 +404,12 @@
       </table>
       </div>
     </div>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="promoter"><i class="fas fa-user-tie"></i><span>ส่งเสริม <span class="count-badge" id="badge-promoter">0</span></span></div>
+      <div class="tab" data-tab="collector"><i class="fas fa-truck"></i><span>Collector <span class="count-badge" id="badge-collector">0</span></span></div>
+      <div class="tab" data-tab="supervisor"><i class="fas fa-user-shield"></i><span>ชุปเปอร์ไวเซอร์ <span class="count-badge" id="badge-supervisor">0</span></span></div>
+    </div>
   </div>
 
   <script>
@@ -392,6 +420,24 @@
     const dataCache = { promoter: [], collector: [], supervisor: [] };
     const TYPE_MAP = { promoter: 'Promoter', collector: 'Collector', supervisor: 'Supervisor' };
 
+    // แคชข้อมูลในเครื่อง 12 ชั่วโมง — เปิดหน้ารอบถัดไปแสดงข้อมูลทันที (ไม่ต้องรอ API)
+    const CACHE_TTL = 12 * 60 * 60 * 1000;
+    const cacheKeyFor = (type) => 'apm_admin_' + type + '_v1';
+
+    function getCache(type) {
+      try {
+        const raw = localStorage.getItem(cacheKeyFor(type));
+        if (!raw) return null;
+        const { ts, data } = JSON.parse(raw);
+        if (Date.now() - ts > CACHE_TTL) return null;
+        return data;
+      } catch (e) { return null; }
+    }
+
+    function setCache(type, data) {
+      try { localStorage.setItem(cacheKeyFor(type), JSON.stringify({ ts: Date.now(), data: data })); } catch (e) { /* localStorage ไม่พร้อมใช้งาน */ }
+    }
+
     const actionFor = (type, verb) => verb + TYPE_MAP[type];
 
     // ดึง JSON จาก GAS แบบทนทาน: กัน timeout / คำตอบ HTML / คำตอบว่าง + ลองใหม่แบบ backoff
@@ -401,7 +447,7 @@
       let lastError = null;
       for (let attempt = 0; attempt <= retries; attempt++) {
         const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), 30000);
+        const timer = setTimeout(() => controller.abort(), 60000);
         let retryable = false;
         try {
           const response = await fetch(url, { ...options, signal: controller.signal });
@@ -419,7 +465,7 @@
         } catch (err) {
           clearTimeout(timer);
           if (err && err.name === 'AbortError') {
-            lastError = new Error('API ตอบช้าเกินไป (หมดเวลา 30 วินาที)');
+            lastError = new Error('API ตอบช้าเกินไป (หมดเวลา 60 วินาที)');
             retryable = true;
           } else {
             lastError = err;
@@ -462,22 +508,43 @@
       });
     });
 
-    // โหลดทีละรายการ ตามลำดับ (ไม่ยิง GAS พร้อมกัน 3 ครั้ง)
-    // → กัน GAS จำกัด concurrent executions / cold start จนโหลดมาไม่ครบ
+    // โหลดข้อมูล: ใช้แคชทันทีถ้ามี (เปิดหน้าไว ไม่ต้องรอ API) แล้วค่อยโหลดสดแบบขนานอัปเดตเบื้องหลัง
+    // ครั้งแรกที่ยังไม่มีแคช → โหลดทั้ง 3 แบบขนาน (ไม่โหลดทีละอันตามลำดับ) แสดงตารางทีละอันทันทีที่ได้ข้อมูล
+    // (เดิมโหลดตามลำดับ + ไม่มีแคช → ต้องรอ cold start ของ GAS นานหลายสิบวินาทีทุกครั้งที่เปิดหน้า)
     async function loadAllData() {
       const loadingText = document.querySelector('#loadingOverlay .loading-text');
       const originalText = loadingText.textContent;
+
+      // 1) แสดงข้อมูลจากแคชทันที (ถ้ามี) → หน้าใช้งานได้เลย ไม่ต้องรอ API
+      let hasCache = false;
+      for (const type of Object.keys(dataCache)) {
+        const cached = getCache(type);
+        if (cached !== null && Array.isArray(cached)) {
+          dataCache[type] = cached;
+          renderTable(type);
+          hasCache = true;
+        }
+      }
+      if (hasCache) {
+        refreshAllData(); // ดึงข้อมูลสดอัปเดตเบื้องหลัง ไม่บล็อกหน้า
+        return;
+      }
+
+      // 2) ครั้งแรก (ยังไม่มีแคช) → โหลด 3 รายการพร้อมกัน แสดงผลทีละตารางทันทีที่ได้มา
       loadingText.textContent = 'กำลังโหลดข้อมูล...';
       showLoading(true);
       const failures = [];
-      try {
-        await loadData('promoter', failures);
-        await loadData('collector', failures);
-        await loadData('supervisor', failures);
-      } finally {
-        loadingText.textContent = originalText;
-        showLoading(false);
-      }
+      const types = ['promoter', 'collector', 'supervisor'];
+      let remaining = types.length;
+      await Promise.allSettled(types.map(type =>
+        loadData(type, failures).then(result => {
+          remaining--;
+          loadingText.textContent = 'กำลังโหลดข้อมูล... (' + (types.length - remaining) + '/' + types.length + ')';
+          return result;
+        })
+      ));
+      loadingText.textContent = originalText;
+      showLoading(false);
       // รวมข้อผิดพลาดทั้งหมดในกล่องเดียว (กัน Swal หลายกล่องซ้อนกัน)
       if (failures.length) {
         Swal.fire({
@@ -490,6 +557,28 @@
           cancelButtonText: 'ปิด'
         }).then(result => {
           if (result.isConfirmed) loadAllData();
+        });
+      }
+    }
+
+    // ดึงข้อมูลสดจาก API แบบขนานแล้วอัปเดตแคช/ตาราง — ทำงานเบื้องหลัง ไม่แสดงหน้าจอบล็อก
+    async function refreshAllData() {
+      const failures = [];
+      await Promise.allSettled([
+        loadData('promoter', failures),
+        loadData('collector', failures),
+        loadData('supervisor', failures)
+      ]);
+      if (failures.length) {
+        Swal.fire({
+          toast: true,
+          position: 'bottom',
+          icon: 'warning',
+          title: 'โหลดข้อมูลใหม่ไม่ครบ',
+          text: 'กำลังแสดงข้อมูลเก่าจากแคชอยู่ — ลองรีเฟรชหน้าอีกครั้ง',
+          timer: 4000,
+          showConfirmButton: false,
+          confirmButtonColor: '#059669'
         });
       }
     }
@@ -508,9 +597,10 @@
     // ถ้าส่ง failures เข้ามาจะเก็บข้อผิดพลาดไว้ (โหลดตอนเปิดหน้า) แทนการเด้งกล่องแจ้งเตือนทีละอัน
     async function loadData(type, failures) {
       try {
-        const data = await requestJson(`${SCRIPT_URL}?action=get${TYPE_MAP[type]}Names`, {}, 3);
+        const data = await requestJson(`${SCRIPT_URL}?action=get${TYPE_MAP[type]}Names`, {}, 2);
         if (data.error) throw new Error(data.error);
         dataCache[type] = Array.isArray(data) ? data : [];
+        setCache(type, dataCache[type]); // อัปเดตแคช → เปิดหน้ารอบถัดไปแสดงทันที
         renderTable(type);
         return true;
       } catch (error) {
