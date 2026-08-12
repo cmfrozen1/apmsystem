@@ -372,16 +372,31 @@
 
     // ดึงข้อมูลจาก API และใช้ Tom Select
     let tomSelectInstance = null;
-    async function fetchKeywords() {
-      try {
-        const response = await fetch(API_URL);
-        if (!response.ok) throw new Error('HTTP ' + response.status);
-        const keywords = await response.json();
 
-        const options = (Array.isArray(keywords) ? keywords : []).map(item => ({
-          value: item.keyword,
-          text: item.keyword
-        }));
+    // รองรับข้อมูลหลายรูปแบบ: array ของ object {keyword}, array ของ string, หรือ object { data: [...] }
+    function normalizeKeywords(raw) {
+      const list = Array.isArray(raw) ? raw : (raw && Array.isArray(raw.data) ? raw.data : []);
+      return list.map(item => {
+        let text = '';
+        if (typeof item === 'string' || typeof item === 'number') {
+          text = String(item);
+        } else if (item && typeof item === 'object') {
+          text = item.keyword || item.Keyword || item.value || item.name || item.label || item.text || '';
+        }
+        text = String(text).trim();
+        return { value: text, text: text };
+      }).filter(o => o.text !== '');
+    }
+
+    async function fetchKeywords() {
+      // ถ้า GAS ตอบช้า/ค้าง (cold start) ให้ timeout 30 วินาทีแทนที่จะรอตลอดไป
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 30000);
+      try {
+        const response = await fetch(API_URL, { signal: controller.signal });
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const raw = await response.json();
+        const options = normalizeKeywords(raw);
 
         // Initialize Tom Select
         tomSelectInstance = new TomSelect('#dropdown', {
@@ -395,7 +410,17 @@
         });
       } catch (err) {
         console.error('Error fetching keywords:', err);
-        Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการโหลด Keyword', confirmButtonColor: '#059669' });
+        const is403 = err && err.message === 'HTTP 403';
+        Swal.fire({
+          icon: 'error',
+          title: 'ข้อผิดพลาด',
+          text: is403
+            ? 'API ยังไม่เปิดใช้งานสาธารณะ (HTTP 403) — ไปที่ Google Apps Script > Deploy > Manage deployments แล้วตั้งค่า Who has access เป็น Anyone'
+            : 'เกิดข้อผิดพลาดในการโหลด Keyword',
+          confirmButtonColor: '#059669'
+        });
+      } finally {
+        clearTimeout(timer);
       }
     }
 
