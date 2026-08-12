@@ -394,6 +394,44 @@
     const TYPE_MAP = { promoter: 'Promoter', collector: 'Collector', supervisor: 'Supervisor' };
 
     const actionFor = (type, verb) => verb + TYPE_MAP[type];
+
+    // ดึง JSON จาก GAS แบบทนทาน: กัน timeout / คำตอบ HTML / คำตอบว่าง + ลองใหม่แบบ backoff
+    // (GAS มีข้อจำกัดเรื่อง concurrent executions ถ้าเรียกพร้อมกันหลายครั้งจะโหลดมาไม่ครบ)
+    const RETRYABLE_STATUS = new Set([408, 429, 500, 502, 503, 504]);
+    async function requestJson(url, options, retries = 2) {
+      let lastError = null;
+      for (let attempt = 0; attempt <= retries; attempt++) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 30000);
+        let retryable = false;
+        try {
+          const response = await fetch(url, { ...options, signal: controller.signal });
+          clearTimeout(timer);
+          if (!response.ok) {
+            retryable = RETRYABLE_STATUS.has(response.status);
+            throw new Error('HTTP ' + response.status);
+          }
+          const text = await response.text();
+          const trimmed = text.trim();
+          if (!trimmed) throw new Error('API ตอบกลับว่างเปล่า');
+          // GAS บางครั้งตอบหน้า HTML (ต้องล็อกอิน / ยังไม่เปิดสาธารณะ) → ถือว่าล้มเหลวทันที
+          if (trimmed.charAt(0) === '<') throw new Error('API ตอบกลับเป็นหน้า HTML (ยังไม่เปิดใช้งานสาธารณะ)');
+          return JSON.parse(trimmed);
+        } catch (err) {
+          clearTimeout(timer);
+          if (err && err.name === 'AbortError') {
+            lastError = new Error('API ตอบช้าเกินไป (หมดเวลา 30 วินาที)');
+            retryable = true;
+          } else {
+            lastError = err;
+          }
+          if (retryable && attempt < retries) {
+            await new Promise(res => setTimeout(res, 1000 * (attempt + 1))); // รอแล้วลองใหม่
+          }
+        }
+      }
+      throw lastError;
+    }
     const showLoading = (show) => {
       const el = document.getElementById('loadingOverlay');
       el.style.display = show ? 'flex' : 'none';
@@ -420,12 +458,42 @@
       }).then((result) => {
         if (result.isConfirmed && result.value === PASSWORD) {
           document.getElementById('mainContainer').style.display = 'block';
-          loadData('promoter');
-          loadData('collector');
-          loadData('supervisor');
+          loadAllData();
         }
       });
     };
+
+    // โหลดทีละรายการ ตามลำดับ (ไม่ยิง GAS พร้อมกัน 3 ครั้ง)
+    // → กัน GAS จำกัด concurrent executions / cold start จนโหลดมาไม่ครบ
+    async function loadAllData() {
+      const loadingText = document.querySelector('#loadingOverlay .loading-text');
+      const originalText = loadingText.textContent;
+      loadingText.textContent = 'กำลังโหลดข้อมูล...';
+      showLoading(true);
+      const failures = [];
+      try {
+        await loadData('promoter', failures);
+        await loadData('collector', failures);
+        await loadData('supervisor', failures);
+      } finally {
+        loadingText.textContent = originalText;
+        showLoading(false);
+      }
+      // รวมข้อผิดพลาดทั้งหมดในกล่องเดียว (กัน Swal หลายกล่องซ้อนกัน)
+      if (failures.length) {
+        Swal.fire({
+          icon: 'error',
+          title: 'โหลดข้อมูลไม่ครบ',
+          html: 'ไม่สามารถโหลดข้อมูลบางรายการได้:<br>' + failures.map(f => '• ' + f).join('<br>'),
+          confirmButtonColor: '#059669',
+          showCancelButton: true,
+          confirmButtonText: 'ลองใหม่',
+          cancelButtonText: 'ปิด'
+        }).then(result => {
+          if (result.isConfirmed) loadAllData();
+        });
+      }
+    }
 
     // Tab switching
     $('.tab').on('click', function () {
@@ -435,19 +503,23 @@
       $(`#${$(this).data('tab')}`).addClass('active');
     });
 
-    // Load data for tables
-    function loadData(type) {
-      fetch(`${SCRIPT_URL}?action=get${TYPE_MAP[type]}Names`)
-        .then(response => response.json())
-        .then(data => {
-          if (data.error) {
-            showError(data.error);
-            return;
-          }
-          dataCache[type] = Array.isArray(data) ? data : [];
-          renderTable(type);
-        })
-        .catch(error => showError('เกิดข้อผิดพลาดในการโหลดข้อมูล: ' + error.message));
+    // Load data for tables (ทนทาน: timeout + ลองใหม่หลายครั้ง จนกว่าจะได้ข้อมูลครบ)
+    // ถ้าส่ง failures เข้ามาจะเก็บข้อผิดพลาดไว้ (โหลดตอนเปิดหน้า) แทนการเด้งกล่องแจ้งเตือนทีละอัน
+    async function loadData(type, failures) {
+      try {
+        const data = await requestJson(`${SCRIPT_URL}?action=get${TYPE_MAP[type]}Names`, {}, 3);
+        if (data.error) throw new Error(data.error);
+        dataCache[type] = Array.isArray(data) ? data : [];
+        renderTable(type);
+        return true;
+      } catch (error) {
+        if (failures) {
+          failures.push(error.message);
+        } else {
+          showError('เกิดข้อผิดพลาดในการโหลดข้อมูล: ' + error.message);
+        }
+        return false;
+      }
     }
 
     // Render table safely (textContent = no HTML injection / broken rows from quotes)
@@ -508,11 +580,10 @@
       }
 
       showLoading(true);
-      fetch(SCRIPT_URL, {
+      requestJson(SCRIPT_URL, {
         method: 'POST',
         body: JSON.stringify({ action: actionFor(type, 'add'), name: name })
-      })
-      .then(response => response.json())
+      }, 0)
       .then(result => {
         showLoading(false);
         if (result.status === 'success') {
@@ -548,11 +619,10 @@
         const newName = result.value ? result.value.trim() : '';
         if (result.isConfirmed && newName) {
           showLoading(true);
-          fetch(SCRIPT_URL, {
+          requestJson(SCRIPT_URL, {
             method: 'POST',
             body: JSON.stringify({ action: actionFor(type, 'edit'), row: row, name: newName })
-          })
-          .then(response => response.json())
+          }, 0)
           .then(result => {
             showLoading(false);
             if (result.status === 'success') {
@@ -589,11 +659,10 @@
       }).then(result => {
         if (result.isConfirmed) {
           showLoading(true);
-          fetch(SCRIPT_URL, {
+          requestJson(SCRIPT_URL, {
             method: 'POST',
             body: JSON.stringify({ action: actionFor(type, 'delete'), row: row })
-          })
-          .then(response => response.json())
+          }, 0)
           .then(result => {
             showLoading(false);
             if (result.status === 'success') {
