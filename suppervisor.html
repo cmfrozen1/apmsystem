@@ -714,11 +714,17 @@
       const cached = getCache(cacheKey);
       if (cached && cached.length) fillSelect(selectId, cached, placeholder, onCreated);
 
-      return fetch(url)
+      // ถ้า GAS ตอบช้า/ค้าง (cold start) ให้ timeout 30 วินาที
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 30000);
+      return fetch(url, { signal: controller.signal })
         .then(response => response.json())
         .then(data => {
           if (data.error) {
-            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลด ' + errorLabel + ' ได้: ' + data.error, confirmButtonColor: '#059669' });
+            // มีข้อมูลแคชแสดงอยู่แล้ว → ไม่ต้องเด้ง error ซ้ำ
+            if (!cached || !cached.length) {
+              Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลด ' + errorLabel + ' ได้: ' + data.error, confirmButtonColor: '#059669' });
+            }
             return;
           }
           if (!Array.isArray(data) || !data.length) return;
@@ -732,7 +738,8 @@
             return;
           }
           Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message, confirmButtonColor: '#059669' });
-        });
+        })
+        .finally(() => clearTimeout(timer));
     }
 
     // โหลด Select ทั้ง 2 ช่องแบบขนาน (ไม่ต้องรอ LIFF/GPS)

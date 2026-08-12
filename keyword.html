@@ -344,7 +344,6 @@
         document.getElementById('browserNotice').style.display = 'block';
         document.getElementById('userName').textContent = 'ยินดีต้อนรับ';
       }
-      fetchKeywords();
     }
 
     // แสดงชื่อและรูปโปรไฟล์ผู้ใช้
@@ -372,6 +371,46 @@
 
     // ดึงข้อมูลจาก API และใช้ Tom Select
     let tomSelectInstance = null;
+    const KEYWORDS_CACHE_KEY = 'apm_keywords_v1';
+    const CACHE_TTL = 60 * 60 * 1000; // 1 ชั่วโมง
+
+    // อ่าน/เขียนแคช localStorage (กัน GAS cold-start ครั้งต่อๆ ไป)
+    function getCachedKeywords() {
+      try {
+        const raw = localStorage.getItem(KEYWORDS_CACHE_KEY);
+        if (!raw) return null;
+        const { ts, data } = JSON.parse(raw);
+        if (Date.now() - ts > CACHE_TTL) return null;
+        return data;
+      } catch (e) { return null; }
+    }
+
+    function setCachedKeywords(data) {
+      try {
+        localStorage.setItem(KEYWORDS_CACHE_KEY, JSON.stringify({ ts: Date.now(), data: data }));
+      } catch (e) { /* localStorage ไม่พร้อมใช้งาน */ }
+    }
+
+    // สร้าง Tom Select ทันที (UI พร้อมใช้ ไม่ต้องรอข้อมูลจาก API)
+    function initTomSelect(options) {
+      tomSelectInstance = new TomSelect('#dropdown', {
+        options: options || [],
+        valueField: 'value',
+        labelField: 'text',
+        searchField: 'text',
+        placeholder: 'ค้นหา Keyword',
+        allowEmptyOption: true,
+        render: { no_results: () => '<div class="no-results">ไม่พบผลลัพธ์</div>' }
+      });
+    }
+
+    // เติม/อัปเดตตัวเลือกใน Tom Select ที่สร้างไว้แล้ว
+    function updateTomSelectOptions(options) {
+      if (!tomSelectInstance || !options || !options.length) return;
+      tomSelectInstance.clearOptions();
+      tomSelectInstance.addOptions(options);
+      tomSelectInstance.refreshOptions(false);
+    }
 
     // รองรับข้อมูลหลายรูปแบบ: array ของ object {keyword}, array ของ string, หรือ object { data: [...] }
     function normalizeKeywords(raw) {
@@ -389,6 +428,18 @@
     }
 
     async function fetchKeywords() {
+      // แสดงข้อมูลจากแคชทันที (เปิดครั้งต่อไปไม่ต้องรอ API)
+      const cached = getCachedKeywords();
+      if (cached && cached.length) {
+        if (!tomSelectInstance) {
+          initTomSelect(cached);
+        } else {
+          updateTomSelectOptions(cached);
+        }
+      } else if (!tomSelectInstance) {
+        initTomSelect([]);
+      }
+
       // ถ้า GAS ตอบช้า/ค้าง (cold start) ให้ timeout 30 วินาทีแทนที่จะรอตลอดไป
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), 30000);
@@ -397,18 +448,16 @@
         if (!response.ok) throw new Error('HTTP ' + response.status);
         const raw = await response.json();
         const options = normalizeKeywords(raw);
+        if (!options.length) return;
 
-        // Initialize Tom Select
-        tomSelectInstance = new TomSelect('#dropdown', {
-          options: options,
-          valueField: 'value',
-          labelField: 'text',
-          searchField: 'text',
-          placeholder: 'ค้นหา Keyword',
-          allowEmptyOption: true,
-          render: { no_results: () => '<div class="no-results">ไม่พบผลลัพธ์</div>' }
-        });
+        setCachedKeywords(options);
+        updateTomSelectOptions(options);
       } catch (err) {
+        // มีข้อมูลแคชแสดงอยู่แล้ว → แค่ log ไม่ต้องเด้ง error ซ้ำ
+        if (cached && cached.length) {
+          console.warn('อัปเดต Keyword ไม่สำเร็จ ใช้ข้อมูลเก่า:', err);
+          return;
+        }
         console.error('Error fetching keywords:', err);
         const is403 = err && err.message === 'HTTP 403';
         Swal.fire({
@@ -468,8 +517,11 @@
       }
     }
 
-    // รอให้ LIFF SDK + ไลบรารีทั้งหมด (defer) โหลดเสร็จก่อน จึงค่อยเริ่มต้น
-    document.addEventListener('DOMContentLoaded', initializeLiff);
+    // เริ่มทันที (Tom Select + ดึงข้อมูล ไม่ต้องรอ LIFF) และรอให้ LIFF SDK โหลดเสร็จก่อนเริ่ม LIFF
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchKeywords();          // เริ่มโหลด Keyword ทันที
+      setTimeout(initializeLiff, 0); // LIFF เริ่มขนานกัน
+    });
   </script>
 </body>
 
