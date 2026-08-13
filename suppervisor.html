@@ -538,7 +538,7 @@
         <div class="icon"><i class="fas fa-calendar-day"></i></div> วันที่ปฏิบัติงาน
       </div>
       <div class="field">
-        <input type="date" name="date" id="date" required>
+        <input type="date" name="date" id="date" required readonly title="วันที่ปฏิบัติงานกำหนดอัตโนมัติ">
       </div>
 
       <div class="section-head">
@@ -1255,7 +1255,11 @@
       loadSelectData(); // เริ่มโหลด Select ทันที (ไม่ต้องรอ LIFF/GPS)
       initializeLiff(); // LIFF/โปรไฟล์ ขนานกัน (มี timeout — ไม่ค้าง)
       const today = new Date().toISOString().split('T')[0];
-      document.getElementById('date').value = today;
+      const dateInput = document.getElementById('date');
+      dateInput.value = today;
+      // วันที่ปฏิบัติงาน = วันนี้เสมอ และแก้ไขไม่ได้ (กันย้อนแก้ข้อมูล)
+      dateInput.addEventListener('input', function () { dateInput.value = today; });
+      dateInput.addEventListener('change', function () { dateInput.value = today; });
       startGpsCheck(); // เริ่ม GPS ทันที ไม่ต้องรอ LIFF (กันค้างที่หน้าตรวจสอบ GPS)
     });
   </script>

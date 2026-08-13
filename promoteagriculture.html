@@ -500,7 +500,7 @@
         <div class="icon"><i class="fas fa-calendar-day"></i></div> วันที่ปฏิบัติงาน
       </div>
       <div class="field">
-        <input type="date" name="date" id="date" required>
+        <input type="date" name="date" id="date" required readonly title="วันที่ปฏิบัติงานกำหนดอัตโนมัติ">
       </div>
 
       <div class="section-head">
@@ -906,7 +906,11 @@
       document.getElementById('dataForm').classList.add('hidden');
 
       const today = new Date().toISOString().split('T')[0];
-      document.getElementById('date').value = today;
+      const dateInput = document.getElementById('date');
+      dateInput.value = today;
+      // วันที่ปฏิบัติงาน = วันนี้เสมอ และแก้ไขไม่ได้ (กันย้อนแก้ข้อมูล)
+      dateInput.addEventListener('input', function () { dateInput.value = today; });
+      dateInput.addEventListener('change', function () { dateInput.value = today; });
 
       // LIFF (มี timeout ด้านใน — ไม่ค้าง) ขนานกับ GPS
       initializeLiff();
