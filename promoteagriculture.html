@@ -646,21 +646,39 @@
       });
     }
 
-    // Initialize LIFF
+    // รอ promise พร้อม timeout — กัน LIFF/API ค้างหน้าไปเรื่อยๆ (คืนค่า fallback แทน)
+    function withTimeout(promise, ms, fallback) {
+      if (promise && typeof promise.catch === 'function') {
+        promise.catch(function () { /* ป้องกัน unhandled rejection */ });
+      }
+      return Promise.race([
+        Promise.resolve(promise),
+        new Promise(function (resolve) { setTimeout(function () { resolve(fallback); }, ms); })
+      ]);
+    }
+
+    // Initialize LIFF (มี timeout — กันค้างที่ "กำลังโหลด..." ตลอดไป)
     async function initializeLiff() {
       try {
-        await liff.init({ liffId: '2007528760-v8N7EXG1' }); // Replace with your LIFF ID
-        if (liff.isLoggedIn()) {
-          const profile = await liff.getProfile();
-          userId = profile.userId;
-          userProfile = profile;
-          document.getElementById('displayName').textContent = profile.displayName;
-          const avatarBox = document.getElementById('avatarBox');
-          if (profile.pictureUrl) {
-            document.getElementById('profileImage').src = profile.pictureUrl;
-            avatarBox.classList.remove('no-photo');
+        if (typeof liff === 'undefined') throw new Error('LIFF SDK โหลดไม่สำเร็จ (เปิดนอก LINE หรือเน็ตขัดข้อง)');
+        await withTimeout(liff.init({ liffId: '2007528760-v8N7EXG1' }), 8000, null); // Replace with your LIFF ID
+        if (typeof liff.isLoggedIn === 'function' && liff.isLoggedIn()) {
+          const profile = await withTimeout(liff.getProfile(), 5000, null);
+          if (profile) {
+            userId = profile.userId;
+            userProfile = profile;
+            document.getElementById('displayName').textContent = profile.displayName;
+            const avatarBox = document.getElementById('avatarBox');
+            if (profile.pictureUrl) {
+              document.getElementById('profileImage').src = profile.pictureUrl;
+              avatarBox.classList.remove('no-photo');
+            } else {
+              avatarBox.classList.add('no-photo');
+            }
           } else {
-            avatarBox.classList.add('no-photo');
+            // ได้โปรไฟล์ช้าเกิน 5 วิ → ไปต่อก่อน (ไม่ค้างหน้า)
+            document.getElementById('displayName').textContent = 'ยินดีต้อนรับ';
+            document.getElementById('avatarBox').classList.add('no-photo');
           }
         } else {
           liff.login();
@@ -882,36 +900,26 @@
       document.getElementById('coordsText').textContent = 'พิกัด: ' + currentCoordinates;
     }
 
-    // Initialize app with GPS check
+    // Initialize app with GPS check — GPS เริ่มทันที ขนานกับ LIFF (กันค้างที่หน้าตรวจสอบ GPS)
     async function initializeApp() {
+      document.getElementById('gpsCheckingScreen').style.display = 'flex';
+      document.getElementById('dataForm').classList.add('hidden');
+
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('date').value = today;
+
+      // LIFF (มี timeout ด้านใน — ไม่ค้าง) ขนานกับ GPS
+      initializeLiff();
+
       try {
-        document.getElementById('gpsCheckingScreen').style.display = 'flex';
-        document.getElementById('dataForm').classList.add('hidden');
-
-        await initializeLiff();
-
         const position = await getLocation();
         showPosition(position);
 
         document.getElementById('gpsCheckingScreen').style.display = 'none';
         document.getElementById('dataForm').classList.remove('hidden');
-
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('date').value = today;
       } catch (error) {
         console.error('GPS Error:', error.message);
-
-        if (error.message.includes('GPS_') || error.message.includes('GPS')) {
-          await sendGPSWarningAndClose(error.message);
-        } else {
-          document.getElementById('gpsCheckingScreen').style.display = 'flex';
-          Swal.fire({
-            icon: 'error',
-            title: 'เกิดข้อผิดพลาด',
-            text: 'ไม่สามารถเริ่มต้นแอปพลิเคชันได้: ' + error.message,
-            confirmButtonColor: '#059669'
-          });
-        }
+        await sendGPSWarningAndClose(error.message);
       }
     }
 
@@ -972,6 +980,9 @@
       const formData = new FormData(this);
       const submitDate = new Date().toLocaleDateString();
       const submitTime = new Date().toLocaleTimeString();
+
+      // ถ้า LIFF ยังโหลดไม่เสร็จ → รอให้ได้ userId ก่อนส่งข้อมูล (ไม่ให้ userId ว่าง)
+      if (!userId) { try { await initializeLiff(); } catch (e) { /* ไม่มี userId ก็ยังส่งได้ */ } }
 
       // ใช้รูปที่บีบอัดแล้ว (ถ้ามี) → ข้ามการอ่านไฟล์ต้นฉบับทั้งไฟล์ (บันทึกเร็วขึ้นมาก)
       async function runUpload(base64, uploadType, uploadName) {
@@ -1179,7 +1190,8 @@
     }
 
     // โหลดข้อมูล Select: ใช้แคชทันที แล้วค่อยดึงจาก API อัปเดตเบื้องหลัง
-    function loadSelect(action, selectId, cacheKey, placeholder, errorLabel) {
+    function loadSelect(action, selectId, cacheKey, placeholder, errorLabel, attempt) {
+      attempt = attempt || 0;
       const url = SCRIPT_BASE_URL + '?action=' + action;
       const cached = getCache(cacheKey);
       if (cached && cached.length) fillSelect(selectId, cached, placeholder);
@@ -1188,16 +1200,16 @@
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), 60000);
 
-      // ถ้าเกิน 8 วิ ยังไม่ตอบ → แจ้งว่ากำลังโหลด (กันผู้ใช้คิดว่าค้าง) — เฉพาะครั้งแรกที่ยังไม่มีแคช
-      let slowNotified = false;
+      // ถ้าเกิน 8 วิ ยังไม่ตอบ → แจ้งแบบ toast เล็กๆ (ไม่บล็อกการใช้งาน) — เฉพาะครั้งแรกที่ยังไม่มีแคช
       const slowTimer = setTimeout(() => {
         if (!cached || !cached.length) {
-          slowNotified = true;
           Swal.fire({
+            toast: true,
+            position: 'bottom',
             icon: 'info',
             title: 'กำลังโหลดข้อมูล...',
-            text: 'API กำลังตอบช้า (Google Apps Script cold start) — กรุณารอสักครู่ ถ้ายังไม่โหลดให้กดลองใหม่',
-            timer: 6000,
+            text: 'API กำลังตอบช้า (Google Apps Script cold start) กรุณารอสักครู่',
+            timer: 4000,
             showConfirmButton: false,
             confirmButtonColor: '#059669'
           });
@@ -1235,6 +1247,11 @@
           // มีข้อมูลแคชแสดงอยู่แล้ว → แค่ log ไม่ต้องเด้ง error ซ้ำ
           if (cached && cached.length) {
             console.warn('อัปเดต ' + errorLabel + ' ไม่สำเร็จ ใช้ข้อมูลเก่า:', error);
+            return;
+          }
+          // ลองใหม่เองอัตโนมัติ 2 ครั้ง (กัน cold start / เน็ตสะดุดชั่วคราว) ก่อนแจ้ง error
+          if (attempt < 2) {
+            setTimeout(() => loadSelect(action, selectId, cacheKey, placeholder, errorLabel, attempt + 1), 1500 * (attempt + 1));
             return;
           }
           const msg = error.apiError ? error.message : 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + describeApiError(error);
