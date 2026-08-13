@@ -908,7 +908,11 @@
       const today = new Date().toISOString().split('T')[0];
       const dateInput = document.getElementById('date');
       dateInput.value = today;
-      // วันที่ปฏิบัติงาน = วันนี้เสมอ และแก้ไขไม่ได้ (กันย้อนแก้ข้อมูล)
+      // วันที่ปฏิบัติงาน = วันนี้เสมอ และ DatePicker แก้ไขไม่ได้จริงๆ (กันเปิดปฏิทิน/พิมพ์/scroll)
+      dateInput.addEventListener('mousedown', function (e) { e.preventDefault(); });
+      dateInput.addEventListener('touchstart', function (e) { e.preventDefault(); }, { passive: false });
+      dateInput.addEventListener('keydown', function (e) { e.preventDefault(); });
+      dateInput.addEventListener('wheel', function (e) { e.preventDefault(); }, { passive: false });
       dateInput.addEventListener('input', function () { dateInput.value = today; });
       dateInput.addEventListener('change', function () { dateInput.value = today; });
 
