@@ -12,13 +12,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-  <link rel="preconnect" href="https://code.jquery.com">
+  <link rel="preconnect" href="https://script.google.com">
+  <link rel="preconnect" href="https://lh3.googleusercontent.com">
   <link rel="dns-prefetch" href="https://static.line-scdn.net">
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.min.css" rel="stylesheet" />
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js" defer></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
   <style>
@@ -582,8 +582,8 @@
 
     // ---------- บีบอัดรูปอัตโนมัติ (ลดขนาดก่อนอัปโหลด เพื่อให้บันทึกเร็วขึ้น) ----------
     let compressedUpload = null; // { base64, type, name } ของรูปที่บีบอัดแล้ว
-    const IMAGE_MAX_DIM = 1280; // ความยาวด้านที่ยาวที่สุด (px)
-    const IMAGE_QUALITY = 0.75; // คุณภาพ JPEG (0-1)
+    const IMAGE_MAX_DIM = 1080; // ความยาวด้านที่ยาวที่สุด (px) — เล็กลงเพื่อให้ไฟล์อัปโหลดเร็วขึ้น
+    const IMAGE_QUALITY = 0.7; // คุณภาพ JPEG (0-1) — ลดลงเล็กน้อยเพื่อให้ไฟล์เล็กลง อัปโหลดเร็วขึ้น
     const COMPRESS_THRESHOLD = 300 * 1024; // รูป ≤ 300KB ส่งไฟล์เดิมได้เลย
 
     function formatBytes(bytes) {
@@ -973,12 +973,8 @@
       const submitDate = new Date().toLocaleDateString();
       const submitTime = new Date().toLocaleTimeString();
 
-      const reader = new FileReader();
-      reader.onload = async function (event) {
-        // ใช้รูปที่บีบอัดแล้ว (ถ้ามี) เพื่อลดขนาดไฟล์ที่ส่งไปอัปโหลด
-        const base64 = compressedUpload ? compressedUpload.base64 : event.target.result.split(',')[1];
-        const uploadType = compressedUpload ? compressedUpload.type : fileInput.type;
-        const uploadName = compressedUpload ? compressedUpload.name : fileInput.name;
+      // ใช้รูปที่บีบอัดแล้ว (ถ้ามี) → ข้ามการอ่านไฟล์ต้นฉบับทั้งไฟล์ (บันทึกเร็วขึ้นมาก)
+      async function runUpload(base64, uploadType, uploadName) {
         const data = {
           date: formData.get('date'),
           firstName: formData.get('firstName'),
@@ -1099,8 +1095,18 @@
           submitButton.textContent = "บันทึกการส่งงาน";
           submitButton.disabled = false;
         }
-      };
-      reader.readAsDataURL(fileInput);
+      }
+
+      if (compressedUpload) {
+        // มีรูปที่บีบอัดแล้ว → เริ่มอัปโหลดทันที ไม่ต้องอ่านไฟล์ต้นฉบับทั้งไฟล์
+        runUpload(compressedUpload.base64, compressedUpload.type, compressedUpload.name);
+      } else {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          runUpload(event.target.result.split(',')[1], fileInput.type, fileInput.name);
+        };
+        reader.readAsDataURL(fileInput);
+      }
     });
 
     // ---------- โหลด Select (แคช + ดึงข้อมูล) ----------
@@ -1254,11 +1260,11 @@
       loadSelect('getPlantTypes', 'plantType', 'apm_plantTypes_v1', 'กรุณาเลือกชนิดพืช', 'ชนิดพืช');
     }
 
-    // Initialize when page loads
-    window.onload = function () {
+    // Initialize when page loads — DOMContentLoaded เร็วกว่า window.onload (ไม่ต้องรอ font/รูปโหลดเสร็จ)
+    document.addEventListener('DOMContentLoaded', function () {
       initializeApp();
       loadSelectData(); // เริ่มโหลด Select ทันที ขนานกับ GPS/LIFF
-    };
+    });
   </script>
 </body>
 

@@ -12,12 +12,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-  <link rel="preconnect" href="https://code.jquery.com">
   <link rel="dns-prefetch" href="https://static.line-scdn.net">
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js" defer></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
   <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
@@ -535,8 +533,7 @@
 
     // ส่งค่าเข้า LINE Chat
     async function sendToChat() {
-      const $dropdown = $('#dropdown');
-      const selectedValue = $dropdown.val();
+      const selectedValue = document.getElementById('dropdown').value;
 
       if (!selectedValue) {
         Swal.fire({ icon: 'warning', title: 'กรุณาเลือก Keyword', text: 'เลือกคำค้นก่อนกดส่งค่า', confirmButtonColor: '#059669' });

@@ -22,8 +22,7 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -440,8 +439,8 @@
     const showError = (msg) => Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: msg, confirmButtonColor: '#059669' });
     const showSuccess = (msg) => Swal.fire({ icon: 'success', title: 'สำเร็จ', text: msg, timer: 1500, showConfirmButton: false, confirmButtonColor: '#059669' });
 
-    // Password prompt on page load
-    window.onload = function () {
+    // Password prompt on page load (DOMContentLoaded เร็วกว่า window.onload)
+    document.addEventListener('DOMContentLoaded', function () {
       Swal.fire({
         title: 'กรุณาใส่รหัสผ่าน',
         input: 'password',
@@ -461,7 +460,7 @@
           loadAllData();
         }
       });
-    };
+    });
 
     // โหลดทีละรายการ ตามลำดับ (ไม่ยิง GAS พร้อมกัน 3 ครั้ง)
     // → กัน GAS จำกัด concurrent executions / cold start จนโหลดมาไม่ครบ
@@ -495,12 +494,14 @@
       }
     }
 
-    // Tab switching
-    $('.tab').on('click', function () {
-      $('.tab').removeClass('active');
-      $('.tab-content').removeClass('active');
-      $(this).addClass('active');
-      $(`#${$(this).data('tab')}`).addClass('active');
+    // Tab switching (vanilla JS — ไม่ต้องโหลด jQuery เพิ่ม)
+    document.querySelectorAll('.tab').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        document.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active'); });
+        document.querySelectorAll('.tab-content').forEach(function (c) { c.classList.remove('active'); });
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
     });
 
     // Load data for tables (ทนทาน: timeout + ลองใหม่หลายครั้ง จนกว่าจะได้ข้อมูลครบ)

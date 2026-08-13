@@ -232,10 +232,9 @@
         <div class="badge-green">🌱 ส่งเสริมการเกษตร</div>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://static.line-scdn.net/liff/edge/versions/2.9.0/sdk.js"></script>
+    <script src="https://static.line-scdn.net/liff/edge/versions/2.9.0/sdk.js" defer></script>
     <script>
-        $(document).ready(function () {
+        document.addEventListener('DOMContentLoaded', function () {
             var target = new URL(window.location).searchParams.get('linkurl');
 
             function goToTarget() {
@@ -254,7 +253,7 @@
                 // Redirect to the target page (works inside LINE and in a normal browser)
                 setTimeout(function () {
                     window.location.replace(target);
-                }, 1800);
+                }, 800);
 
                 // Safety: close the LIFF window after a while (only meaningful inside LINE)
                 setTimeout(function () {
