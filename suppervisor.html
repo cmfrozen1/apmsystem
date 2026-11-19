@@ -2,1271 +2,1599 @@
 <html lang="th">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>รายงานการกำกับดูแล (Supervisor)</title>
-  <meta name="description" content="แบบฟอร์มรายงานการกำกับดูแล ชุปเปอร์ไวเซอร์">
-  <link rel="icon" type="image/png" sizes="96x96"
-    href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
-  <!-- Preconnect to speed up CDN connections -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://cdn.jsdelivr.net">
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-  <link rel="preconnect" href="https://script.google.com">
-  <link rel="preconnect" href="https://lh3.googleusercontent.com">
-  <link rel="dns-prefetch" href="https://static.line-scdn.net">
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.min.css" rel="stylesheet" />
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายงานการกำกับดูแล (Supervisor)</title>
+    <meta name="description" content="แบบฟอร์มรายงานการกำกับดูแล ชุปเปอร์ไวเซอร์">
+    <link rel="icon" type="image/png" sizes="96x96"
+        href="https://lh3.googleusercontent.com/a/ACg8ocJt_yMM3sBNowu7Y5BiDgl5qQ9R1vTL5vokSt_XWwuqA8_m7QU=s288-c-no">
+    <!-- Preconnect to speed up CDN connections -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://script.google.com">
+    <link rel="preconnect" href="https://lh3.googleusercontent.com">
+    <link rel="dns-prefetch" href="https://static.line-scdn.net">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.min.css" rel="stylesheet" />
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    body {
-      font-family: 'Prompt', sans-serif;
-      background: linear-gradient(155deg, #eff6ff 0%, #e0f2fe 45%, #dbeafe 100%);
-      min-height: 100vh;
-      padding-bottom: 3rem;
-      background-attachment: fixed;
-    }
+        body {
+            font-family: 'Prompt', sans-serif;
+            background: linear-gradient(155deg, #eff6ff 0%, #e0f2fe 45%, #dbeafe 100%);
+            min-height: 100vh;
+            padding-bottom: 3rem;
+            background-attachment: fixed;
+        }
 
-    /* Header */
-    .app-header {
-      background: linear-gradient(120deg, #1e40af, #2563eb 55%, #3b82f6);
-      color: #fff;
-      padding: 1.3rem 1.2rem;
-      display: flex;
-      align-items: center;
-      gap: 0.9rem;
-      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.28);
-      position: sticky;
-      top: 0;
-      z-index: 500;
-    }
+        /* Header */
+        .app-header {
+            background: linear-gradient(120deg, #1e40af, #2563eb 55%, #3b82f6);
+            color: #fff;
+            padding: 1.1rem 1.2rem 0.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.28);
+            position: sticky;
+            top: 0;
+            z-index: 500;
+        }
 
-    .avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: #dbeafe;
-      border: 2px solid rgba(255, 255, 255, 0.85);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #1d4ed8;
-      overflow: hidden;
-      flex-shrink: 0;
-      position: relative;
-    }
+        .app-header .header-main {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            width: 100%;
+        }
 
-    /* รูปโปรไฟล์: ขยายเต็มกรอบวงกลมรวมขอบ (ไม่เหลือช่องว่างรอบรูป) */
-    .avatar img {
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      width: calc(100% + 4px);
-      height: calc(100% + 4px);
-      object-fit: cover;
-    }
+        /* Session Timer Badge */
+        .session-timer-pill {
+            align-self: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            padding: 0.28rem 0.95rem;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #1e40af;
+            font-size: 0.78rem;
+            font-weight: 500;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+        }
 
-    .avatar.no-photo img {
-      display: none;
-    }
+        .session-timer-pill i {
+            font-size: 0.85rem;
+            color: #2563eb;
+        }
 
-    .app-header .titles {
-      flex: 1;
-      min-width: 0;
-    }
+        .session-timer-pill .timer-countdown {
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            color: #1d4ed8;
+            letter-spacing: 0.02em;
+        }
 
-    .app-header .titles h1 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      line-height: 1.35;
-    }
+        .session-timer-pill.warning {
+            background: #fef2f2;
+            color: #dc2626;
+            border-color: #f87171;
+            animation: timerPulse 1.2s infinite;
+        }
 
-    .app-header .titles p {
-      font-size: 0.78rem;
-      color: #dbeafe;
-    }
+        .session-timer-pill.warning i,
+        .session-timer-pill.warning .timer-countdown {
+            color: #dc2626;
+        }
 
-    .leaf-badge {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.16);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      flex-shrink: 0;
-    }
+        @keyframes timerPulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.03);
+            }
+        }
 
-    .card {
-      max-width: 540px;
-      margin: 1.2rem auto 0;
-      background: #fff;
-      border-radius: 22px;
-      box-shadow: 0 18px 44px rgba(30, 58, 138, 0.14);
-      padding: 1.6rem 1.5rem 1.8rem;
-      position: relative;
-      border: 1px solid #eef2ef;
-    }
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #dbeafe;
+            border: 2px solid rgba(255, 255, 255, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1d4ed8;
+            overflow: hidden;
+            flex-shrink: 0;
+            position: relative;
+        }
 
-    /* GPS checking / error screen */
-    .gps-checking {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 3rem 1.2rem;
-      min-height: 420px;
-    }
+        /* รูปโปรไฟล์: ขยายเต็มกรอบวงกลมรวมขอบ (ไม่เหลือช่องว่างรอบรูป) */
+        .avatar img {
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            width: calc(100% + 4px);
+            height: calc(100% + 4px);
+            object-fit: cover;
+        }
 
-    .gps-icon-wrap {
-      width: 96px;
-      height: 96px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1.6rem;
-      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.25);
-      animation: gpsPulse 2.2s ease-in-out infinite;
-    }
+        .avatar.no-photo img {
+            display: none;
+        }
 
-    .gps-icon-wrap i {
-      font-size: 2.6rem;
-      color: #1d4ed8;
-    }
+        .app-header .titles {
+            flex: 1;
+            min-width: 0;
+        }
 
-    @keyframes gpsPulse {
+        .app-header .titles h1 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            line-height: 1.35;
+        }
 
-      0%,
-      100% {
-        transform: scale(1);
-        box-shadow: 0 12px 30px rgba(37, 99, 235, 0.25);
-      }
+        .app-header .titles p {
+            font-size: 0.78rem;
+            color: #dbeafe;
+        }
 
-      50% {
-        transform: scale(1.06);
-        box-shadow: 0 14px 38px rgba(37, 99, 235, 0.4);
-      }
-    }
+        .leaf-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.16);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
 
-    .gps-icon-wrap.error {
-      background: linear-gradient(135deg, #fee2e2, #fecaca);
-      animation: none;
-    }
+        .card {
+            max-width: 540px;
+            margin: 1.2rem auto 0;
+            background: #fff;
+            border-radius: 22px;
+            box-shadow: 0 18px 44px rgba(30, 58, 138, 0.14);
+            padding: 1.6rem 1.5rem 1.8rem;
+            position: relative;
+            border: 1px solid #eef2ef;
+        }
 
-    .gps-icon-wrap.error i {
-      color: #dc2626;
-    }
+        /* GPS checking / error screen */
+        .gps-checking {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 3rem 1.2rem;
+            min-height: 420px;
+        }
 
-    .gps-checking h3 {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: #1e3a8a;
-      margin-bottom: 0.6rem;
-    }
+        .gps-icon-wrap {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.6rem;
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.25);
+            animation: gpsPulse 2.2s ease-in-out infinite;
+        }
 
-    .gps-checking p {
-      color: #6b7280;
-      font-size: 0.9rem;
-      margin-bottom: 1.8rem;
-    }
+        .gps-icon-wrap i {
+            font-size: 2.6rem;
+            color: #1d4ed8;
+        }
 
-    .spinner {
-      width: 42px;
-      height: 42px;
-      border: 4px solid #dbeafe;
-      border-top: 4px solid #2563eb;
-      border-radius: 50%;
-      animation: spin 0.9s linear infinite;
-    }
+        @keyframes gpsPulse {
 
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 12px 30px rgba(37, 99, 235, 0.25);
+            }
 
-    .retry-btn {
-      padding: 0.8rem 2rem;
-      border: none;
-      border-radius: 14px;
-      cursor: pointer;
-      font-family: 'Prompt', sans-serif;
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: #fff;
-      background: linear-gradient(120deg, #2563eb, #3b82f6);
-      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.32);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: all 0.25s ease;
-    }
+            50% {
+                transform: scale(1.06);
+                box-shadow: 0 14px 38px rgba(37, 99, 235, 0.4);
+            }
+        }
 
-    .retry-btn:hover {
-      transform: translateY(-2px);
-    }
+        .gps-icon-wrap.error {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            animation: none;
+        }
 
-    .hidden {
-      display: none !important;
-    }
+        .gps-icon-wrap.error i {
+            color: #dc2626;
+        }
 
-    .section-head {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #1e40af;
-      margin: 1.3rem 0 0.7rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid #eff6ff;
-    }
+        .gps-checking h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 0.6rem;
+        }
 
-    .section-head:first-of-type {
-      margin-top: 0;
-    }
+        .gps-checking p {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-bottom: 1.8rem;
+        }
 
-    .section-head .icon {
-      width: 30px;
-      height: 30px;
-      border-radius: 9px;
-      background: #dbeafe;
-      color: #1d4ed8;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
-    }
+        .spinner {
+            width: 42px;
+            height: 42px;
+            border: 4px solid #dbeafe;
+            border-top: 4px solid #2563eb;
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+        }
 
-    .field {
-      margin-bottom: 0.9rem;
-    }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
-    .field label {
-      display: block;
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: #4b5563;
-      margin-bottom: 0.35rem;
-    }
+        .retry-btn {
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            font-family: 'Prompt', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #fff;
+            background: linear-gradient(120deg, #2563eb, #3b82f6);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.32);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.25s ease;
+        }
 
-    .field label .req {
-      color: #dc2626;
-    }
+        .retry-btn:hover {
+            transform: translateY(-2px);
+        }
 
-    input[type="text"],
-    input[type="date"],
-    input[type="file"],
-    textarea {
-      width: 100%;
-      padding: 0.72rem 0.9rem;
-      border: 1.5px solid #d1d5db;
-      border-radius: 12px;
-      outline: none;
-      font-family: 'Prompt', sans-serif;
-      font-size: 0.9rem;
-      background: #fff;
-      transition: border-color 0.25s ease, box-shadow 0.25s ease;
-      color: #1f2937;
-    }
+        .hidden {
+            display: none !important;
+        }
 
-    input:focus,
-    textarea:focus {
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
-    }
+        .section-head {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1e40af;
+            margin: 1.3rem 0 0.7rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #eff6ff;
+        }
 
-    /* ช่องวันที่: ให้พอดีกับเนื้อหา ไม่ยืดเต็มความกว้าง */
-    input[type="date"] {
-      width: auto;
-      max-width: 220px;
-      min-width: 0;
-    }
+        .section-head:first-of-type {
+            margin-top: 0;
+        }
 
-    input[readonly] {
-      background: #f8fafc;
-      color: #6b7280;
-    }
+        .section-head .icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 9px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+        }
 
-    textarea {
-      min-height: 96px;
-      resize: vertical;
-    }
+        .field {
+            margin-bottom: 0.9rem;
+        }
 
-    input[type="file"] {
-      padding: 0.5rem 0.9rem;
-    }
+        .field label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: #4b5563;
+            margin-bottom: 0.35rem;
+        }
 
-    .file-box {
-      border: 2px dashed #bfdbfe;
-      border-radius: 14px;
-      padding: 1.1rem;
-      text-align: center;
-      color: #1d4ed8;
-      font-size: 0.85rem;
-      background: #eff6ff;
-      cursor: pointer;
-      transition: all 0.25s ease;
-    }
+        .field label .req {
+            color: #dc2626;
+        }
 
-    .file-box:hover {
-      border-color: #2563eb;
-      background: #e0f2fe;
-    }
+        input[type="text"],
+        input[type="date"],
+        input[type="file"],
+        textarea {
+            width: 100%;
+            padding: 0.72rem 0.9rem;
+            border: 1.5px solid #d1d5db;
+            border-radius: 12px;
+            outline: none;
+            font-family: 'Prompt', sans-serif;
+            font-size: 0.9rem;
+            background: #fff;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+            color: #1f2937;
+        }
 
-    .file-box i {
-      font-size: 1.4rem;
-      display: block;
-      margin-bottom: 0.3rem;
-    }
+        input:focus,
+        textarea:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+        }
 
-    .image-preview {
-      margin-top: 0.8rem;
-    }
+        /* ช่องวันที่: ให้พอดีกับเนื้อหา ไม่ยืดเต็มความกว้าง */
+        input[type="date"] {
+            width: auto;
+            max-width: 220px;
+            min-width: 0;
+        }
 
-    .image-preview img {
-      width: 100%;
-      max-height: 260px;
-      object-fit: cover;
-      border-radius: 14px;
-      border: 2px solid #dbeafe;
-      box-shadow: 0 8px 20px rgba(30, 58, 138, 0.12);
-    }
+        input[readonly] {
+            background: #f8fafc;
+            color: #6b7280;
+        }
 
-    .img-size-note {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.75rem;
-      color: #1d4ed8;
-      background: #eff6ff;
-      padding: 0.45rem 0.8rem;
-      border-radius: 10px;
-      margin-top: 0.5rem;
-      word-break: break-all;
-    }
+        textarea {
+            min-height: 96px;
+            resize: vertical;
+        }
 
-    .map-container iframe {
-      border-radius: 14px;
-      border: 2px solid #dbeafe;
-    }
+        input[type="file"] {
+            padding: 0.5rem 0.9rem;
+        }
 
-    .coords-note {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.75rem;
-      color: #1d4ed8;
-      background: #eff6ff;
-      padding: 0.45rem 0.8rem;
-      border-radius: 10px;
-      margin-top: 0.5rem;
-      word-break: break-all;
-    }
+        .file-box {
+            border: 2px dashed #bfdbfe;
+            border-radius: 14px;
+            padding: 1.1rem;
+            text-align: center;
+            color: #1d4ed8;
+            font-size: 0.85rem;
+            background: #eff6ff;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
 
-    .coords-note i {
-      flex-shrink: 0;
-    }
+        .file-box:hover {
+            border-color: #2563eb;
+            background: #e0f2fe;
+        }
 
-    .submit-btn {
-      width: 100%;
-      margin-top: 1.4rem;
-      padding: 0.95rem 1rem;
-      border: none;
-      border-radius: 14px;
-      cursor: pointer;
-      font-family: 'Prompt', sans-serif;
-      font-weight: 700;
-      font-size: 1rem;
-      color: #fff;
-      background: linear-gradient(120deg, #2563eb, #3b82f6);
-      box-shadow: 0 10px 26px rgba(37, 99, 235, 0.35);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.55rem;
-      transition: all 0.25s ease;
-    }
+        .file-box i {
+            font-size: 1.4rem;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
 
-    .submit-btn:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 32px rgba(37, 99, 235, 0.45);
-    }
+        .image-preview {
+            margin-top: 0.8rem;
+        }
 
-    .submit-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
+        .image-preview img {
+            width: 100%;
+            max-height: 260px;
+            object-fit: cover;
+            border-radius: 14px;
+            border: 2px solid #dbeafe;
+            box-shadow: 0 8px 20px rgba(30, 58, 138, 0.12);
+        }
 
-    /* Tom Select green styling */
-    .ts-wrapper {
-      width: 100% !important;
-    }
+        .img-size-note {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+            color: #1d4ed8;
+            background: #eff6ff;
+            padding: 0.45rem 0.8rem;
+            border-radius: 10px;
+            margin-top: 0.5rem;
+            word-break: break-all;
+        }
 
-    .ts-control {
-      border: 1.5px solid #d1d5db !important;
-      border-radius: 12px !important;
-      background-color: #ffffff !important;
-      padding: 0.6rem 1rem !important;
-      font-size: 0.9rem !important;
-      color: #374151 !important;
-      min-height: 44px !important;
-      font-family: 'Prompt', sans-serif !important;
-      cursor: pointer;
-    }
+        .map-container iframe {
+            border-radius: 14px;
+            border: 2px solid #dbeafe;
+        }
 
-    .ts-wrapper.focus .ts-control {
-      border-color: #3b82f6 !important;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18) !important;
-    }
+        .coords-note {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+            color: #1d4ed8;
+            background: #eff6ff;
+            padding: 0.45rem 0.8rem;
+            border-radius: 10px;
+            margin-top: 0.5rem;
+            word-break: break-all;
+        }
 
-    .ts-dropdown {
-      border-radius: 12px !important;
-      border: 1.5px solid #d1d5db !important;
-      font-family: 'Prompt', sans-serif !important;
-      font-size: 0.9rem !important;
-    }
+        .coords-note i {
+            flex-shrink: 0;
+        }
 
-    .ts-dropdown .option {
-      font-family: 'Prompt', sans-serif !important;
-      padding: 0.5rem 1rem;
-    }
+        .submit-btn {
+            width: 100%;
+            margin-top: 1.4rem;
+            padding: 0.95rem 1rem;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            font-family: 'Prompt', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #fff;
+            background: linear-gradient(120deg, #2563eb, #3b82f6);
+            box-shadow: 0 10px 26px rgba(37, 99, 235, 0.35);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+            transition: all 0.25s ease;
+        }
 
-    .ts-dropdown .option.active {
-      background-color: #2563eb !important;
-      color: #fff !important;
-    }
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 32px rgba(37, 99, 235, 0.45);
+        }
 
-    /* Loading overlay */
-    .loading-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(255, 255, 255, 0.82);
-      backdrop-filter: blur(4px);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 1.1rem;
-    }
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
 
-    .loader {
-      width: 50px;
-      height: 50px;
-      border: 5px solid #dbeafe;
-      border-top: 5px solid #2563eb;
-      border-radius: 50%;
-      animation: spin 0.9s linear infinite;
-    }
+        /* Tom Select green styling */
+        .ts-wrapper {
+            width: 100% !important;
+        }
 
-    .loading-text {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #1d4ed8;
-    }
+        .ts-control {
+            border: 1.5px solid #d1d5db !important;
+            border-radius: 12px !important;
+            background-color: #ffffff !important;
+            padding: 0.6rem 1rem !important;
+            font-size: 0.9rem !important;
+            color: #374151 !important;
+            min-height: 44px !important;
+            font-family: 'Prompt', sans-serif !important;
+            cursor: pointer;
+        }
 
-    .footnote {
-      text-align: center;
-      font-size: 0.75rem;
-      color: #9ca3af;
-      margin-top: 1.4rem;
-    }
+        .ts-wrapper.focus .ts-control {
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18) !important;
+        }
 
-    @media (max-width: 480px) {
-      .card {
-        margin: 0.9rem 0.8rem 0;
-        padding: 1.3rem 1.1rem 1.5rem;
-      }
+        .ts-dropdown {
+            border-radius: 12px !important;
+            border: 1.5px solid #d1d5db !important;
+            font-family: 'Prompt', sans-serif !important;
+            font-size: 0.9rem !important;
+        }
 
-      .app-header {
-        padding: 1rem 0.9rem;
-      }
-    }
-  </style>
+        .ts-dropdown .option {
+            font-family: 'Prompt', sans-serif !important;
+            padding: 0.5rem 1rem;
+        }
+
+        .ts-dropdown .option.active {
+            background-color: #2563eb !important;
+            color: #fff !important;
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1.1rem;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #dbeafe;
+            border-top: 5px solid #2563eb;
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+        }
+
+        .loading-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1d4ed8;
+        }
+
+        .footnote {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #9ca3af;
+            margin-top: 1.4rem;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                margin: 0.9rem 0.8rem 0;
+                padding: 1.3rem 1.1rem 1.5rem;
+            }
+
+            .app-header {
+                padding: 1rem 0.9rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
-  <!-- Header -->
-  <header class="app-header">
-    <div class="avatar" id="avatarBox"><img id="profileImage" src="" alt="Profile"><i class="fas fa-user-shield"></i>
-    </div>
-    <div class="titles">
-      <h1>ชุปเปอร์ไวเซอร์</h1>
-      <p id="displayName">กำลังโหลด...</p>
-    </div>
-    <div class="leaf-badge"><i class="fas fa-leaf"></i></div>
-  </header>
-
-  <div class="card">
-    <div class="loading-overlay" id="loadingOverlay">
-      <div class="loader"></div>
-      <p class="loading-text">กำลังบันทึก..</p>
-    </div>
-
-    <!-- GPS Checking Screen -->
-    <div id="gpsCheckingScreen" class="gps-checking">
-      <div class="gps-icon-wrap" id="gpsIcon"><i class="fas fa-map-marker-alt"></i></div>
-      <h3 id="gpsTitle">กำลังตรวจสอบ GPS</h3>
-      <p id="gpsDesc">กรุณารอสักครู่ขณะที่เราตรวจสอบตำแหน่งของคุณ...</p>
-      <div class="spinner" id="gpsSpinner"></div>
-      <button class="retry-btn hidden" id="gpsRetry" onclick="startGpsCheck()"><i class="fas fa-sync-alt"></i>
-        ลองอีกครั้ง</button>
-    </div>
-
-    <!-- Main Form (Hidden until GPS ready) -->
-    <form id="dataForm" class="hidden">
-      <div class="section-head">
-        <div class="icon"><i class="fas fa-calendar-day"></i></div> วันที่ปฏิบัติงาน
-      </div>
-      <div class="field">
-        <input type="date" name="date" id="date" required readonly title="วันที่ปฏิบัติงานกำหนดอัตโนมัติ">
-      </div>
-
-      <div class="section-head">
-        <div class="icon"><i class="fas fa-user-tie"></i></div> ข้อมูลผู้ส่งงาน
-      </div>
-      <div class="field">
-        <label>ชื่อชุปเปอร์ไวเซอร์ <span class="req">*</span></label>
-        <select name="firstName" id="firstName" required>
-          <option value="">กรุณาเลือกชื่อ</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>เขต <span class="req">*</span></label>
-        <select name="district" id="district" required>
-          <option value="">กรุณาเลือกเขต</option>
-        </select>
-      </div>
-
-      <div class="section-head">
-        <div class="icon"><i class="fas fa-map-marked-alt"></i></div> ข้อมูลพื้นที่ (อัตโนมัติ)
-      </div>
-      <div class="field">
-        <label>หมู่บ้าน</label>
-        <input type="text" name="village" id="village" readonly>
-      </div>
-      <div class="field">
-        <label>ตำบล</label>
-        <input type="text" name="subDistrict" id="subDistrict" readonly>
-      </div>
-
-      <div class="section-head">
-        <div class="icon"><i class="fas fa-clipboard-list"></i></div> รายละเอียดปฏิบัติงาน
-      </div>
-      <div class="field">
-        <textarea name="details" required placeholder="ระบุรายละเอียดการปฏิบัติงาน"></textarea>
-      </div>
-
-      <div class="section-head">
-        <div class="icon"><i class="fas fa-map-pin"></i></div> พิกัด
-      </div>
-      <div class="field">
-        <div class="map-container" id="mapContainer"></div>
-        <div class="coords-note hidden" id="coordsNote"><i class="fas fa-crosshairs"></i><span id="coordsText"></span>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-main">
+            <div class="avatar" id="avatarBox"><img id="profileImage" src="" alt="Profile"><i class="fas fa-user-shield"></i></div>
+            <div class="titles">
+                <h1>ชุปเปอร์ไวเซอร์</h1>
+                <p id="displayName">กำลังโหลด...</p>
+            </div>
+            <div class="leaf-badge"><i class="fas fa-leaf"></i></div>
         </div>
-      </div>
+        <div class="session-timer-pill" id="sessionTimerPill">
+            <i class="fas fa-stopwatch"></i>
+            <span>เวลาเปิดฟอร์มคงเหลือ:</span>
+            <span id="sessionTimerText" class="timer-countdown">10:00</span>
+        </div>
+    </header>
 
-      <div class="section-head">
-        <div class="icon"><i class="fas fa-camera"></i></div> รูปภาพ
-      </div>
-      <div class="field">
-        <label class="file-box" for="imageFile">
-          <i class="fas fa-cloud-upload-alt"></i>
-          เลือกรูปภาพ (จำเป็น)
-        </label>
-        <input type="file" name="imageFile" id="imageFile" accept="image/*" class="hidden" required>
-        <div class="image-preview" id="imagePreview"></div>
-      </div>
+    <div class="card">
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loader"></div>
+            <p class="loading-text">กำลังบันทึก..</p>
+        </div>
 
-      <button type="submit" id="sub" class="submit-btn"><i class="fas fa-paper-plane"></i> บันทึกการกำกับดูแล</button>
-      <p class="footnote"><i class="fas fa-leaf"></i> ระบบส่งเสริมการเกษตร • บริษัทเชียงใหม่โฟรเซ่นฟูดส์ จำกัด (มหาชน)
-      </p>
-    </form>
-  </div>
+        <!-- GPS Checking Screen -->
+        <div id="gpsCheckingScreen" class="gps-checking">
+            <div class="gps-icon-wrap" id="gpsIcon"><i class="fas fa-map-marker-alt"></i></div>
+            <h3 id="gpsTitle">กำลังตรวจสอบ GPS</h3>
+            <p id="gpsDesc">กรุณารอสักครู่ขณะที่เราตรวจสอบตำแหน่งของคุณ...</p>
+            <div class="spinner" id="gpsSpinner"></div>
+            <button class="retry-btn hidden" id="gpsRetry" onclick="startGpsCheck()"><i class="fas fa-sync-alt"></i>
+                ลองอีกครั้ง</button>
+        </div>
 
-  <script>
-    let currentCoordinates = '';
-    let userId = '';
-    let locationReady = false;
+        <!-- Main Form (Hidden until GPS ready) -->
+        <form id="dataForm" class="hidden">
+            <div class="section-head">
+                <div class="icon"><i class="fas fa-calendar-day"></i></div> วันที่ปฏิบัติงาน
+            </div>
+            <div class="field">
+                <input type="date" name="date" id="date" required readonly title="วันที่ปฏิบัติงานกำหนดอัตโนมัติ">
+            </div>
 
-    // ---------- บีบอัดรูปอัตโนมัติ (ลดขนาดก่อนอัปโหลด เพื่อให้บันทึกเร็วขึ้น) ----------
-    let compressedUpload = null; // { base64, type, name } ของรูปที่บีบอัดแล้ว
-    const IMAGE_MAX_DIM = 900; // ความยาวด้านที่ยาวที่สุด (px) — เล็กลงเพื่อให้ไฟล์อัปโหลดเร็วขึ้น
-    const IMAGE_QUALITY = 0.6; // คุณภาพ JPEG (0-1) — ลดลงเพื่อให้ไฟล์เล็กลง อัปโหลดเร็วขึ้น
-    const COMPRESS_THRESHOLD = 150 * 1024; // รูป ≤ 150KB ส่งไฟล์เดิมได้เลย (ใหญ่กว่านี้บีบให้เล็กลง)
+            <div class="section-head">
+                <div class="icon"><i class="fas fa-user-tie"></i></div> ข้อมูลผู้ส่งงาน
+            </div>
+            <div class="field">
+                <label>ชื่อชุปเปอร์ไวเซอร์ <span class="req">*</span></label>
+                <select name="firstName" id="firstName" required>
+                    <option value="">กรุณาเลือกชื่อ</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>เขต <span class="req">*</span></label>
+                <select name="district" id="district" required>
+                    <option value="">กรุณาเลือกเขต</option>
+                </select>
+            </div>
 
-    function formatBytes(bytes) {
-      if (!bytes && bytes !== 0) return '0 KB';
-      if (bytes < 1024) return bytes + ' B';
-      return (bytes / 1024).toFixed(0) + ' KB';
-    }
+            <div class="section-head">
+                <div class="icon"><i class="fas fa-map-marked-alt"></i></div> ข้อมูลพื้นที่ (อัตโนมัติ)
+            </div>
+            <div class="field">
+                <label>หมู่บ้าน</label>
+                <input type="text" name="village" id="village" readonly>
+            </div>
+            <div class="field">
+                <label>ตำบล</label>
+                <input type="text" name="subDistrict" id="subDistrict" readonly>
+            </div>
 
-    // บีบอัดรูปด้วย Canvas → คืน Blob JPEG ถ้าทำได้ / null = ใช้ไฟล์เดิม
-    function compressImage(file) {
-      return new Promise((resolve) => {
-        if (!file || !file.type || file.size <= COMPRESS_THRESHOLD || file.type === 'image/gif') {
-          resolve(null); // เล็กอยู่แล้ว / GIF ภาพเคลื่อนไหว → ไม่บีบ
-          return;
+            <div class="section-head">
+                <div class="icon"><i class="fas fa-clipboard-list"></i></div> รายละเอียดปฏิบัติงาน
+            </div>
+            <div class="field">
+                <textarea name="details" required placeholder="ระบุรายละเอียดการปฏิบัติงาน"></textarea>
+            </div>
+
+            <div class="section-head">
+                <div class="icon"><i class="fas fa-map-pin"></i></div> พิกัด
+            </div>
+            <div class="field">
+                <div class="map-container" id="mapContainer"></div>
+                <div class="coords-note hidden" id="coordsNote"><i class="fas fa-crosshairs"></i><span
+                        id="coordsText"></span>
+                </div>
+            </div>
+
+            <div class="section-head">
+                <div class="icon"><i class="fas fa-camera"></i></div> รูปภาพ
+            </div>
+            <div class="field">
+                <label class="file-box" for="imageFile">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    เลือกรูปภาพ (จำเป็น)
+                </label>
+                <input type="file" name="imageFile" id="imageFile" accept="image/*" class="hidden" required>
+                <div class="image-preview" id="imagePreview"></div>
+            </div>
+
+            <button type="submit" id="sub" class="submit-btn"><i class="fas fa-paper-plane"></i>
+                บันทึกการกำกับดูแล</button>
+            <p class="footnote"><i class="fas fa-leaf"></i> ระบบส่งเสริมการเกษตร • บริษัทเชียงใหม่โฟรเซ่นฟูดส์ จำกัด
+                (มหาชน)
+            </p>
+        </form>
+    </div>
+
+    <script>
+        let currentCoordinates = '';
+        let userId = '';
+        let locationReady = false;
+
+        // ---------- บีบอัดรูปอัตโนมัติ (ลดขนาดก่อนอัปโหลด เพื่อให้บันทึกเร็วขึ้น) ----------
+        let compressedUpload = null; // { base64, type, name } ของรูปที่บีบอัดแล้ว
+        const IMAGE_MAX_DIM = 900; // ความยาวด้านที่ยาวที่สุด (px) — เล็กลงเพื่อให้ไฟล์อัปโหลดเร็วขึ้น
+        const IMAGE_QUALITY = 0.6; // คุณภาพ JPEG (0-1) — ลดลงเพื่อให้ไฟล์เล็กลง อัปโหลดเร็วขึ้น
+        const COMPRESS_THRESHOLD = 150 * 1024; // รูป ≤ 150KB ส่งไฟล์เดิมได้เลย (ใหญ่กว่านี้บีบให้เล็กลง)
+
+        function formatBytes(bytes) {
+            if (!bytes && bytes !== 0) return '0 KB';
+            if (bytes < 1024) return bytes + ' B';
+            return (bytes / 1024).toFixed(0) + ' KB';
         }
-        try {
-          const img = new Image();
-          const objectUrl = URL.createObjectURL(file);
-          img.onload = function () {
-            URL.revokeObjectURL(objectUrl);
+
+        // บีบอัดรูปด้วย Canvas → คืน Blob JPEG ถ้าทำได้ / null = ใช้ไฟล์เดิม
+        function compressImage(file) {
+            return new Promise((resolve) => {
+                if (!file || !file.type || file.size <= COMPRESS_THRESHOLD || file.type === 'image/gif') {
+                    resolve(null); // เล็กอยู่แล้ว / GIF ภาพเคลื่อนไหว → ไม่บีบ
+                    return;
+                }
+                try {
+                    const img = new Image();
+                    const objectUrl = URL.createObjectURL(file);
+                    img.onload = function () {
+                        URL.revokeObjectURL(objectUrl);
+                        try {
+                            let width = img.naturalWidth || img.width;
+                            let height = img.naturalHeight || img.height;
+                            if (!width || !height) { resolve(null); return; }
+                            if (width > IMAGE_MAX_DIM || height > IMAGE_MAX_DIM) {
+                                const ratio = Math.min(IMAGE_MAX_DIM / width, IMAGE_MAX_DIM / height);
+                                width = Math.round(width * ratio);
+                                height = Math.round(height * ratio);
+                            }
+                            const canvas = document.createElement('canvas');
+                            canvas.width = width;
+                            canvas.height = height;
+                            canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+                            canvas.toBlob(function (blob) {
+                                if (!blob) { resolve(null); return; }
+                                resolve(blob);
+                            }, 'image/jpeg', IMAGE_QUALITY);
+                        } catch (e) {
+                            resolve(null); // เปิด/วาดภาพไม่ได้ → ใช้ไฟล์เดิม
+                        }
+                    };
+                    img.onerror = function () {
+                        URL.revokeObjectURL(objectUrl);
+                        resolve(null);
+                    };
+                    img.src = objectUrl;
+                } catch (e) {
+                    resolve(null);
+                }
+            });
+        }
+
+        // แปลง Blob → base64 (เฉพาะข้อมูล ไม่มี prefix)
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = () => reject(new Error('อ่านรูปที่บีบอัดไม่ได้'));
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        // รอ promise พร้อม timeout — กัน LIFF/API ค้างหน้าไปเรื่อยๆ (คืนค่า fallback แทน)
+        function withTimeout(promise, ms, fallback) {
+            if (promise && typeof promise.catch === 'function') {
+                promise.catch(function () { /* ป้องกัน unhandled rejection */ });
+            }
+            return Promise.race([
+                Promise.resolve(promise),
+                new Promise(function (resolve) { setTimeout(function () { resolve(fallback); }, ms); })
+            ]);
+        }
+
+        // ---------- ตัวจับเวลาการใช้งาน (จำกัด 10 นาทีเพื่อความถูกต้องของพิกัดปัจจุบัน) ----------
+        const SESSION_TIMEOUT_MS = 10 * 60 * 1000; // 10 นาที
+        const LIFF_ID = '2007528760-v8N7EXG1';
+        let sessionStartTime = Date.now();
+        let sessionTimerInterval = null;
+        let isSessionExpired = false;
+        let isSubmitting = false;
+
+        function startSessionTimer() {
+            sessionStartTime = Date.now();
+            isSessionExpired = false;
+            updateSessionTimerDisplay();
+            if (sessionTimerInterval) clearInterval(sessionTimerInterval);
+            sessionTimerInterval = setInterval(checkSessionTimeout, 1000);
+        }
+
+        function updateSessionTimerDisplay() {
+            if (isSessionExpired) return;
+            const elapsed = Date.now() - sessionStartTime;
+            const remaining = Math.max(0, SESSION_TIMEOUT_MS - elapsed);
+            const totalSeconds = Math.floor(remaining / 1000);
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            const formatted = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+
+            const textEl = document.getElementById('sessionTimerText');
+            const pillEl = document.getElementById('sessionTimerPill');
+            if (textEl) textEl.textContent = formatted;
+            if (pillEl) {
+                if (remaining <= 120000) { // เหลือน้อยกว่า 2 นาที
+                    pillEl.classList.add('warning');
+                } else {
+                    pillEl.classList.remove('warning');
+                }
+            }
+        }
+
+        async function checkSessionTimeout() {
+            if (isSessionExpired || isSubmitting) return;
+            const elapsed = Date.now() - sessionStartTime;
+            if (elapsed >= SESSION_TIMEOUT_MS) {
+                await handleSessionTimeout();
+            } else {
+                updateSessionTimerDisplay();
+            }
+        }
+
+        // ตรวจสอบทันทีเมื่อสลับกลับมาที่หน้าจอ (กันกรณีพับจอ/ล็อกจอ)
+        document.addEventListener('visibilitychange', function () {
+            if (!document.hidden && !isSessionExpired && !isSubmitting) {
+                checkSessionTimeout();
+            }
+        });
+        window.addEventListener('focus', function () {
+            if (!isSessionExpired && !isSubmitting) {
+                checkSessionTimeout();
+            }
+        });
+
+        // แจ้งเตือนและปิด LIFF เมื่อเปิดค้างเกิน 10 นาที
+        async function handleSessionTimeout() {
+            if (isSessionExpired) return;
+            isSessionExpired = true;
+            if (sessionTimerInterval) clearInterval(sessionTimerInterval);
+
+            const textEl = document.getElementById('sessionTimerText');
+            const pillEl = document.getElementById('sessionTimerPill');
+            if (textEl) textEl.textContent = '00:00 (หมดเวลา)';
+            if (pillEl) pillEl.classList.add('warning');
+
+            const submitButton = document.getElementById('sub');
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.textContent = 'หมดเวลาใช้งาน (เกิน 10 นาที)';
+            }
+
+            Swal.fire({
+                icon: 'warning',
+                title: 'หมดเวลาการใช้งาน',
+                text: 'ท่านเปิดหน้าต่างทิ้งไว้เกิน 10 นาที กรุณาเปิดระบบใช้งานใหม่อีกครั้ง กำลังปิดหน้าต่างและแจ้งเตือนไปยัง LINE...',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false,
+                timer: 3200
+            });
+
+            const liffAppId = (typeof liff !== 'undefined' && liff && liff.id) ? liff.id : LIFF_ID;
+            const liffUri = `https://liff.line.me/${liffAppId}`;
+
+            const timeoutFlexMessage = {
+                type: "flex",
+                altText: "ท่านเปิดหน้าต่างทิ้งไว้เกิน 10 นาทีกรุณาเปิดระบบใช้งานใหม่อีกครั้ง",
+                contents: {
+                    type: "bubble",
+                    size: "mega",
+                    header: {
+                        type: "box",
+                        layout: "vertical",
+                        backgroundColor: "#DC2626",
+                        paddingAll: "lg",
+                        contents: [
+                            {
+                                type: "text",
+                                text: "⏰ แจ้งเตือนหมดเวลาใช้งาน",
+                                weight: "bold",
+                                size: "md",
+                                color: "#FFFFFF",
+                                align: "center"
+                            }
+                        ]
+                    },
+                    body: {
+                        type: "box",
+                        layout: "vertical",
+                        spacing: "md",
+                        paddingAll: "xl",
+                        contents: [
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                contents: [
+                                    {
+                                        type: "text",
+                                        text: "⏳",
+                                        size: "3xl",
+                                        align: "center"
+                                    }
+                                ],
+                                alignItems: "center",
+                                paddingBottom: "xs"
+                            },
+                            {
+                                type: "text",
+                                text: "ท่านเปิดหน้าต่างทิ้งไว้เกิน 10 นาที",
+                                weight: "bold",
+                                size: "md",
+                                color: "#DC2626",
+                                align: "center",
+                                wrap: true
+                            },
+                            {
+                                type: "text",
+                                text: "กรุณาเปิดระบบใช้งานใหม่อีกครั้ง",
+                                weight: "bold",
+                                size: "md",
+                                color: "#1F2937",
+                                align: "center",
+                                wrap: true
+                            },
+                            {
+                                type: "separator",
+                                margin: "lg"
+                            },
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                margin: "lg",
+                                spacing: "xs",
+                                contents: [
+                                    {
+                                        type: "text",
+                                        text: "📍 เพื่อความถูกต้องของพิกัดการกำกับดูแล:",
+                                        weight: "bold",
+                                        size: "xs",
+                                        color: "#4B5563"
+                                    },
+                                    {
+                                        type: "text",
+                                        text: "ระบบจำเป็นต้องบันทึกข้อมูลและพิกัดตำแหน่งจริง ณ เวลาส่งงาน กรุณาทำรายการและส่งงานภายใน 10 นาทีหลังจากเปิดฟอร์ม",
+                                        size: "xs",
+                                        color: "#6B7280",
+                                        wrap: true
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    footer: {
+                        type: "box",
+                        layout: "vertical",
+                        paddingAll: "md",
+                        contents: [
+                            {
+                                type: "button",
+                                style: "primary",
+                                color: "#2563eb",
+                                action: {
+                                    type: "uri",
+                                    label: "เปิดระบบใช้งานใหม่อีกครั้ง",
+                                    uri: liffUri
+                                }
+                            }
+                        ]
+                    }
+                }
+            };
+
             try {
-              let width = img.naturalWidth || img.width;
-              let height = img.naturalHeight || img.height;
-              if (!width || !height) { resolve(null); return; }
-              if (width > IMAGE_MAX_DIM || height > IMAGE_MAX_DIM) {
-                const ratio = Math.min(IMAGE_MAX_DIM / width, IMAGE_MAX_DIM / height);
-                width = Math.round(width * ratio);
-                height = Math.round(height * ratio);
-              }
-              const canvas = document.createElement('canvas');
-              canvas.width = width;
-              canvas.height = height;
-              canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-              canvas.toBlob(function (blob) {
-                if (!blob) { resolve(null); return; }
-                resolve(blob);
-              }, 'image/jpeg', IMAGE_QUALITY);
-            } catch (e) {
-              resolve(null); // เปิด/วาดภาพไม่ได้ → ใช้ไฟล์เดิม
+                if (typeof liff !== 'undefined' && typeof liff.isLoggedIn === 'function' && liff.isLoggedIn()) {
+                    if (typeof liff.isInClient === 'function' && liff.isInClient()) {
+                        await withTimeout(liff.sendMessages([timeoutFlexMessage]), 4000, null);
+                    }
+                }
+            } catch (err) {
+                console.warn("ส่ง Flex Message แจ้งเตือนหมดเวลาไม่สำเร็จ:", err);
+            } finally {
+                setTimeout(function () {
+                    try {
+                        if (typeof liff !== 'undefined' && typeof liff.closeWindow === 'function') {
+                            liff.closeWindow();
+                        }
+                    } catch (e) { /* noop */ }
+                }, 1500);
             }
-          };
-          img.onerror = function () {
-            URL.revokeObjectURL(objectUrl);
-            resolve(null);
-          };
-          img.src = objectUrl;
-        } catch (e) {
-          resolve(null);
         }
-      });
-    }
 
-    // แปลง Blob → base64 (เฉพาะข้อมูล ไม่มี prefix)
-    function blobToBase64(blob) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result.split(',')[1]);
-        reader.onerror = () => reject(new Error('อ่านรูปที่บีบอัดไม่ได้'));
-        reader.readAsDataURL(blob);
-      });
-    }
-
-    // รอ promise พร้อม timeout — กัน LIFF/API ค้างหน้าไปเรื่อยๆ (คืนค่า fallback แทน)
-    function withTimeout(promise, ms, fallback) {
-      if (promise && typeof promise.catch === 'function') {
-        promise.catch(function () { /* ป้องกัน unhandled rejection */ });
-      }
-      return Promise.race([
-        Promise.resolve(promise),
-        new Promise(function (resolve) { setTimeout(function () { resolve(fallback); }, ms); })
-      ]);
-    }
-
-    // Initialize LIFF (มี timeout — กันค้างที่ "กำลังโหลด..." ตลอดไป)
-    async function initializeLiff() {
-      try {
-        if (typeof liff === 'undefined') throw new Error('LIFF SDK โหลดไม่สำเร็จ (เปิดนอก LINE หรือเน็ตขัดข้อง)');
-        await withTimeout(liff.init({ liffId: '2007528760-v8N7EXG1' }), 8000, null); // Replace with your LIFF ID
-        if (typeof liff.isLoggedIn === 'function' && liff.isLoggedIn()) {
-          const profile = await withTimeout(liff.getProfile(), 5000, null);
-          if (profile) {
-            userId = profile.userId;
-            document.getElementById('displayName').textContent = profile.displayName;
-            const avatarBox = document.getElementById('avatarBox');
-            if (profile.pictureUrl) {
-              document.getElementById('profileImage').src = profile.pictureUrl;
-              avatarBox.classList.remove('no-photo');
-            } else {
-              avatarBox.classList.add('no-photo');
+        // Initialize LIFF (มี timeout — กันค้างที่ "กำลังโหลด..." ตลอดไป)
+        async function initializeLiff() {
+            try {
+                if (typeof liff === 'undefined') throw new Error('LIFF SDK โหลดไม่สำเร็จ (เปิดนอก LINE หรือเน็ตขัดข้อง)');
+                await withTimeout(liff.init({ liffId: '2007528760-v8N7EXG1' }), 8000, null); // Replace with your LIFF ID
+                if (typeof liff.isLoggedIn === 'function' && liff.isLoggedIn()) {
+                    const profile = await withTimeout(liff.getProfile(), 5000, null);
+                    if (profile) {
+                        userId = profile.userId;
+                        document.getElementById('displayName').textContent = profile.displayName;
+                        const avatarBox = document.getElementById('avatarBox');
+                        if (profile.pictureUrl) {
+                            document.getElementById('profileImage').src = profile.pictureUrl;
+                            avatarBox.classList.remove('no-photo');
+                        } else {
+                            avatarBox.classList.add('no-photo');
+                        }
+                    } else {
+                        // ได้โปรไฟล์ช้าเกิน 5 วิ → ไปต่อก่อน (ไม่ค้างหน้า)
+                        document.getElementById('displayName').textContent = 'ยินดีต้อนรับ';
+                        document.getElementById('avatarBox').classList.add('no-photo');
+                    }
+                } else {
+                    console.log("Mock liff login bypassed"); userId = "test-user"; document.getElementById("displayName").textContent = "นายทดสอบ";
+                }
+            } catch (error) {
+                document.getElementById('displayName').textContent = 'ยินดีต้อนรับ';
+                document.getElementById('avatarBox').classList.add('no-photo');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'LIFF Initialization Failed',
+                    text: error.message,
+                    confirmButtonColor: '#2563eb'
+                });
             }
-          } else {
-            // ได้โปรไฟล์ช้าเกิน 5 วิ → ไปต่อก่อน (ไม่ค้างหน้า)
-            document.getElementById('displayName').textContent = 'ยินดีต้อนรับ';
-            document.getElementById('avatarBox').classList.add('no-photo');
-          }
-        } else {
-          console.log("Mock liff login bypassed"); userId = "test-user"; document.getElementById("displayName").textContent = "นายทดสอบ";
         }
-      } catch (error) {
-        document.getElementById('displayName').textContent = 'ยินดีต้อนรับ';
-        document.getElementById('avatarBox').classList.add('no-photo');
-        Swal.fire({
-          icon: 'error',
-          title: 'LIFF Initialization Failed',
-          text: error.message,
-          confirmButtonColor: '#2563eb'
+
+        // GPS with timeout
+        function getLocation() {
+            return new Promise((resolve, reject) => {
+                if (!navigator.geolocation) {
+                    reject(new Error('เบราว์เซอร์ของคุณไม่สนับสนุนการรับพิกัด GPS'));
+                    return;
+                }
+                const timeoutId = setTimeout(() => reject(new Error('การตรวจสอบตำแหน่งหมดเวลา')), 15000);
+                navigator.geolocation.getCurrentPosition(
+                    (position) => { clearTimeout(timeoutId); resolve(position); },
+                    (error) => {
+                        clearTimeout(timeoutId);
+                        let msg = '';
+                        switch (error.code) {
+                            case error.PERMISSION_DENIED: msg = 'ไม่อนุญาตให้ LINE เข้าถึงตำแหน่ง'; break;
+                            case error.POSITION_UNAVAILABLE: msg = 'ไม่สามารถระบุตำแหน่งได้'; break;
+                            case error.TIMEOUT: msg = 'การตรวจสอบตำแหน่งหมดเวลา'; break;
+                            default: msg = 'เกิดข้อผิดพลาดในการรับตำแหน่ง'; break;
+                        }
+                        reject(new Error(msg));
+                    },
+                    { enableHighAccuracy: true, timeout: 13000, maximumAge: 0 }
+                );
+            });
+        }
+
+        function showPosition(position) {
+            currentCoordinates = position.coords.latitude + ", " + position.coords.longitude;
+            const mapHtml = `<iframe width="100%" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q=${currentCoordinates}&t=&z=15&ie=UTF8&iwloc=&output=embed"></iframe>`;
+            document.getElementById('mapContainer').innerHTML = mapHtml;
+            const note = document.getElementById('coordsNote');
+            note.classList.remove('hidden');
+            document.getElementById('coordsText').textContent = 'พิกัด: ' + currentCoordinates;
+        }
+
+        // GPS flow: show form only when coordinates are ready (prevents NaN submission)
+        function startGpsCheck() {
+            locationReady = false;
+            const screen = document.getElementById('gpsCheckingScreen');
+            document.getElementById('gpsIcon').className = 'gps-icon-wrap';
+            document.getElementById('gpsIcon').innerHTML = '<i class="fas fa-map-marker-alt"></i>';
+            document.getElementById('gpsTitle').textContent = 'กำลังตรวจสอบ GPS';
+            document.getElementById('gpsDesc').textContent = 'กรุณารอสักครู่ขณะที่เราตรวจสอบตำแหน่งของคุณ...';
+            document.getElementById('gpsSpinner').classList.remove('hidden');
+            document.getElementById('gpsRetry').classList.add('hidden');
+            screen.style.display = 'flex';
+            document.getElementById('dataForm').classList.add('hidden');
+
+            getLocation()
+                .then((position) => {
+                    showPosition(position);
+                    locationReady = true;
+                    screen.style.display = 'none';
+                    document.getElementById('dataForm').classList.remove('hidden');
+                })
+                .catch((err) => {
+                    console.error('GPS error:', err.message);
+                    document.getElementById('gpsIcon').className = 'gps-icon-wrap error';
+                    document.getElementById('gpsIcon').innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+                    document.getElementById('gpsTitle').textContent = 'ไม่สามารถรับตำแหน่งได้';
+                    document.getElementById('gpsDesc').textContent = err.message + ' กรุณาเปิด GPS และอนุญาตสิทธิ์ตำแหน่ง แล้วลองใหม่อีกครั้ง';
+                    document.getElementById('gpsSpinner').classList.add('hidden');
+                    document.getElementById('gpsRetry').classList.remove('hidden');
+                });
+        }
+
+        document.getElementById('imageFile').addEventListener('change', async function (event) {
+            const file = event.target.files[0];
+            compressedUpload = null;
+            if (!file) return;
+
+            const previewEl = document.getElementById('imagePreview');
+
+            // บีบอัดรูปอัตโนมัติก่อนแสดงตัวอย่าง (ตรงกับไฟล์ที่จะอัปโหลด)
+            try {
+                const blob = await compressImage(file);
+                // ผู้ใช้เปลี่ยนไปเลือกรูปอื่นระหว่างบีบอัด → ไม่เอา result เก่ามาทับ
+                if (document.getElementById('imageFile').files[0] !== file) return;
+                if (blob) {
+                    const base64 = await blobToBase64(blob);
+                    if (document.getElementById('imageFile').files[0] !== file) return;
+                    const baseName = (file.name || 'image').replace(/\.[^.]+$/, '') || 'image';
+                    compressedUpload = { base64: base64, type: 'image/jpeg', name: baseName + '.jpg' };
+                    previewEl.innerHTML =
+                        `<img src="data:image/jpeg;base64,${base64}" alt="Image Preview">` +
+                        `<p class="img-size-note"><i class="fas fa-compress-arrows-alt"></i> บีบอัดแล้ว: ${formatBytes(file.size)} → ${formatBytes(Math.round(base64.length * 3 / 4))}</p>`;
+                    return;
+                }
+            } catch (e) { /* บีบอัดไม่ได้ → ใช้ไฟล์เดิม */ }
+
+            // รูปเล็กอยู่แล้ว / บีบอัดไม่ได้ → แสดงและใช้ไฟล์เดิม
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                if (document.getElementById('imageFile').files[0] !== file) return;
+                previewEl.innerHTML = `<img src="${e.target.result}" alt="Image Preview">`;
+            };
+            reader.readAsDataURL(file);
         });
-      }
-    }
 
-    // GPS with timeout
-    function getLocation() {
-      return new Promise((resolve, reject) => {
-        if (!navigator.geolocation) {
-          reject(new Error('เบราว์เซอร์ของคุณไม่สนับสนุนการรับพิกัด GPS'));
-          return;
-        }
-        const timeoutId = setTimeout(() => reject(new Error('การตรวจสอบตำแหน่งหมดเวลา')), 15000);
-        navigator.geolocation.getCurrentPosition(
-          (position) => { clearTimeout(timeoutId); resolve(position); },
-          (error) => {
-            clearTimeout(timeoutId);
-            let msg = '';
-            switch (error.code) {
-              case error.PERMISSION_DENIED: msg = 'ไม่อนุญาตให้ LINE เข้าถึงตำแหน่ง'; break;
-              case error.POSITION_UNAVAILABLE: msg = 'ไม่สามารถระบุตำแหน่งได้'; break;
-              case error.TIMEOUT: msg = 'การตรวจสอบตำแหน่งหมดเวลา'; break;
-              default: msg = 'เกิดข้อผิดพลาดในการรับตำแหน่ง'; break;
+        document.getElementById('dataForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            // ตรวจสอบเงื่อนไขเวลาเปิดค้างไว้เกิน 10 นาทีหรือไม่
+            if (Date.now() - sessionStartTime >= SESSION_TIMEOUT_MS || isSessionExpired) {
+                await handleSessionTimeout();
+                return;
             }
-            reject(new Error(msg));
-          },
-          { enableHighAccuracy: true, timeout: 13000, maximumAge: 30000 }
-        );
-      });
-    }
 
-    function showPosition(position) {
-      currentCoordinates = position.coords.latitude + ", " + position.coords.longitude;
-      const mapHtml = `<iframe width="100%" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q=${currentCoordinates}&t=&z=15&ie=UTF8&iwloc=&output=embed"></iframe>`;
-      document.getElementById('mapContainer').innerHTML = mapHtml;
-      const note = document.getElementById('coordsNote');
-      note.classList.remove('hidden');
-      document.getElementById('coordsText').textContent = 'พิกัด: ' + currentCoordinates;
-    }
-
-    // GPS flow: show form only when coordinates are ready (prevents NaN submission)
-    function startGpsCheck() {
-      locationReady = false;
-      const screen = document.getElementById('gpsCheckingScreen');
-      document.getElementById('gpsIcon').className = 'gps-icon-wrap';
-      document.getElementById('gpsIcon').innerHTML = '<i class="fas fa-map-marker-alt"></i>';
-      document.getElementById('gpsTitle').textContent = 'กำลังตรวจสอบ GPS';
-      document.getElementById('gpsDesc').textContent = 'กรุณารอสักครู่ขณะที่เราตรวจสอบตำแหน่งของคุณ...';
-      document.getElementById('gpsSpinner').classList.remove('hidden');
-      document.getElementById('gpsRetry').classList.add('hidden');
-      screen.style.display = 'flex';
-      document.getElementById('dataForm').classList.add('hidden');
-
-      getLocation()
-        .then((position) => {
-          showPosition(position);
-          locationReady = true;
-          screen.style.display = 'none';
-          document.getElementById('dataForm').classList.remove('hidden');
-        })
-        .catch((err) => {
-          console.error('GPS error:', err.message);
-          document.getElementById('gpsIcon').className = 'gps-icon-wrap error';
-          document.getElementById('gpsIcon').innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
-          document.getElementById('gpsTitle').textContent = 'ไม่สามารถรับตำแหน่งได้';
-          document.getElementById('gpsDesc').textContent = err.message + ' กรุณาเปิด GPS และอนุญาตสิทธิ์ตำแหน่ง แล้วลองใหม่อีกครั้ง';
-          document.getElementById('gpsSpinner').classList.add('hidden');
-          document.getElementById('gpsRetry').classList.remove('hidden');
-        });
-    }
-
-    document.getElementById('imageFile').addEventListener('change', async function (event) {
-      const file = event.target.files[0];
-      compressedUpload = null;
-      if (!file) return;
-
-      const previewEl = document.getElementById('imagePreview');
-
-      // บีบอัดรูปอัตโนมัติก่อนแสดงตัวอย่าง (ตรงกับไฟล์ที่จะอัปโหลด)
-      try {
-        const blob = await compressImage(file);
-        // ผู้ใช้เปลี่ยนไปเลือกรูปอื่นระหว่างบีบอัด → ไม่เอา result เก่ามาทับ
-        if (document.getElementById('imageFile').files[0] !== file) return;
-        if (blob) {
-          const base64 = await blobToBase64(blob);
-          if (document.getElementById('imageFile').files[0] !== file) return;
-          const baseName = (file.name || 'image').replace(/\.[^.]+$/, '') || 'image';
-          compressedUpload = { base64: base64, type: 'image/jpeg', name: baseName + '.jpg' };
-          previewEl.innerHTML =
-            `<img src="data:image/jpeg;base64,${base64}" alt="Image Preview">` +
-            `<p class="img-size-note"><i class="fas fa-compress-arrows-alt"></i> บีบอัดแล้ว: ${formatBytes(file.size)} → ${formatBytes(Math.round(base64.length * 3 / 4))}</p>`;
-          return;
-        }
-      } catch (e) { /* บีบอัดไม่ได้ → ใช้ไฟล์เดิม */ }
-
-      // รูปเล็กอยู่แล้ว / บีบอัดไม่ได้ → แสดงและใช้ไฟล์เดิม
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        if (document.getElementById('imageFile').files[0] !== file) return;
-        previewEl.innerHTML = `<img src="${e.target.result}" alt="Image Preview">`;
-      };
-      reader.readAsDataURL(file);
-    });
-
-    document.getElementById('dataForm').addEventListener('submit', async function (event) {
-      event.preventDefault();
-
-      const fileInput = document.getElementById('imageFile').files[0];
-      if (!fileInput) {
-        Swal.fire({ icon: 'warning', title: 'กรุณาเลือกรูปภาพ', text: 'ต้องแนบรูปภาพก่อนบันทึกข้อมูล', confirmButtonColor: '#2563eb' });
-        return;
-      }
-      if (!locationReady || !currentCoordinates) {
-        Swal.fire({ icon: 'warning', title: 'ยังไม่มีพิกัด GPS', text: 'กรุณารอให้ระบบตรวจสอบตำแหน่งสำเร็จก่อนบันทึกข้อมูล', confirmButtonColor: '#2563eb' });
-        return;
-      }
-
-      const loadingOverlay = document.getElementById('loadingOverlay');
-      loadingOverlay.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-
-      const submitButton = document.getElementById('sub');
-      submitButton.disabled = true;
-      submitButton.textContent = "กำลังบันทึก...";
-
-      const formData = new FormData(this);
-      const submitDate = new Date().toLocaleDateString();
-      const submitTime = new Date().toLocaleTimeString();
-      const location = `https://maps.google.com/maps?q=${currentCoordinates}`;
-
-      // ถ้า LIFF ยังโหลดไม่เสร็จ → รอให้ได้ userId ก่อนส่งข้อมูล (ไม่ให้ userId ว่าง)
-      if (!userId) { try { await initializeLiff(); } catch (e) { /* ไม่มี userId ก็ยังส่งได้ */ } }
-
-      // ใช้รูปที่บีบอัดแล้ว (ถ้ามี) → ข้ามการอ่านไฟล์ต้นฉบับทั้งไฟล์ (บันทึกเร็วขึ้นมาก)
-      async function runUpload(base64, uploadType, uploadName) {
-        const data = {
-          date: formData.get('date'),
-          firstName: formData.get('firstName'),
-          district: formData.get('district'),
-          village: formData.get('village'),
-          subDistrict: formData.get('subDistrict'),
-          details: formData.get('details'),
-          coordinates: currentCoordinates,
-          location: location,
-          base64: base64,
-          type: uploadType,
-          name: uploadName,
-          submitDate: submitDate,
-          submitTime: submitTime,
-          userId: userId
-        };
-
-        try {
-          const response = await fetch('https://script.google.com/macros/s/AKfycbyE8tvOVYAAR6WOiCVDEb2Fp1Yq3ebTAri9ZQYonpduMjQCFzod8xi0glBVXc6A6_qOeA/exec', {
-            method: "POST",
-            body: JSON.stringify(data)
-          });
-          const result = await response.json();
-
-          if (result.status !== "success") {
-            throw new Error(result.message || "Failed to upload data and image");
-          }
-
-          const fileLink = result.fileLink;
-
-          const flexMessage = {
-            type: "flex",
-            altText: "รายงานการทำงานSupervisor",
-            contents: {
-              type: "bubble",
-              body: {
-                type: "box",
-                layout: "vertical",
-                contents: [
-                  {
-                    type: "text",
-                    text: "รายงานการทำงานSupervisor",
-                    weight: "bold",
-                    size: "md",
-                    wrap: true
-                  },
-                  {
-                    type: "box",
-                    layout: "vertical",
-                    margin: "lg",
-                    spacing: "sm",
-                    contents: [
-                      { type: "text", text: `วันที่: ${data.date}`, wrap: true },
-                      { type: "text", text: `ชื่อชุปเปอร์ไวเซอร์: ${data.firstName}`, wrap: true },
-                      { type: "text", text: `เขต: ${data.district}`, wrap: true },
-                      { type: "text", text: `หมู่บ้าน: ${data.village}`, wrap: true },
-                      { type: "text", text: `ตำบล: ${data.subDistrict}`, wrap: true },
-                      { type: "text", text: `รายละเอียดปฏิบัติงาน: ${data.details}`, wrap: true },
-                      { type: "text", text: `พิกัด: ${data.coordinates}`, wrap: true },
-                      { type: "text", text: `ส่งเมื่อ: ${data.submitDate} ${data.submitTime}`, wrap: true }
-                    ]
-                  }
-                ]
-              }
+            const fileInput = document.getElementById('imageFile').files[0];
+            if (!fileInput) {
+                Swal.fire({ icon: 'warning', title: 'กรุณาเลือกรูปภาพ', text: 'ต้องแนบรูปภาพก่อนบันทึกข้อมูล', confirmButtonColor: '#2563eb' });
+                return;
             }
-          };
-
-          const imageMessage = {
-            type: "image",
-            originalContentUrl: fileLink,
-            previewImageUrl: fileLink
-          };
-
-          await liff.sendMessages([
-            flexMessage,
-            imageMessage,
-            {
-              type: "location",
-              title: "สถานที่ปฏิบัติงาน",
-              address: data.location,
-              latitude: parseFloat(currentCoordinates.split(',')[0]),
-              longitude: parseFloat(currentCoordinates.split(',')[1])
+            if (!locationReady || !currentCoordinates) {
+                Swal.fire({ icon: 'warning', title: 'ยังไม่มีพิกัด GPS', text: 'กรุณารอให้ระบบตรวจสอบตำแหน่งสำเร็จก่อนบันทึกข้อมูล', confirmButtonColor: '#2563eb' });
+                return;
             }
-          ]);
 
-          loadingOverlay.style.display = 'none';
-          document.body.style.overflow = '';
-          submitButton.textContent = "บันทึกการกำกับดูแล";
-          submitButton.disabled = false;
-          document.getElementById('dataForm').reset();
-          document.getElementById('imagePreview').innerHTML = '';
-          compressedUpload = null;
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const loadingText = loadingOverlay.querySelector('.loading-text');
+            loadingOverlay.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
 
-          Swal.fire({
-            icon: 'success',
-            title: 'บันทึกและส่งสำเร็จ!',
-            text: 'ข้อมูลการกำกับดูแลถูกบันทึกและส่งไปยัง LINE Chat เรียบร้อยแล้ว',
-            timer: 2000,
-            showConfirmButton: false
-          });
+            const submitButton = document.getElementById('sub');
+            submitButton.disabled = true;
+            submitButton.textContent = "กำลังตรวจสอบพิกัด...";
+            if (loadingText) loadingText.textContent = "กำลังตรวจสอบพิกัดปัจจุบัน...";
 
-          // ปิดหน้าต่างหลังจากแสดงข้อความสำเร็จแล้ว (ไม่ปิดทันทีจนมองไม่เห็น Toast)
-          setTimeout(function () {
-            try { liff.closeWindow(); } catch (e) { /* noop */ }
-          }, 1600);
-        } catch (error) {
-          loadingOverlay.style.display = 'none';
-          document.body.style.overflow = '';
-          Swal.fire({
-            icon: 'error',
-            title: 'เกิดข้อผิดพลาด',
-            text: 'ไม่สามารถบันทึกหรือส่งข้อมูลได้: ' + error.message,
-            confirmButtonColor: '#2563eb'
-          });
-          submitButton.textContent = "บันทึกการกำกับดูแล";
-          submitButton.disabled = false;
-        }
-      }
-
-      if (compressedUpload) {
-        // มีรูปที่บีบอัดแล้ว → เริ่มอัปโหลดทันที ไม่ต้องอ่านไฟล์ต้นฉบับทั้งไฟล์
-        runUpload(compressedUpload.base64, compressedUpload.type, compressedUpload.name);
-      } else {
-        const reader = new FileReader();
-        reader.onload = function (event) {
-          runUpload(event.target.result.split(',')[1], fileInput.type, fileInput.name);
-        };
-        reader.readAsDataURL(fileInput);
-      }
-    });
-
-    // ---------- โหลด Select (แคช + ดึงข้อมูล) ----------
-    const SUPERVISOR_API_URL = 'https://script.google.com/macros/s/AKfycbyE8tvOVYAAR6WOiCVDEb2Fp1Yq3ebTAri9ZQYonpduMjQCFzod8xi0glBVXc6A6_qOeA/exec';
-    const CACHE_TTL = 12 * 60 * 60 * 1000; // 12 ชั่วโมง (ข้อมูล Select เปลี่ยนบ่อยน้อย)
-
-    function getCache(key) {
-      try {
-        const raw = localStorage.getItem(key);
-        if (!raw) return null;
-        const { ts, data } = JSON.parse(raw);
-        if (Date.now() - ts > CACHE_TTL) return null;
-        return data;
-      } catch (e) { return null; }
-    }
-
-    function setCache(key, data) {
-      try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data: data })); } catch (e) { /* localStorage ไม่พร้อมใช้งาน */ }
-    }
-
-    // แปลงข้อผิดพลาดให้ผู้ใช้เข้าใจว่าต้องแก้อะไร
-    function describeApiError(error) {
-      if (!error) return 'เกิดข้อผิดพลาดในการเชื่อมต่อ';
-      if (error.name === 'AbortError') return 'API ตอบช้าเกินไป (หมดเวลา 60 วินาที) — ลองเปิดหน้าใหม่อีกครั้ง';
-      if (error.message === 'Failed to fetch') return 'เชื่อมต่อกับ API ไม่ได้ (CORS/เครือข่าย) — ตรวจว่าเปิดหน้านี้จากลิงก์ LINE อย่างเป็นทางการ';
-      if (/Unexpected token|did not match the expected pattern/.test(error.message)) return 'API ตอบกลับเป็นหน้า HTML (ต้องล็อกอิน Google หรือยังไม่เปิดสาธารณะ) — ไปที่ Google Apps Script > Deploy > Manage deployments แล้วตั้งค่า Who has access เป็น Anyone';
-      return error.message || 'เกิดข้อผิดพลาดในการเชื่อมต่อ';
-    }
-
-    // อ่าน response โดยตรวจเนื้อหาจริง (GAS มักคืน JSON พร้อม header text/html)
-    function parseResponseBody(response) {
-      return response.text().then(text => {
-        const trimmed = text.trim();
-        if (!trimmed) throw new Error('API ตอบกลับว่างเปล่า');
-        // ถ้าเป็น HTML (หน้า login/error ของ Google) → แจ้งเตือนชัดเจน
-        if (trimmed.charAt(0) === '<') {
-          const e = new Error('API ตอบกลับเป็นหน้า HTML (ต้องล็อกอิน Google หรือยังไม่เปิดสาธารณะ) — ไปที่ Google Apps Script > Deploy > Manage deployments แล้วตั้งค่า Who has access เป็น Anyone');
-          e.apiError = true;
-          throw e;
-        }
-        try {
-          return JSON.parse(trimmed);
-        } catch (e) {
-          const err = new Error('API ตอบกลับไม่ใช่ JSON ที่ถูกต้อง: ' + trimmed.slice(0, 80));
-          err.apiError = true;
-          throw err;
-        }
-      });
-    }
-
-    // เติมตัวเลือกใน Select และสร้าง/อัปเดต Tom Select (กัน option ซ้ำ)
-    // onCreated: เรียกหลังสร้าง TomSelect ครั้งแรก (สำหรับผูก event พิเศษ เช่น เขต → ดึงข้อมูลอัตโนมัติ)
-    function fillSelect(selectId, items, placeholder, onCreated) {
-      if (!Array.isArray(items) || !items.length) return;
-      const selectEl = document.getElementById(selectId);
-      if (!selectEl) return;
-      const existing = selectEl._tomSelect;
-      if (existing) {
-        existing.clearOptions();
-        existing.addOptions(items.map(v => ({ value: v, text: v })));
-        existing.refreshOptions(false);
-        return;
-      }
-      items.forEach(name => {
-        const o = document.createElement('option');
-        o.value = name;
-        o.text = name;
-        selectEl.appendChild(o);
-      });
-      selectEl._tomSelect = new TomSelect('#' + selectId, { placeholder: placeholder, allowEmptyOption: true });
-      if (onCreated) onCreated(selectEl._tomSelect);
-    }
-
-    // โหลดข้อมูล Select: ใช้แคชทันที แล้วค่อยดึงจาก API อัปเดตเบื้องหลัง
-    // onCreated: เรียกเมื่อสร้าง TomSelect ครั้งแรก / onData: เรียกเมื่อได้ข้อมูล (แคชหรือ API) พร้อมรายการข้อมูล
-    function loadSelect(action, selectId, cacheKey, placeholder, errorLabel, onCreated, onData, attempt) {
-      attempt = attempt || 0;
-      const url = SUPERVISOR_API_URL + '?action=' + action;
-      const cached = getCache(cacheKey);
-      if (cached && cached.length) {
-        fillSelect(selectId, cached, placeholder, onCreated);
-        if (onData) onData(cached);
-      }
-
-      // ถ้า GAS ตอบช้า/ค้าง (cold start) ให้ timeout 60 วินาที
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 60000);
-
-      // ถ้าเกิน 8 วิ ยังไม่ตอบ → แจ้งแบบ toast เล็กๆ (ไม่บล็อกการใช้งาน) — เฉพาะครั้งแรกที่ยังไม่มีแคช
-      const slowTimer = setTimeout(() => {
-        if (!cached || !cached.length) {
-          Swal.fire({
-            toast: true,
-            position: 'bottom',
-            icon: 'info',
-            title: 'กำลังโหลดข้อมูล...',
-            text: 'API กำลังตอบช้า (Google Apps Script cold start) กรุณารอสักครู่',
-            timer: 4000,
-            showConfirmButton: false,
-            confirmButtonColor: '#2563eb'
-          });
-        }
-      }, 8000);
-
-      return fetch(url, { signal: controller.signal })
-        .then(response => {
-          if (!response.ok) {
-            // GAS คืน HTTP error (403 = ไม่เปิดสาธารณะ, 404 = URL ผิด/ถูกลบ)
-            const statusText = response.status === 403
-              ? 'API ยังไม่เปิดใช้งานสาธารณะ (HTTP 403) — ไปที่ Google Apps Script > Deploy > Manage deployments แล้วตั้งค่า Who has access เป็น Anyone'
-              : response.status === 404
-                ? 'ไม่พบ API (HTTP 404) — ตรวจสอบ URL ของ Google Apps Script หรือ Deployment ถูกลบไปแล้ว'
-                : 'API ตอบกลับ HTTP ' + response.status;
-            const e = new Error(statusText);
-            e.apiError = true;
-            throw e;
-          }
-          return parseResponseBody(response);
-        })
-        .then(data => {
-          if (data.error) {
-            // มีข้อมูลแคชแสดงอยู่แล้ว → ไม่ต้องเด้ง error ซ้ำ
-            if (!cached || !cached.length) {
-              Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลด ' + errorLabel + ' ได้: ' + data.error, confirmButtonColor: '#2563eb' });
+            // ตรวจสอบพิกัดปัจจุบันอีกครั้งก่อนส่งงานจริง เพื่อป้องกันช่องโหว่เปิดค้างแล้วย้ายตำแหน่ง
+            try {
+                const freshPos = await getLocation();
+                showPosition(freshPos);
+                locationReady = true;
+            } catch (gpsError) {
+                loadingOverlay.style.display = 'none';
+                document.body.style.overflow = '';
+                submitButton.disabled = false;
+                submitButton.textContent = "บันทึกการกำกับดูแล";
+                if (loadingText) loadingText.textContent = "กำลังบันทึก..";
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ไม่สามารถยืนยันพิกัดปัจจุบันได้',
+                    text: 'ระบบจำเป็นต้องใช้พิกัดปัจจุบันจริง ณ เวลาที่ส่งงาน กรุณาเปิด GPS และอนุญาตสิทธิ์ตำแหน่ง แล้วลองใหม่อีกครั้ง',
+                    confirmButtonColor: '#2563eb'
+                });
+                return;
             }
-            return;
-          }
-          if (!Array.isArray(data) || !data.length) return;
-          setCache(cacheKey, data);
-          fillSelect(selectId, data, placeholder, onCreated);
-          if (onData) onData(data);
-        })
-        .catch(error => {
-          // มีข้อมูลแคชแสดงอยู่แล้ว → แค่ log ไม่ต้องเด้ง error ซ้ำ
-          if (cached && cached.length) {
-            console.warn('อัปเดต ' + errorLabel + ' ไม่สำเร็จ ใช้ข้อมูลเก่า:', error);
-            return;
-          }
-          // ลองใหม่เองอัตโนมัติ 2 ครั้ง (กัน cold start / เน็ตสะดุดชั่วคราว) ก่อนแจ้ง error
-          if (attempt < 2) {
-            setTimeout(() => loadSelect(action, selectId, cacheKey, placeholder, errorLabel, onCreated, onData, attempt + 1), 1500 * (attempt + 1));
-            return;
-          }
-          const msg = error.apiError ? error.message : 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + describeApiError(error);
-          Swal.fire({
-            icon: 'error',
-            title: 'ข้อผิดพลาด',
-            text: msg,
-            confirmButtonColor: '#2563eb',
-            showCancelButton: true,
-            confirmButtonText: 'ลองใหม่',
-            cancelButtonText: 'ปิด'
-          }).then(result => {
-            if (result.isConfirmed) loadSelect(action, selectId, cacheKey, placeholder, errorLabel, onCreated, onData);
-          });
-        })
-        .finally(() => { clearTimeout(timer); clearTimeout(slowTimer); });
-    }
 
-    // โหลด Select ทั้ง 2 ช่องแบบขนาน (ไม่ต้องรอ LIFF/GPS)
-    function loadSelectData() {
-      loadSelect('getPromoterNames', 'firstName', 'apm_supervisorNames_v1', 'กรุณาเลือกชื่อ', 'ชื่อ');
-      loadSelect('getDistricts', 'district', 'apm_districts_v1', 'กรุณาเลือกเขต', 'เขต',
-        function (tsDistrict) {
-          // เลือกเขตแล้ว → แสดงหมู่บ้าน/ตำบลทันที (จากแคช) หรือโหลดถ้ายังไม่มี
-          tsDistrict.on('change', function (value) {
-            if (value) {
-              fetchAutoData(value);
+            // ตรวจสอบเวลาอีกครั้งหลังจากเช็ค GPS
+            if (Date.now() - sessionStartTime >= SESSION_TIMEOUT_MS || isSessionExpired) {
+                loadingOverlay.style.display = 'none';
+                document.body.style.overflow = '';
+                await handleSessionTimeout();
+                return;
+            }
+
+            isSubmitting = true;
+            submitButton.textContent = "กำลังบันทึก...";
+            if (loadingText) loadingText.textContent = "กำลังบันทึกข้อมูล...";
+
+            const formData = new FormData(this);
+            const submitDate = new Date().toLocaleDateString();
+            const submitTime = new Date().toLocaleTimeString();
+            const location = `https://maps.google.com/maps?q=${currentCoordinates}`;
+
+            // ถ้า LIFF ยังโหลดไม่เสร็จ → รอให้ได้ userId ก่อนส่งข้อมูล (ไม่ให้ userId ว่าง)
+            if (!userId) { try { await initializeLiff(); } catch (e) { /* ไม่มี userId ก็ยังส่งได้ */ } }
+
+            // ใช้รูปที่บีบอัดแล้ว (ถ้ามี) → ข้ามการอ่านไฟล์ต้นฉบับทั้งไฟล์ (บันทึกเร็วขึ้นมาก)
+            async function runUpload(base64, uploadType, uploadName) {
+                const data = {
+                    date: formData.get('date'),
+                    firstName: formData.get('firstName'),
+                    district: formData.get('district'),
+                    village: formData.get('village'),
+                    subDistrict: formData.get('subDistrict'),
+                    details: formData.get('details'),
+                    coordinates: currentCoordinates,
+                    location: location,
+                    base64: base64,
+                    type: uploadType,
+                    name: uploadName,
+                    submitDate: submitDate,
+                    submitTime: submitTime,
+                    userId: userId
+                };
+
+                try {
+                    const response = await fetch('https://script.google.com/macros/s/AKfycbyE8tvOVYAAR6WOiCVDEb2Fp1Yq3ebTAri9ZQYonpduMjQCFzod8xi0glBVXc6A6_qOeA/exec', {
+                        method: "POST",
+                        body: JSON.stringify(data)
+                    });
+                    const result = await response.json();
+
+                    if (result.status !== "success") {
+                        throw new Error(result.message || "Failed to upload data and image");
+                    }
+
+                    const fileLink = result.fileLink;
+
+                    const flexMessage = {
+                        type: "flex",
+                        altText: "รายงานการทำงานSupervisor",
+                        contents: {
+                            type: "bubble",
+                            body: {
+                                type: "box",
+                                layout: "vertical",
+                                contents: [
+                                    {
+                                        type: "text",
+                                        text: "รายงานการทำงานSupervisor",
+                                        weight: "bold",
+                                        size: "md",
+                                        wrap: true
+                                    },
+                                    {
+                                        type: "box",
+                                        layout: "vertical",
+                                        margin: "lg",
+                                        spacing: "sm",
+                                        contents: [
+                                            { type: "text", text: `วันที่: ${data.date}`, wrap: true },
+                                            { type: "text", text: `ชื่อชุปเปอร์ไวเซอร์: ${data.firstName}`, wrap: true },
+                                            { type: "text", text: `เขต: ${data.district}`, wrap: true },
+                                            { type: "text", text: `หมู่บ้าน: ${data.village}`, wrap: true },
+                                            { type: "text", text: `ตำบล: ${data.subDistrict}`, wrap: true },
+                                            { type: "text", text: `รายละเอียดปฏิบัติงาน: ${data.details}`, wrap: true },
+                                            { type: "text", text: `พิกัด: ${data.coordinates}`, wrap: true },
+                                            { type: "text", text: `ส่งเมื่อ: ${data.submitDate} ${data.submitTime}`, wrap: true }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    };
+
+                    const imageMessage = {
+                        type: "image",
+                        originalContentUrl: fileLink,
+                        previewImageUrl: fileLink
+                    };
+
+                    await liff.sendMessages([
+                        flexMessage,
+                        imageMessage,
+                        {
+                            type: "location",
+                            title: "สถานที่ปฏิบัติงาน",
+                            address: data.location,
+                            latitude: parseFloat(currentCoordinates.split(',')[0]),
+                            longitude: parseFloat(currentCoordinates.split(',')[1])
+                        }
+                    ]);
+
+                    isSubmitting = false;
+                    loadingOverlay.style.display = 'none';
+                    document.body.style.overflow = '';
+                    submitButton.textContent = "บันทึกการกำกับดูแล";
+                    submitButton.disabled = false;
+                    if (loadingText) loadingText.textContent = "กำลังบันทึก..";
+                    document.getElementById('dataForm').reset();
+                    document.getElementById('imagePreview').innerHTML = '';
+                    compressedUpload = null;
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'บันทึกและส่งสำเร็จ!',
+                        text: 'ข้อมูลการกำกับดูแลถูกบันทึกและส่งไปยัง LINE Chat เรียบร้อยแล้ว',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                    // ปิดหน้าต่างหลังจากแสดงข้อความสำเร็จแล้ว (ไม่ปิดทันทีจนมองไม่เห็น Toast)
+                    setTimeout(function () {
+                        try { liff.closeWindow(); } catch (e) { /* noop */ }
+                    }, 1600);
+                } catch (error) {
+                    isSubmitting = false;
+                    loadingOverlay.style.display = 'none';
+                    document.body.style.overflow = '';
+                    if (loadingText) loadingText.textContent = "กำลังบันทึก..";
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'เกิดข้อผิดพลาด',
+                        text: 'ไม่สามารถบันทึกหรือส่งข้อมูลได้: ' + error.message,
+                        confirmButtonColor: '#2563eb'
+                    });
+                    submitButton.textContent = "บันทึกการกำกับดูแล";
+                    submitButton.disabled = false;
+                }
+            }
+
+            if (compressedUpload) {
+                // มีรูปที่บีบอัดแล้ว → เริ่มอัปโหลดทันที ไม่ต้องอ่านไฟล์ต้นฉบับทั้งไฟล์
+                runUpload(compressedUpload.base64, compressedUpload.type, compressedUpload.name);
             } else {
-              document.getElementById('village').value = '';
-              document.getElementById('subDistrict').value = '';
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    runUpload(event.target.result.split(',')[1], fileInput.type, fileInput.name);
+                };
+                reader.readAsDataURL(fileInput);
             }
-          });
-        },
-        function (districts) {
-          // ได้รายชื่อเขตแล้ว → โหลดหมู่บ้าน/ตำบลของทุกเขตล่วงหน้า
-          prefetchAutoData(districts);
+        });
+
+        // ---------- โหลด Select (แคช + ดึงข้อมูล) ----------
+        const SUPERVISOR_API_URL = 'https://script.google.com/macros/s/AKfycbyE8tvOVYAAR6WOiCVDEb2Fp1Yq3ebTAri9ZQYonpduMjQCFzod8xi0glBVXc6A6_qOeA/exec';
+        const CACHE_TTL = 12 * 60 * 60 * 1000; // 12 ชั่วโมง (ข้อมูล Select เปลี่ยนบ่อยน้อย)
+
+        function getCache(key) {
+            try {
+                const raw = localStorage.getItem(key);
+                if (!raw) return null;
+                const { ts, data } = JSON.parse(raw);
+                if (Date.now() - ts > CACHE_TTL) return null;
+                return data;
+            } catch (e) { return null; }
         }
-      );
-    }
 
-    // ---------- ข้อมูลอัตโนมัติ (หมู่บ้าน/ตำบล) แบบแคช + โหลดล่วงหน้า ----------
-    const AUTO_DATA_CACHE_KEY = 'apm_autoData_v1';
+        function setCache(key, data) {
+            try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data: data })); } catch (e) { /* localStorage ไม่พร้อมใช้งาน */ }
+        }
 
-    // อ่านแคชข้อมูลอัตโนมัติ: { ชื่อเขต: { village, subDistrict } }
-    function getAutoDataCache() {
-      return getCache(AUTO_DATA_CACHE_KEY) || {};
-    }
+        // แปลงข้อผิดพลาดให้ผู้ใช้เข้าใจว่าต้องแก้อะไร
+        function describeApiError(error) {
+            if (!error) return 'เกิดข้อผิดพลาดในการเชื่อมต่อ';
+            if (error.name === 'AbortError') return 'API ตอบช้าเกินไป (หมดเวลา 60 วินาที) — ลองเปิดหน้าใหม่อีกครั้ง';
+            if (error.message === 'Failed to fetch') return 'เชื่อมต่อกับ API ไม่ได้ (CORS/เครือข่าย) — ตรวจว่าเปิดหน้านี้จากลิงก์ LINE อย่างเป็นทางการ';
+            if (/Unexpected token|did not match the expected pattern/.test(error.message)) return 'API ตอบกลับเป็นหน้า HTML (ต้องล็อกอิน Google หรือยังไม่เปิดสาธารณะ) — ไปที่ Google Apps Script > Deploy > Manage deployments แล้วตั้งค่า Who has access เป็น Anyone';
+            return error.message || 'เกิดข้อผิดพลาดในการเชื่อมต่อ';
+        }
 
-    function setAutoDataCache(cache) {
-      setCache(AUTO_DATA_CACHE_KEY, cache);
-    }
+        // อ่าน response โดยตรวจเนื้อหาจริง (GAS มักคืน JSON พร้อม header text/html)
+        function parseResponseBody(response) {
+            return response.text().then(text => {
+                const trimmed = text.trim();
+                if (!trimmed) throw new Error('API ตอบกลับว่างเปล่า');
+                // ถ้าเป็น HTML (หน้า login/error ของ Google) → แจ้งเตือนชัดเจน
+                if (trimmed.charAt(0) === '<') {
+                    const e = new Error('API ตอบกลับเป็นหน้า HTML (ต้องล็อกอิน Google หรือยังไม่เปิดสาธารณะ) — ไปที่ Google Apps Script > Deploy > Manage deployments แล้วตั้งค่า Who has access เป็น Anyone');
+                    e.apiError = true;
+                    throw e;
+                }
+                try {
+                    return JSON.parse(trimmed);
+                } catch (e) {
+                    const err = new Error('API ตอบกลับไม่ใช่ JSON ที่ถูกต้อง: ' + trimmed.slice(0, 80));
+                    err.apiError = true;
+                    throw err;
+                }
+            });
+        }
 
-    // แสดงผลทันทีถ้ามีแคช
-    function applyAutoData(district) {
-      const cache = getAutoDataCache();
-      const item = cache[district];
-      if (!item) return false;
-      document.getElementById('village').value = item.village || '';
-      document.getElementById('subDistrict').value = item.subDistrict || '';
-      return true;
-    }
+        // เติมตัวเลือกใน Select และสร้าง/อัปเดต Tom Select (กัน option ซ้ำ)
+        // onCreated: เรียกหลังสร้าง TomSelect ครั้งแรก (สำหรับผูก event พิเศษ เช่น เขต → ดึงข้อมูลอัตโนมัติ)
+        function fillSelect(selectId, items, placeholder, onCreated) {
+            if (!Array.isArray(items) || !items.length) return;
+            const selectEl = document.getElementById(selectId);
+            if (!selectEl) return;
+            const existing = selectEl._tomSelect;
+            if (existing) {
+                existing.clearOptions();
+                existing.addOptions(items.map(v => ({ value: v, text: v })));
+                existing.refreshOptions(false);
+                return;
+            }
+            items.forEach(name => {
+                const o = document.createElement('option');
+                o.value = name;
+                o.text = name;
+                selectEl.appendChild(o);
+            });
+            selectEl._tomSelect = new TomSelect('#' + selectId, { placeholder: placeholder, allowEmptyOption: true });
+            if (onCreated) onCreated(selectEl._tomSelect);
+        }
 
-    // ดึงข้อมูลเขตเดียวจาก API แล้วเก็บแคช (ไม่ต้องเด้ง error ถ้าเป็นแค่ prefetch)
-    function fetchOneAutoData(district, silent) {
-      // ถ้า GAS ตอบช้า/ค้าง ให้ timeout 30 วินาที
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 30000);
-      return fetch(SUPERVISOR_API_URL + '?action=getAutoData&district=' + encodeURIComponent(district), { signal: controller.signal })
-        .then(response => {
-          if (!response.ok) {
-            const statusText = response.status === 403
-              ? 'API ยังไม่เปิดใช้งานสาธารณะ (HTTP 403) — ไปที่ Google Apps Script > Deploy > Manage deployments แล้วตั้งค่า Who has access เป็น Anyone'
-              : response.status === 404
-                ? 'ไม่พบ API (HTTP 404) — ตรวจสอบ URL ของ Google Apps Script หรือ Deployment ถูกลบไปแล้ว'
-                : 'API ตอบกลับ HTTP ' + response.status;
-            throw new Error(statusText);
-          }
-          return parseResponseBody(response);
-        })
-        .then(data => {
-          if (data.error) {
-            if (!silent) Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลดข้อมูลได้: ' + data.error, confirmButtonColor: '#2563eb' });
-            return;
-          }
-          // เก็บแคช
-          const cache = getAutoDataCache();
-          cache[district] = { village: data.village || '', subDistrict: data.subDistrict || '' };
-          setAutoDataCache(cache);
-          // ถ้าผู้ใช้กำลังเลือกเขตนี้อยู่ → อัปเดตทันที
-          if (document.getElementById('district').value === district) {
-            document.getElementById('village').value = cache[district].village;
-            document.getElementById('subDistrict').value = cache[district].subDistrict;
-          }
-        })
-        .catch(error => {
-          if (!silent) Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + describeApiError(error), confirmButtonColor: '#2563eb' });
-        })
-        .finally(() => clearTimeout(timer));
-    }
+        // โหลดข้อมูล Select: ใช้แคชทันที แล้วค่อยดึงจาก API อัปเดตเบื้องหลัง
+        // onCreated: เรียกเมื่อสร้าง TomSelect ครั้งแรก / onData: เรียกเมื่อได้ข้อมูล (แคชหรือ API) พร้อมรายการข้อมูล
+        function loadSelect(action, selectId, cacheKey, placeholder, errorLabel, onCreated, onData, attempt) {
+            attempt = attempt || 0;
+            const url = SUPERVISOR_API_URL + '?action=' + action;
+            const cached = getCache(cacheKey);
+            if (cached && cached.length) {
+                fillSelect(selectId, cached, placeholder, onCreated);
+                if (onData) onData(cached);
+            }
 
-    // ผู้ใช้เลือกเขต: แสดงจากแคชทันที (ไม่ต้องรอ API)
-    function fetchAutoData(district) {
-      if (applyAutoData(district)) return;
-      // ยังไม่มีแคช → แสดงสถานะกำลังโหลด แล้วค่อยดึง
-      document.getElementById('village').value = 'กำลังโหลด...';
-      document.getElementById('subDistrict').value = 'กำลังโหลด...';
-      fetchOneAutoData(district, false);
-    }
+            // ถ้า GAS ตอบช้า/ค้าง (cold start) ให้ timeout 60 วินาที
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 60000);
 
-    // โหลดข้อมูลหมู่บ้าน/ตำบลของทุกเขตล่วงหน้า (ครั้งแรกหลังโหลดรายชื่อเขตเสร็จ)
-    // ใช้ batch ทีละ 4 เขต เพื่อไม่ให้ยิง API พร้อมกันเกินไป
-    function prefetchAutoData(districts) {
-      if (!Array.isArray(districts) || !districts.length) return;
-      const cache = getAutoDataCache();
-      const missing = districts.filter(d => !cache[d]);
-      if (!missing.length) return;
+            // ถ้าเกิน 8 วิ ยังไม่ตอบ → แจ้งแบบ toast เล็กๆ (ไม่บล็อกการใช้งาน) — เฉพาะครั้งแรกที่ยังไม่มีแคช
+            const slowTimer = setTimeout(() => {
+                if (!cached || !cached.length) {
+                    Swal.fire({
+                        toast: true,
+                        position: 'bottom',
+                        icon: 'info',
+                        title: 'กำลังโหลดข้อมูล...',
+                        text: 'API กำลังตอบช้า (Google Apps Script cold start) กรุณารอสักครู่',
+                        timer: 4000,
+                        showConfirmButton: false,
+                        confirmButtonColor: '#2563eb'
+                    });
+                }
+            }, 8000);
 
-      const BATCH = 4;
-      let index = 0;
-      const runBatch = () => {
-        const slice = missing.slice(index, index + BATCH);
-        index += BATCH;
-        slice.forEach(d => fetchOneAutoData(d, true));
-        if (index < missing.length) setTimeout(runBatch, 300);
-      };
-      runBatch();
-    }
+            return fetch(url, { signal: controller.signal })
+                .then(response => {
+                    if (!response.ok) {
+                        // GAS คืน HTTP error (403 = ไม่เปิดสาธารณะ, 404 = URL ผิด/ถูกลบ)
+                        const statusText = response.status === 403
+                            ? 'API ยังไม่เปิดใช้งานสาธารณะ (HTTP 403) — ไปที่ Google Apps Script > Deploy > Manage deployments แล้วตั้งค่า Who has access เป็น Anyone'
+                            : response.status === 404
+                                ? 'ไม่พบ API (HTTP 404) — ตรวจสอบ URL ของ Google Apps Script หรือ Deployment ถูกลบไปแล้ว'
+                                : 'API ตอบกลับ HTTP ' + response.status;
+                        const e = new Error(statusText);
+                        e.apiError = true;
+                        throw e;
+                    }
+                    return parseResponseBody(response);
+                })
+                .then(data => {
+                    if (data.error) {
+                        // มีข้อมูลแคชแสดงอยู่แล้ว → ไม่ต้องเด้ง error ซ้ำ
+                        if (!cached || !cached.length) {
+                            Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลด ' + errorLabel + ' ได้: ' + data.error, confirmButtonColor: '#2563eb' });
+                        }
+                        return;
+                    }
+                    if (!Array.isArray(data) || !data.length) return;
+                    setCache(cacheKey, data);
+                    fillSelect(selectId, data, placeholder, onCreated);
+                    if (onData) onData(data);
+                })
+                .catch(error => {
+                    // มีข้อมูลแคชแสดงอยู่แล้ว → แค่ log ไม่ต้องเด้ง error ซ้ำ
+                    if (cached && cached.length) {
+                        console.warn('อัปเดต ' + errorLabel + ' ไม่สำเร็จ ใช้ข้อมูลเก่า:', error);
+                        return;
+                    }
+                    // ลองใหม่เองอัตโนมัติ 2 ครั้ง (กัน cold start / เน็ตสะดุดชั่วคราว) ก่อนแจ้ง error
+                    if (attempt < 2) {
+                        setTimeout(() => loadSelect(action, selectId, cacheKey, placeholder, errorLabel, onCreated, onData, attempt + 1), 1500 * (attempt + 1));
+                        return;
+                    }
+                    const msg = error.apiError ? error.message : 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + describeApiError(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ข้อผิดพลาด',
+                        text: msg,
+                        confirmButtonColor: '#2563eb',
+                        showCancelButton: true,
+                        confirmButtonText: 'ลองใหม่',
+                        cancelButtonText: 'ปิด'
+                    }).then(result => {
+                        if (result.isConfirmed) loadSelect(action, selectId, cacheKey, placeholder, errorLabel, onCreated, onData);
+                    });
+                })
+                .finally(() => { clearTimeout(timer); clearTimeout(slowTimer); });
+        }
 
-    // DOMContentLoaded เร็วกว่า window.onload (ไม่ต้องรอ font/รูปโหลดเสร็จ)
-    document.addEventListener('DOMContentLoaded', function () {
-      loadSelectData(); // เริ่มโหลด Select ทันที (ไม่ต้องรอ LIFF/GPS)
-      initializeLiff(); // LIFF/โปรไฟล์ ขนานกัน (มี timeout — ไม่ค้าง)
-      const today = new Date().toISOString().split('T')[0];
-      const dateInput = document.getElementById('date');
-      dateInput.value = today;
-      // วันที่ปฏิบัติงาน = วันนี้เสมอ และ DatePicker แก้ไขไม่ได้จริงๆ (กันเปิดปฏิทิน/พิมพ์/scroll)
-      dateInput.addEventListener('mousedown', function (e) { e.preventDefault(); });
-      dateInput.addEventListener('touchstart', function (e) { e.preventDefault(); }, { passive: false });
-      dateInput.addEventListener('keydown', function (e) { e.preventDefault(); });
-      dateInput.addEventListener('wheel', function (e) { e.preventDefault(); }, { passive: false });
-      dateInput.addEventListener('input', function () { dateInput.value = today; });
-      dateInput.addEventListener('change', function () { dateInput.value = today; });
-      startGpsCheck(); // เริ่ม GPS ทันที ไม่ต้องรอ LIFF (กันค้างที่หน้าตรวจสอบ GPS)
-    });
-  </script>
+        // โหลด Select ทั้ง 2 ช่องแบบขนาน (ไม่ต้องรอ LIFF/GPS)
+        function loadSelectData() {
+            loadSelect('getPromoterNames', 'firstName', 'apm_supervisorNames_v1', 'กรุณาเลือกชื่อ', 'ชื่อ');
+            loadSelect('getDistricts', 'district', 'apm_districts_v1', 'กรุณาเลือกเขต', 'เขต',
+                function (tsDistrict) {
+                    // เลือกเขตแล้ว → แสดงหมู่บ้าน/ตำบลทันที (จากแคช) หรือโหลดถ้ายังไม่มี
+                    tsDistrict.on('change', function (value) {
+                        if (value) {
+                            fetchAutoData(value);
+                        } else {
+                            document.getElementById('village').value = '';
+                            document.getElementById('subDistrict').value = '';
+                        }
+                    });
+                },
+                function (districts) {
+                    // ได้รายชื่อเขตแล้ว → โหลดหมู่บ้าน/ตำบลของทุกเขตล่วงหน้า
+                    prefetchAutoData(districts);
+                }
+            );
+        }
+
+        // ---------- ข้อมูลอัตโนมัติ (หมู่บ้าน/ตำบล) แบบแคช + โหลดล่วงหน้า ----------
+        const AUTO_DATA_CACHE_KEY = 'apm_autoData_v1';
+
+        // อ่านแคชข้อมูลอัตโนมัติ: { ชื่อเขต: { village, subDistrict } }
+        function getAutoDataCache() {
+            return getCache(AUTO_DATA_CACHE_KEY) || {};
+        }
+
+        function setAutoDataCache(cache) {
+            setCache(AUTO_DATA_CACHE_KEY, cache);
+        }
+
+        // แสดงผลทันทีถ้ามีแคช
+        function applyAutoData(district) {
+            const cache = getAutoDataCache();
+            const item = cache[district];
+            if (!item) return false;
+            document.getElementById('village').value = item.village || '';
+            document.getElementById('subDistrict').value = item.subDistrict || '';
+            return true;
+        }
+
+        // ดึงข้อมูลเขตเดียวจาก API แล้วเก็บแคช (ไม่ต้องเด้ง error ถ้าเป็นแค่ prefetch)
+        function fetchOneAutoData(district, silent) {
+            // ถ้า GAS ตอบช้า/ค้าง ให้ timeout 30 วินาที
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 30000);
+            return fetch(SUPERVISOR_API_URL + '?action=getAutoData&district=' + encodeURIComponent(district), { signal: controller.signal })
+                .then(response => {
+                    if (!response.ok) {
+                        const statusText = response.status === 403
+                            ? 'API ยังไม่เปิดใช้งานสาธารณะ (HTTP 403) — ไปที่ Google Apps Script > Deploy > Manage deployments แล้วตั้งค่า Who has access เป็น Anyone'
+                            : response.status === 404
+                                ? 'ไม่พบ API (HTTP 404) — ตรวจสอบ URL ของ Google Apps Script หรือ Deployment ถูกลบไปแล้ว'
+                                : 'API ตอบกลับ HTTP ' + response.status;
+                        throw new Error(statusText);
+                    }
+                    return parseResponseBody(response);
+                })
+                .then(data => {
+                    if (data.error) {
+                        if (!silent) Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'ไม่สามารถโหลดข้อมูลได้: ' + data.error, confirmButtonColor: '#2563eb' });
+                        return;
+                    }
+                    // เก็บแคช
+                    const cache = getAutoDataCache();
+                    cache[district] = { village: data.village || '', subDistrict: data.subDistrict || '' };
+                    setAutoDataCache(cache);
+                    // ถ้าผู้ใช้กำลังเลือกเขตนี้อยู่ → อัปเดตทันที
+                    if (document.getElementById('district').value === district) {
+                        document.getElementById('village').value = cache[district].village;
+                        document.getElementById('subDistrict').value = cache[district].subDistrict;
+                    }
+                })
+                .catch(error => {
+                    if (!silent) Swal.fire({ icon: 'error', title: 'ข้อผิดพลาด', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + describeApiError(error), confirmButtonColor: '#2563eb' });
+                })
+                .finally(() => clearTimeout(timer));
+        }
+
+        // ผู้ใช้เลือกเขต: แสดงจากแคชทันที (ไม่ต้องรอ API)
+        function fetchAutoData(district) {
+            if (applyAutoData(district)) return;
+            // ยังไม่มีแคช → แสดงสถานะกำลังโหลด แล้วค่อยดึง
+            document.getElementById('village').value = 'กำลังโหลด...';
+            document.getElementById('subDistrict').value = 'กำลังโหลด...';
+            fetchOneAutoData(district, false);
+        }
+
+        // โหลดข้อมูลหมู่บ้าน/ตำบลของทุกเขตล่วงหน้า (ครั้งแรกหลังโหลดรายชื่อเขตเสร็จ)
+        // ใช้ batch ทีละ 4 เขต เพื่อไม่ให้ยิง API พร้อมกันเกินไป
+        function prefetchAutoData(districts) {
+            if (!Array.isArray(districts) || !districts.length) return;
+            const cache = getAutoDataCache();
+            const missing = districts.filter(d => !cache[d]);
+            if (!missing.length) return;
+
+            const BATCH = 4;
+            let index = 0;
+            const runBatch = () => {
+                const slice = missing.slice(index, index + BATCH);
+                index += BATCH;
+                slice.forEach(d => fetchOneAutoData(d, true));
+                if (index < missing.length) setTimeout(runBatch, 300);
+            };
+            runBatch();
+        }
+
+        // DOMContentLoaded เร็วกว่า window.onload (ไม่ต้องรอ font/รูปโหลดเสร็จ)
+        document.addEventListener('DOMContentLoaded', function () {
+            startSessionTimer(); // เริ่มนับเวลาถอยหลัง 10 นาที
+            loadSelectData(); // เริ่มโหลด Select ทันที (ไม่ต้องรอ LIFF/GPS)
+            initializeLiff(); // LIFF/โปรไฟล์ ขนานกัน (มี timeout — ไม่ค้าง)
+            const today = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('date');
+            dateInput.value = today;
+            // วันที่ปฏิบัติงาน = วันนี้เสมอ และ DatePicker แก้ไขไม่ได้จริงๆ (กันเปิดปฏิทิน/พิมพ์/scroll)
+            dateInput.addEventListener('mousedown', function (e) { e.preventDefault(); });
+            dateInput.addEventListener('touchstart', function (e) { e.preventDefault(); }, { passive: false });
+            dateInput.addEventListener('keydown', function (e) { e.preventDefault(); });
+            dateInput.addEventListener('wheel', function (e) { e.preventDefault(); }, { passive: false });
+            dateInput.addEventListener('input', function () { dateInput.value = today; });
+            dateInput.addEventListener('change', function () { dateInput.value = today; });
+            startGpsCheck(); // เริ่ม GPS ทันที ไม่ต้องรอ LIFF (กันค้างที่หน้าตรวจสอบ GPS)
+        });
+    </script>
 </body>
 
 </html>
