@@ -40,14 +40,72 @@
     .app-header {
       background: linear-gradient(120deg, #065f46, #059669 55%, #10b981);
       color: #fff;
-      padding: 1.3rem 1.2rem;
+      padding: 1.1rem 1.2rem 0.9rem;
       display: flex;
-      align-items: center;
-      gap: 0.9rem;
+      flex-direction: column;
+      gap: 0.6rem;
       box-shadow: 0 8px 24px rgba(5, 150, 105, 0.28);
       position: sticky;
       top: 0;
       z-index: 500;
+    }
+
+    .app-header .header-main {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      width: 100%;
+    }
+
+    /* Session Timer Badge */
+    .session-timer-pill {
+      align-self: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding: 0.28rem 0.95rem;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #065f46;
+      font-size: 0.78rem;
+      font-weight: 500;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      transition: all 0.3s ease;
+    }
+
+    .session-timer-pill i {
+      font-size: 0.85rem;
+      color: #059669;
+    }
+
+    .session-timer-pill .timer-countdown {
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: #047857;
+      letter-spacing: 0.02em;
+    }
+
+    .session-timer-pill.warning {
+      background: #fef2f2;
+      color: #dc2626;
+      border-color: #f87171;
+      animation: timerPulse 1.2s infinite;
+    }
+
+    .session-timer-pill.warning i,
+    .session-timer-pill.warning .timer-countdown {
+      color: #dc2626;
+    }
+
+    @keyframes timerPulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.03);
+      }
     }
 
     .avatar {
@@ -478,12 +536,19 @@
 <body>
   <!-- Header -->
   <header class="app-header">
-    <div class="avatar" id="avatarBox"><img id="profileImage" src="" alt="Profile"><i class="fas fa-user"></i></div>
-    <div class="titles">
-      <h1>ส่งงานส่งเสริมการเกษตร</h1>
-      <p id="displayName">กำลังโหลด...</p>
+    <div class="header-main">
+      <div class="avatar" id="avatarBox"><img id="profileImage" src="" alt="Profile"><i class="fas fa-user"></i></div>
+      <div class="titles">
+        <h1>ส่งงานส่งเสริมการเกษตร</h1>
+        <p id="displayName">กำลังโหลด...</p>
+      </div>
+      <div class="leaf-badge"><i class="fas fa-leaf"></i></div>
     </div>
-    <div class="leaf-badge"><i class="fas fa-leaf"></i></div>
+    <div class="session-timer-pill" id="sessionTimerPill">
+      <i class="fas fa-stopwatch"></i>
+      <span>เวลาเปิดฟอร์มคงเหลือ:</span>
+      <span id="sessionTimerText" class="timer-countdown">10:00</span>
+    </div>
   </header>
 
   <div class="card">
@@ -661,6 +726,222 @@
         Promise.resolve(promise),
         new Promise(function (resolve) { setTimeout(function () { resolve(fallback); }, ms); })
       ]);
+    }
+
+    // ---------- ตัวจับเวลาการใช้งาน (จำกัด 10 นาทีเพื่อความถูกต้องของพิกัดปัจจุบัน) ----------
+    const SESSION_TIMEOUT_MS = 10 * 60 * 1000; // 10 นาที (600,000 มิลลิวินาที)
+    const LIFF_ID = '2007528760-v8N7EXG1';
+    let sessionStartTime = Date.now();
+    let sessionTimerInterval = null;
+    let isSessionExpired = false;
+    let isSubmitting = false;
+
+    function startSessionTimer() {
+      sessionStartTime = Date.now();
+      isSessionExpired = false;
+      updateSessionTimerDisplay();
+      if (sessionTimerInterval) clearInterval(sessionTimerInterval);
+      sessionTimerInterval = setInterval(checkSessionTimeout, 1000);
+    }
+
+    function updateSessionTimerDisplay() {
+      if (isSessionExpired) return;
+      const elapsed = Date.now() - sessionStartTime;
+      const remaining = Math.max(0, SESSION_TIMEOUT_MS - elapsed);
+      const totalSeconds = Math.floor(remaining / 1000);
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      const formatted = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+
+      const textEl = document.getElementById('sessionTimerText');
+      const pillEl = document.getElementById('sessionTimerPill');
+      if (textEl) textEl.textContent = formatted;
+      if (pillEl) {
+        if (remaining <= 120000) { // เหลือน้อยกว่า 2 นาที
+          pillEl.classList.add('warning');
+        } else {
+          pillEl.classList.remove('warning');
+        }
+      }
+    }
+
+    async function checkSessionTimeout() {
+      if (isSessionExpired || isSubmitting) return;
+      const elapsed = Date.now() - sessionStartTime;
+      if (elapsed >= SESSION_TIMEOUT_MS) {
+        await handleSessionTimeout();
+      } else {
+        updateSessionTimerDisplay();
+      }
+    }
+
+    // ตรวจสอบทันทีเมื่อสลับกลับมาที่หน้าจอ (กันกรณีพับจอ/ล็อกจอ แล้ว timer ในเบราว์เซอร์หยุดทำงาน)
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden && !isSessionExpired && !isSubmitting) {
+        checkSessionTimeout();
+      }
+    });
+    window.addEventListener('focus', function () {
+      if (!isSessionExpired && !isSubmitting) {
+        checkSessionTimeout();
+      }
+    });
+
+    // แจ้งเตือนเมื่อเปิดค้างเกิน 10 นาที ส่ง Flex Message และปิด LIFF อัตโนมัติ
+    async function handleSessionTimeout() {
+      if (isSessionExpired) return;
+      isSessionExpired = true;
+      if (sessionTimerInterval) clearInterval(sessionTimerInterval);
+
+      const textEl = document.getElementById('sessionTimerText');
+      const pillEl = document.getElementById('sessionTimerPill');
+      if (textEl) textEl.textContent = '00:00 (หมดเวลา)';
+      if (pillEl) pillEl.classList.add('warning');
+
+      const submitButton = document.getElementById('sub');
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'หมดเวลาใช้งาน (เกิน 10 นาที)';
+      }
+
+      Swal.fire({
+        icon: 'warning',
+        title: 'หมดเวลาการใช้งาน',
+        text: 'ท่านเปิดหน้าต่างทิ้งไว้เกิน 10 นาที กรุณาเปิดระบบใช้งานใหม่อีกครั้ง กำลังปิดหน้าต่างและแจ้งเตือนไปยัง LINE...',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        timer: 3200
+      });
+
+      const liffAppId = (typeof liff !== 'undefined' && liff && liff.id) ? liff.id : LIFF_ID;
+      const liffUri = `https://liff.line.me/${liffAppId}`;
+
+      const timeoutFlexMessage = {
+        type: "flex",
+        altText: "ท่านเปิดหน้าต่างทิ้งไว้เกิน 10 นาทีกรุณาเปิดระบบใช้งานใหม่อีกครั้ง",
+        contents: {
+          type: "bubble",
+          size: "mega",
+          header: {
+            type: "box",
+            layout: "vertical",
+            backgroundColor: "#DC2626",
+            paddingAll: "lg",
+            contents: [
+              {
+                type: "text",
+                text: "⏰ แจ้งเตือนหมดเวลาใช้งาน",
+                weight: "bold",
+                size: "md",
+                color: "#FFFFFF",
+                align: "center"
+              }
+            ]
+          },
+          body: {
+            type: "box",
+            layout: "vertical",
+            spacing: "md",
+            paddingAll: "xl",
+            contents: [
+              {
+                type: "box",
+                layout: "vertical",
+                contents: [
+                  {
+                    type: "text",
+                    text: "⏳",
+                    size: "3xl",
+                    align: "center"
+                  }
+                ],
+                alignItems: "center",
+                paddingBottom: "xs"
+              },
+              {
+                type: "text",
+                text: "ท่านเปิดหน้าต่างทิ้งไว้เกิน 10 นาที",
+                weight: "bold",
+                size: "md",
+                color: "#DC2626",
+                align: "center",
+                wrap: true
+              },
+              {
+                type: "text",
+                text: "กรุณาเปิดระบบใช้งานใหม่อีกครั้ง",
+                weight: "bold",
+                size: "md",
+                color: "#1F2937",
+                align: "center",
+                wrap: true
+              },
+              {
+                type: "separator",
+                margin: "lg"
+              },
+              {
+                type: "box",
+                layout: "vertical",
+                margin: "lg",
+                spacing: "xs",
+                contents: [
+                  {
+                    type: "text",
+                    text: "📍 เพื่อความถูกต้องของพิกัดส่งเสริมการเกษตร:",
+                    weight: "bold",
+                    size: "xs",
+                    color: "#4B5563"
+                  },
+                  {
+                    type: "text",
+                    text: "ระบบจำเป็นต้องบันทึกข้อมูลและพิกัดตำแหน่งจริง ณ เวลาส่งงาน กรุณาทำรายการและส่งงานภายใน 10 นาทีหลังจากเปิดฟอร์ม",
+                    size: "xs",
+                    color: "#6B7280",
+                    wrap: true
+                  }
+                ]
+              }
+            ]
+          },
+          footer: {
+            type: "box",
+            layout: "vertical",
+            paddingAll: "md",
+            contents: [
+              {
+                type: "button",
+                style: "primary",
+                color: "#059669",
+                action: {
+                  type: "uri",
+                  label: "เปิดระบบใช้งานใหม่อีกครั้ง",
+                  uri: liffUri
+                }
+              }
+            ]
+          }
+        }
+      };
+
+      try {
+        if (typeof liff !== 'undefined' && typeof liff.isLoggedIn === 'function' && liff.isLoggedIn()) {
+          if (typeof liff.isInClient === 'function' && liff.isInClient()) {
+            await withTimeout(liff.sendMessages([timeoutFlexMessage]), 4000, null);
+          }
+        }
+      } catch (err) {
+        console.warn("ส่ง Flex Message แจ้งเตือนหมดเวลาไม่สำเร็จ:", err);
+      } finally {
+        setTimeout(function () {
+          try {
+            if (typeof liff !== 'undefined' && typeof liff.closeWindow === 'function') {
+              liff.closeWindow();
+            }
+          } catch (e) { /* noop */ }
+        }, 1500);
+      }
     }
 
     // Initialize LIFF (มี timeout — กันค้างที่ "กำลังโหลด..." ตลอดไป)
@@ -857,7 +1138,7 @@
         const locationOptions = {
           enableHighAccuracy: true,
           timeout: timeoutDuration - 2000,
-          maximumAge: isIOS ? 30000 : 0
+          maximumAge: 0 // ดึงพิกัดสดใหม่เสมอ ไม่ใช้พิกัดเก่าที่แคชไว้
         };
 
         console.log('GPS options:', locationOptions);
@@ -908,6 +1189,7 @@
 
     // Initialize app with GPS check — GPS เริ่มทันที ขนานกับ LIFF (กันค้างที่หน้าตรวจสอบ GPS)
     async function initializeApp() {
+      startSessionTimer(); // เริ่มนับเวลาถอยหลัง 10 นาที
       document.getElementById('gpsCheckingScreen').style.display = 'flex';
       document.getElementById('dataForm').classList.add('hidden');
 
@@ -973,6 +1255,12 @@
     document.getElementById('dataForm').addEventListener('submit', async function (event) {
       event.preventDefault();
 
+      // ตรวจสอบเงื่อนไขเวลาเปิดค้างไว้เกิน 10 นาทีหรือไม่
+      if (Date.now() - sessionStartTime >= SESSION_TIMEOUT_MS || isSessionExpired) {
+        await handleSessionTimeout();
+        return;
+      }
+
       const fileInput = document.getElementById('imageFile').files[0];
       if (!fileInput) {
         Swal.fire({ icon: 'warning', title: 'กรุณาเลือกรูปภาพ', text: 'ต้องแนบรูปภาพก่อนบันทึกการส่งงาน', confirmButtonColor: '#059669' });
@@ -984,12 +1272,45 @@
       }
 
       const loadingOverlay = document.getElementById('loadingOverlay');
+      const loadingText = loadingOverlay.querySelector('.loading-text');
       loadingOverlay.style.display = 'flex';
       document.body.style.overflow = 'hidden';
 
       const submitButton = document.getElementById('sub');
       submitButton.disabled = true;
+      submitButton.textContent = "กำลังตรวจสอบพิกัด...";
+      if (loadingText) loadingText.textContent = "กำลังตรวจสอบพิกัดปัจจุบัน...";
+
+      // ตรวจสอบพิกัดปัจจุบันอีกครั้งก่อนส่งงานจริง เพื่อป้องกันช่องโหว่เปิดค้างแล้วย้ายตำแหน่ง
+      try {
+        const freshPos = await getLocation();
+        showPosition(freshPos);
+      } catch (gpsError) {
+        loadingOverlay.style.display = 'none';
+        document.body.style.overflow = '';
+        submitButton.disabled = false;
+        submitButton.textContent = "บันทึกการส่งงาน";
+        if (loadingText) loadingText.textContent = "กำลังบันทึก..";
+        Swal.fire({
+          icon: 'error',
+          title: 'ไม่สามารถยืนยันพิกัดปัจจุบันได้',
+          text: 'ระบบจำเป็นต้องใช้พิกัดปัจจุบันจริง ณ เวลาที่ส่งงาน กรุณาเปิด GPS และอนุญาตสิทธิ์ตำแหน่ง แล้วลองใหม่อีกครั้ง',
+          confirmButtonColor: '#059669'
+        });
+        return;
+      }
+
+      // ตรวจสอบเวลาอีกครั้งหลังจากเช็ค GPS
+      if (Date.now() - sessionStartTime >= SESSION_TIMEOUT_MS || isSessionExpired) {
+        loadingOverlay.style.display = 'none';
+        document.body.style.overflow = '';
+        await handleSessionTimeout();
+        return;
+      }
+
+      isSubmitting = true;
       submitButton.textContent = "กำลังบันทึก...";
+      if (loadingText) loadingText.textContent = "กำลังบันทึกข้อมูล...";
 
       const formData = new FormData(this);
       const submitDate = new Date().toLocaleDateString();
@@ -1088,10 +1409,12 @@
             }
           ]);
 
+          isSubmitting = false;
           loadingOverlay.style.display = 'none';
           document.body.style.overflow = '';
           submitButton.textContent = "บันทึกการส่งงาน";
           submitButton.disabled = false;
+          if (loadingText) loadingText.textContent = "กำลังบันทึก..";
           document.getElementById('dataForm').reset();
           document.getElementById('imagePreview').innerHTML = '';
           compressedUpload = null;
@@ -1109,8 +1432,10 @@
             try { liff.closeWindow(); } catch (e) { /* noop */ }
           }, 1600);
         } catch (error) {
+          isSubmitting = false;
           loadingOverlay.style.display = 'none';
           document.body.style.overflow = '';
+          if (loadingText) loadingText.textContent = "กำลังบันทึก..";
           Swal.fire({
             icon: 'error',
             title: 'เกิดข้อผิดพลาด',
